@@ -7,6 +7,12 @@
     <!--<link rel="stylesheet" href="assets/css/style.css">-->
 </head>
 <style>
+    .question
+     {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
     .answers
     {
         display: grid;
@@ -37,12 +43,11 @@
     </header>
     <p>Subject<p>
     <p>Test Name<p>
-    <p>Question text box<p>
-    <p>Question 1/10<p>
-    <p>Answer 1<p>
-    <p>Answer 2<p>
-    <p>Answer 3<p>
-    <p>Answer 4<p>
+
+    <div class="question">
+        <p>Question text box</p>
+        <p>Question 1/10</p>
+    </div>
 
     <div class="answers">
         <div class="answer">Answer 1</div>
