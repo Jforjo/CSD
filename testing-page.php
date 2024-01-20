@@ -14,6 +14,24 @@
         background-color: #0f0f0f;
     }
     
+    nav ul 
+    {
+        display: flex;
+        list-style-type: none;
+        justify-content: center;
+    }
+
+    nav ul li
+    {
+        margin: 0 20px;
+    }
+
+    .test-info
+    {
+        position: relative;
+        top: 30px;
+    }
+
     .question
      {
         text-align: center;
