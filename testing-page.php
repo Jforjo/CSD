@@ -15,10 +15,15 @@
 
     .answers
     {
+        position: absolute;
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 10px;
         width: 50%;
+        bottom: 25%;
+        left: 50%;
+        transform: translateX(-50%)
+        
     }
     .answer
     {
@@ -41,8 +46,10 @@
             </ul>
         </nav>
     </header>
-    <p>Subject<p>
-    <p>Test Name<p>
+    <div class="test-info">
+        <p>Subject</p>
+        <p>Test Name</p>
+    </div>
 
     <div class="question">
         <p>Question text box</p>
