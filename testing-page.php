@@ -7,7 +7,23 @@
     <!--<link rel="stylesheet" href="assets/css/style.css">-->
 </head>
 <style>
+    *
+    {
+        font-family: Arial, Helvetica, sans-serif;
+        color: white;
+        background-color: #0f0f0f;
+    }
+    
     .question
+     {
+        text-align: center;
+        margin-bottom: 20px;
+        width: 50%;
+        margin: 0 auto;
+        margin-top: 90px;
+    }
+
+    .question-number
      {
         text-align: center;
         margin-bottom: 20px;
@@ -27,13 +43,13 @@
     }
     .answer
     {
-        border: 1px solid black;
+        border: 1px solid white;
         padding: 10px;
         text-align: center;
     }
     .answer:hover
     {
-        background-color: #e6e6e6;
+        background-color: #666666;
     }
 </style>  
 <body>
@@ -52,7 +68,10 @@
     </div>
 
     <div class="question">
-        <p>Question text box</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    </div>
+
+    <div class="question-number">
         <p>Question 1/10</p>
     </div>
 
