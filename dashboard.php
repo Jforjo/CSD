@@ -35,5 +35,21 @@
             </ul>
         </nav>
     </header>
+    <section>
+        <h2 class="section-title">Tests to complete</h2>
+        <div class="test-box">
+            <h3>Test Name</h3>
+            <p>Test Subject</P>
+        </div>
+    </section>
+    <section>
+        <h2 class="section-title">Completed Tests</h2>
+        <div class="test-box">
+            <h3>Test Name</h3>
+            <p>Completed: 22/01/2024</p>
+            <p>Score: 80%</p>
+            <p>250 points</p>
+        </div>
+    </section>
 </body>
 </html>
