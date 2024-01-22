@@ -36,9 +36,10 @@
     {
         border: 1px solid white;
         padding: 10px;
-        width: 200px;
-        height: 150px;
+        width: 300px;
+        height: 250px;
         margin: 10px;
+        font-size: 20px;
     }
 
     .test-contents:hover, .test-contents:hover p, .test-contents:hover h3
@@ -61,9 +62,23 @@
     </header>
     <section>
         <h2 class="section-title">Tests to complete</h2>
+        <div class="test-box">
         <div class="test-contents">
             <h3>Test Name</h3>
             <p>Test Subject</P>
+        </div>
+        <div class="test-contents">
+            <h3>Test Name</h3>
+            <p>Test Subject</P>
+        </div>
+        <div class="test-contents">
+            <h3>Test Name</h3>
+            <p>Test Subject</P>
+        </div>
+        <div class="test-contents">
+            <h3>Test Name</h3>
+            <p>Test Subject</P>
+        </div>
         </div>
     </section>
     <section>
