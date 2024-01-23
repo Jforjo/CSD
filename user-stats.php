@@ -23,6 +23,15 @@
     {
         margin: 0 20px;
     }
+
+    #chart-container
+    {
+        width: 400px;
+        height: 400px;
+        margin: 0 auto;
+        background-color: #555555;
+        
+    }
     </style>
 </head>
 <body>
@@ -35,5 +44,8 @@
             </ul>
         </nav>
     </header>
+    <div id="chart-container">
+
+    </div>
 </body>
 </html>
