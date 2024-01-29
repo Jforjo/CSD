@@ -4,6 +4,8 @@
     --primary: #a3a3a3;
     --secondary: #2c2c2c;
     --accent: #ff799d;
+    --accent-opacity-50: rgb(255, 121, 157, 0.5);
+    --accent-opacity-75: rgb(255, 121, 157, 0.75);
 }
 * {
     margin: 0;
@@ -267,6 +269,7 @@ main .dashboard-cards .card h2 i:hover::after {
 }
 main .dashboard-cards .card .stats {
     width: 100%;
+    margin: 16px 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -341,6 +344,78 @@ main .dashboard-cards .card > h3 {
     cursor: default;
     user-select: none;
 }
+main .dashboard-cards .card .user-row {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 8px clamp(8px, 5%, 32px);
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+}
+main .dashboard-cards .card .user-row .details {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+main .dashboard-cards .card .user-row h4 {
+    color: var(--text);
+    font-size: 1.5em;
+}
+main .dashboard-cards .card .user-row span {
+    color: var(--primary);
+    font-size: 0.7em;
+}
+main .dashboard-cards .card .user-row input[type="text"] {
+    background-color: transparent;
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 8px 16px;
+    margin: 8px 0;
+    border-radius: 10px;
+    color: var(--text);
+}
+main .dashboard-cards .card .user-row .user-row-btns {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+main .dashboard-cards .card .user-row .user-row-btns button {
+    position: relative;
+    width: 100%;
+    margin: 0 16px;
+    background-color: var(--secondary);
+    border: unset;
+    padding: 8px 16px;
+    color: var(--primary);
+    font-weight: 600;
+    text-transform: uppercase;
+    border-radius: 10px;
+    transition: letter-spacing 0.5s, background-color 0.5s, color 0.5s;
+    cursor: pointer;
+}
+main .dashboard-cards .card .user-row .user-row-btns button.primary {
+    background-color: var(--accent-opacity-50);
+    color: var(--text);
+}
+main .dashboard-cards .card .user-row .user-row-btns button:hover {
+    letter-spacing: 1px;
+    color: var(--text);
+}
+main .dashboard-cards .card .user-row .user-row-btns button.primary:hover {
+    background-color: var(--accent-opacity-75);
+}
+main .dashboard-cards .card .user-row .user-row-btns button.to-error:hover {
+    background-color: rgba(200,0,0,0.5);
+}
+
+
+
+
 
 .bar-chart {
     position: relative;
