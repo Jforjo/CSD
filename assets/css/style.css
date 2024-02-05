@@ -3,9 +3,11 @@
     --background: #181818;
     --primary: #a3a3a3;
     --secondary: #2c2c2c;
-    --accent: #ff799d;
-    --accent-opacity-50: rgb(255, 121, 157, 0.5);
-    --accent-opacity-75: rgb(255, 121, 157, 0.75);
+    /* TODO: Change all variables to numbers instead of hex values */
+    --accent: 255 121 157;
+    --accent-gradient: hsl(344, 100%, 74%);
+    --accent-gradient-1: hsl(324, 100%, 74%);
+    --accent-gradient-2: hsl(4, 100%, 74%);
 }
 * {
     margin: 0;
@@ -61,35 +63,73 @@ header .title #page-title {
 header .title #breadcrumbs {
     color: var(--primary);
     margin: 2px 0;
+    display: flex;
 }
 header .title #breadcrumbs a {
-    text-decoration: underline;
     color: inherit;
+}
+header .title #breadcrumbs a[data-link] {
+    text-decoration: underline;
 }
 header .title #breadcrumbs a:hover {
     color: var(--text);
 }
-header .search {
-    background: #141414;
-    padding: 8px;
-    border-radius: 28px;
+header .title #breadcrumbs i {
+    margin: 0 8px;
 }
-header .search form input {
-    background: #0f0f0f;
+header .search {
+    position: relative;
+    background: #141414;
+    border-radius: 28px;
+    min-width: 256px;
+    height: 48px;
+    z-index: 1;
+    transition: min-width 0.5s;
+}
+header .search .search-box {
+    position: absolute;
+    inset: 4px;
+}
+header .search .search-box form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    border-radius: 28px;
+    padding: 0 8px;
+}
+header .search .search-box form input {
+    padding: 0 8px;
+    background: none;
+    outline: none;
     border: none;
     font-size: 1rem;
-    padding: 12px 16px;
-    border-radius: 20px;
     color: var(--text);
-    width: 256px;
-    transition: width 0.5s;
+    width: 100%;
 }
-header .search form input:focus,
-header .search form input:not(:placeholder-shown) {
-    width: 512px;
+header .search:has(.search-box form input:focus),
+header .search:has(.search-box form input:focus-visible),
+header .search:has(.search-box form input:not(:placeholder-shown)) {
+    min-width: 512px;
 }
-header .search form input::placeholder {
+header .search .search-box form input::placeholder {
     color: var(--primary);
+}
+header .search::before {
+    position: absolute;
+    content: '';
+    inset: 0;
+    background: linear-gradient(to right, var(--accent-gradient-1), var(--accent-gradient-2));
+    border-radius: 28px;
+    z-index: -1;
+    transition: opacity 0.5s;
+    opacity: 0;
+}
+header .search:has(.search-box form input:focus)::before,
+header .search:has(.search-box form input:focus-visible)::before,
+header .search:has(.search-box form input:not(:placeholder-shown))::before {
+    opacity: 1;
 }
 
 nav {
@@ -112,7 +152,7 @@ nav .glow {
     position: absolute;
     left: 50%;
     translate: -50% -50%;
-    background-color: var(--accent);
+    background-color: rgb(var(--accent));
     width: 96px;
     height: 80px;
     border-radius: 48px;
@@ -124,7 +164,7 @@ nav .indicator {
     top: calc(40px + calc(var(--pos) * 64px));
     width: 4px;
     height: 48px;
-    background-color: var(--accent);
+    background-color: rgb(var(--accent));
     border-radius: 1em;
     transition: top 0.5s;
 }
@@ -155,7 +195,7 @@ nav ul li:hover a {
     color: var(--text);
 }
 nav ul li.active a {
-    color: var(--accent);
+    color: rgb(var(--accent));
 }
 nav ul li a svg {
     width: 24px;
@@ -174,7 +214,7 @@ nav .top span {
 }
 nav .top span i {
     font-style: normal;
-    color: var(--accent);
+    color: rgb(var(--accent));
 }
 
 
@@ -400,7 +440,7 @@ main .dashboard-cards .card .user-row .user-row-btns button {
     cursor: pointer;
 }
 main .dashboard-cards .card .user-row .user-row-btns button.primary {
-    background-color: var(--accent-opacity-50);
+    background-color: rgb(var(--accent) / 50%);
     color: var(--text);
 }
 main .dashboard-cards .card .user-row .user-row-btns button:hover {
@@ -408,7 +448,7 @@ main .dashboard-cards .card .user-row .user-row-btns button:hover {
     color: var(--text);
 }
 main .dashboard-cards .card .user-row .user-row-btns button.primary:hover {
-    background-color: var(--accent-opacity-75);
+    background-color: rgb(var(--accent) / 75%);
 }
 main .dashboard-cards .card .user-row .user-row-btns button.to-error:hover {
     background-color: rgba(200,0,0,0.5);
@@ -474,7 +514,7 @@ main .dashboard-cards .card .user-row .user-row-btns button.to-error:hover {
 .bar-chart .bar-chart-graph .bar-chart-bar:hover i {
     background: linear-gradient(
         to bottom,
-        var(--accent),
+        rgb(var(--accent)),
         #181818
     );
 }
@@ -489,7 +529,7 @@ main .dashboard-cards .card .user-row .user-row-btns button.to-error:hover {
     padding: 4px 12px;
     background-color: #2c2c2c;
     border-radius: 1rem;
-    border: 1px solid var(--accent);
+    border: 1px solid rgb(var(--accent));
     color: var(--text);
     text-align: center;
     font-size: 1.2em;
@@ -514,7 +554,7 @@ main .dashboard-cards .card .user-row .user-row-btns button.to-error:hover {
     background: linear-gradient(
         to right,
         transparent,
-        var(--accent),
+        rgb(var(--accent)),
         transparent
     );
     /* border-radius: 1rem; */
