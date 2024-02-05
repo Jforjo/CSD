@@ -2,7 +2,7 @@
     {
         font-family: Arial, Helvetica, sans-serif;
         color: white;
-        background-color: #0f0f0f;
+        background-color: #181818;
     }
     
     nav ul 
@@ -17,12 +17,18 @@
         margin: 0 20px;
     }
 
-    a.test-box
+    footer
+    {
+        text-align: center;
+        margin-top: 50px;
+    }
+
+    a.test-link
     {
         text-decoration: none;
     }
 
-    .test-box
+    .test-box a
     {
         display: flex;
         flex-wrap: wrap;
@@ -30,6 +36,12 @@
         width: 80%;
         margin: 0 auto;
         
+    }
+
+    .section-title
+    {
+        margin-top: 70px;
+        padding-left: 2%;
     }
 
     .test-contents

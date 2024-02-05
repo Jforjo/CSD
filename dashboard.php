@@ -18,8 +18,8 @@
     </header>
     <section>
         <h2 class="section-title">Tests to complete</h2>
-        <a href="testing-page.php">
             <div class="test-box">
+            <a href="testing-page.php" class="test-link">
             <div class="test-contents">
                 <h3>Test Name</h3>
                 <p>Test Subject</P>
@@ -36,44 +36,49 @@
                 <h3>Test Name</h3>
                 <p>Test Subject</P>
             </div>
+            </a>
             </div>
         </a>
         
     </section>
     <section>
         <h2 class="section-title">Completed Tests</h2>
-        <div class="test-box">
-        <div class="test-contents">
-            <h3>Test Name</h3>
-            <p>Completed: 22/01/2024</p>
-            <p>Score: 80%</p>
-            <p>250 points</p>
-        </div>
-        <div class="test-contents">
-            <h3>Test Name</h3>
-            <p>Completed: 22/01/2024</p>
-            <p>Score: 80%</p>
-            <p>250 points</p>
-        </div>
-        <div class="test-contents">
-            <h3>Test Name</h3>
-            <p>Completed: 22/01/2024</p>
-            <p>Score: 80%</p>
-            <p>250 points</p>
-        </div>
-        <div class="test-contents">
-            <h3>Test Name</h3>
-            <p>Completed: 22/01/2024</p>
-            <p>Score: 80%</p>
-            <p>250 points</p>
-        </div>
-        <div class="test-contents">
-            <h3>Test Name</h3>
-            <p>Completed: 22/01/2024</p>
-            <p>Score: 80%</p>
-            <p>250 points</p>
-        </div>
-        </div>
+            <div class="test-box">
+            <a href="testing-page.php" class="test-link">
+            <div class="test-contents">
+                <h3>Test Name</h3>
+                <p>Completed: 22/01/2024</p>
+                <p>Score: 80%</p>
+                <p>250 points</p>
+            </div>
+            <div class="test-contents">
+                <h3>Test Name</h3>
+                <p>Completed: 22/01/2024</p>
+                <p>Score: 80%</p>
+                <p>250 points</p>
+            </div>
+            <div class="test-contents">
+                <h3>Test Name</h3>
+                <p>Completed: 22/01/2024</p>
+                <p>Score: 80%</p>
+                <p>250 points</p>
+            </div>
+            <div class="test-contents">
+                <h3>Test Name</h3>
+                <p>Completed: 22/01/2024</p>
+                <p>Score: 80%</p>
+                <p>250 points</p>
+            </div>
+            <div class="test-contents">
+                <h3>Test Name</h3>
+                <p>Completed: 22/01/2024</p>
+                <p>Score: 80%</p>
+                <p>250 points</p>
+            </div>
+            </a>
+            </div>
+        
     </section>
+    <footer></footer>
 </body>
 </html>
