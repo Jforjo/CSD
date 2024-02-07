@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
     <title>Dashboard</title>
 </head>
@@ -19,32 +20,32 @@
     <section>
         <h2 class="section-title">Tests to complete</h2>
             <div class="test-box">
-            <a href="testing-page.php" class="test-link">
             <div class="test-contents">
                 <h3>Test Name</h3>
                 <p>Test Subject</P>
-            </div>
-            <div class="test-contents">
-                <h3>Test Name</h3>
-                <p>Test Subject</P>
+                <a href="testing-page.php" class="btn btn-primary">Start Test</a>
             </div>
             <div class="test-contents">
                 <h3>Test Name</h3>
                 <p>Test Subject</P>
+                <a href="testing-page.php" class="btn btn-primary">Start Test</a>
             </div>
             <div class="test-contents">
                 <h3>Test Name</h3>
                 <p>Test Subject</P>
+                <a href="testing-page.php" class="btn btn-primary">Start Test</a>
             </div>
-            </a>
+            <div class="test-contents">
+                <h3>Test Name</h3>
+                <p>Test Subject</P>
+                <a href="testing-page.php" class="btn btn-primary">Start Test</a>
             </div>
-        </a>
+            </div>
         
     </section>
     <section>
         <h2 class="section-title">Completed Tests</h2>
             <div class="test-box">
-            <a href="testing-page.php" class="test-link">
             <div class="test-contents">
                 <h3>Test Name</h3>
                 <p>Completed: 22/01/2024</p>
@@ -75,7 +76,6 @@
                 <p>Score: 80%</p>
                 <p>250 points</p>
             </div>
-            </a>
             </div>
         
     </section>
