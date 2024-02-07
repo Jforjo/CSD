@@ -74,6 +74,9 @@
 
     .test-contents
     {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
         border: 1px solid white;
         padding: 10px;
         width: 300px;
@@ -82,9 +85,19 @@
         font-size: 20px;
     }
 
-    .test-contents:hover, .test-contents:hover p, .test-contents:hover h3
+    .test-contents .btn-primary 
     {
-        background-color: #666666
+        align-self: flex-end;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .test-contents:hover
+    {
+        transform: scale(1.05);
+        transition: transform 0.1s ease;
     }
 
     .btn-primary {
@@ -93,6 +106,6 @@
     }
     
     .btn-primary:hover {
-        background-color: darkred;
-        border-color: darkred;
+        background-color: #5e0000;
+        border-color: #5e0000;
     }
