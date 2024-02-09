@@ -18,15 +18,19 @@
         </nav>
     </header>
     <section class="welcome-section">
-        <h2 class="section-title">Welcome, Chris</h2>
+        <h2 class="welcome-message">Welcome, Chris</h2>
     </section>
+    <!-- Main Content of Page (Test Boxes) -->
+    <div class="main-content">
     <section>
         <h2 class="section-title">Tests to complete</h2>
+        <!-- Area of page that contains the test boxes -->
         <div class="test-section">
             <div class="test-box">
             <div class="test-contents">
-                <h3>Test Name</h3>
-                <p>Test Subject</P>
+                <h3>Test Subject</h3>
+                <p>Test Name</p>
+                <p>10 Question</p>
                 <a href="testing-page.php" class="btn btn-primary">Start Test</a>
             </div>
             </div>
@@ -34,6 +38,7 @@
             <div class="test-contents">
                 <h3>Test Name</h3>
                 <p>Test Subject</P>
+                <p>10 Question</p>
                 <a href="testing-page.php" class="btn btn-primary">Start Test</a>
             </div>
             </div>
@@ -98,8 +103,8 @@
             </div>
             </div>
         </div>
-        
     </section>
+    </div>
     <footer></footer>
 </body>
 </html>
