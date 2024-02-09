@@ -17,6 +17,9 @@
             </ul>
         </nav>
     </header>
+    <section class="welcome-section">
+        <h2 class="section-title">Welcome, Chris</h2>
+    </section>
     <section>
         <h2 class="section-title">Tests to complete</h2>
             <div class="test-box">

@@ -10,6 +10,13 @@
     body
     {
         background-color: #181818;
+        margin: 0 auto;
+        width: 80%;
+    }
+
+    nav
+    {
+        background-color: #282828;
     }
 
     nav ul 
@@ -41,18 +48,19 @@
         margin-top: 50px;
     }
 
-    a.test-link
+    .welcome-section
     {
-        text-decoration: none;
+        background-color: #282828;
     }
 
     .test-box
     {
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
         flex-wrap: wrap;
         margin-top: 50px;
+        margin-left: 80px;
         text-decoration: none;
     }
 
@@ -83,6 +91,7 @@
         height: 250px;
         margin: 10px;
         font-size: 20px;
+        box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.7);
     }
 
     .test-contents .btn-primary 
@@ -98,6 +107,7 @@
     {
         transform: scale(1.05);
         transition: transform 0.1s ease;
+        box-shadow: 3px 3px 5px rgba(128, 128, 128, 0.3);
     }
 
     .btn-primary {
