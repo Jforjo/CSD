@@ -16,7 +16,7 @@
 
     nav
     {
-        background-color: #383838;
+        background-color: #484848;
     }
 
     nav ul 
@@ -47,13 +47,14 @@
     {
         text-align: center;
         margin-top: 50px;
+        background: linear-gradient(#181818, #383838);
     }
 
     /* Test Selection Page */
 
     .welcome-section
     {
-        background: linear-gradient(#383838, #181818);
+        background: linear-gradient(#484848, #181818);
         margin-top: 0;
     }
 
@@ -140,6 +141,19 @@
         width: 100%;
     }
 
+    .test-box h5
+    {
+        width: 100%;
+        margin-bottom: 50px;
+        color: #cccccc;
+    }
+
+    .test-box h6
+    {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
     .test-contents
     {
         display: flex;
@@ -164,7 +178,7 @@
     {
         transform: scale(1.05);
         transition: transform 0.1s ease;
-        box-shadow: 3px 3px 5px rgba(128, 128, 128, 0.3);
+        box-shadow: -3px -3px 10px rgba(128, 128, 128, 0.5);
     }
 
     .btn-primary {

@@ -22,6 +22,7 @@
     </section>
     <!-- Main Content of Page (Test Boxes) -->
     <div class="main-content">
+    <!-- Tests to complete section -->
     <section>
         <h2 class="section-title">Tests to complete</h2>
         <!-- Area of page that contains the test boxes -->
@@ -29,30 +30,32 @@
             <div class="test-box">
             <div class="test-contents">
                 <h3>Test Subject</h3>
-                <p>Test Name</p>
-                <p>10 Question</p>
+                <h5>Test Name</h5>
+                <h6>10 Questions</h6>
                 <a href="testing-page.php" class="btn btn-primary">Start Test</a>
             </div>
             </div>
             <div class="test-box">
             <div class="test-contents">
-                <h3>Test Name</h3>
-                <p>Test Subject</P>
-                <p>10 Question</p>
+                <h3>Test Subject</h3>
+                <h5>Test Name</h5>
+                <h6>10 Questions</h6>
                 <a href="testing-page.php" class="btn btn-primary">Start Test</a>
             </div>
             </div>
             <div class="test-box">
             <div class="test-contents">
-                <h3>Test Name</h3>
-                <p>Test Subject</P>
+                <h3>Test Subject</h3>
+                <h5>Test Name</h5>
+                <h6>10 Questions</h6>
                 <a href="testing-page.php" class="btn btn-primary">Start Test</a>
             </div>
             </div>
             <div class="test-box">
             <div class="test-contents">
-                <h3>Test Name</h3>
-                <p>Test Subject</P>
+                <h3>Test Subject</h3>
+                <h5>Test Name</h5>
+                <h6>10 Questions</h6>
                 <a href="testing-page.php" class="btn btn-primary">Start Test</a>
             </div>
             </div>
@@ -60,51 +63,58 @@
         
     </section>
     <section>
+        <!-- Completed tests section -->
         <h2 class="section-title">Completed Tests</h2>
+        <!-- Area of page that contains the test boxes -->
         <div class="test-section">
             <div class="test-box">
             <div class="test-contents">
-                <h3>Test Name</h3>
-                <p>Completed: 22/01/2024</p>
-                <p>Score: 80%</p>
-                <p>250 points</p>
+                <h3>Test Subject</h3>
+                <h5>Test Name</h5>
+                <h6>Completed: 22/01/2024</h6>
+                <h6>Score: 80%</h6>
+                <h6>250 points</h6>
             </div>
             </div>
             <div class="test-box">
             <div class="test-contents">
-                <h3>Test Name</h3>
-                <p>Completed: 22/01/2024</p>
-                <p>Score: 80%</p>
-                <p>250 points</p>
+                <h3>Test Subject</h3>
+                <h5>Test Name</h5>
+                <h6>Completed: 22/01/2024</h6>
+                <h6>Score: 80%</h6>
+                <h6>250 points</h6>
             </div>
             </div>
             <div class="test-box">
             <div class="test-contents">
-                <h3>Test Name</h3>
-                <p>Completed: 22/01/2024</p>
-                <p>Score: 80%</p>
-                <p>250 points</p>
+                <h3>Test Subject</h3>
+                <h5>Test Name</h5>
+                <h6>Completed: 22/01/2024</h6>
+                <h6>Score: 80%</h6>
+                <h6>250 points</h6>
             </div>
             </div>
             <div class="test-box">
             <div class="test-contents">
-                <h3>Test Name</h3>
-                <p>Completed: 22/01/2024</p>
-                <p>Score: 80%</p>
-                <p>250 points</p>
+                <h3>Test Subject</h3>
+                <h5>Test Name</h5>
+                <h6>Completed: 22/01/2024</h6>
+                <h6>Score: 80%</h6>
+                <h6>250 points</h6>
             </div>
             </div>
             <div class="test-box">
             <div class="test-contents">
-                <h3>Test Name</h3>
-                <p>Completed: 22/01/2024</p>
-                <p>Score: 80%</p>
-                <p>250 points</p>
+                <h3>Test Subject</h3>
+                <h5>Test Name</h5>
+                <h6>Completed: 22/01/2024</h6>
+                <h6>Score: 80%</h6>
+                <h6>250 points</h6>
             </div>
             </div>
         </div>
     </section>
     </div>
-    <footer></footer>
+    <footer>Footer</footer>
 </body>
 </html>
