@@ -1,0 +1,258 @@
+*
+    {
+        font-family: Arial, Helvetica, sans-serif;
+        color: white;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body
+    {
+        background-color: #181818;
+        margin: 0 auto;
+        
+    }
+
+    nav
+    {
+        background-color: #484848;
+    }
+
+    nav ul 
+    {
+        display: flex;
+        list-style-type: none;
+        justify-content: center;
+        margin-bottom: 0;
+    }
+
+    nav ul li
+    {
+        margin: 0 20px;
+    }
+
+    nav ul li a
+    {
+        text-decoration: none;
+        color: white;
+    }
+
+    nav ul li a:hover
+    {
+        text-decoration: underline;
+    }
+
+    footer
+    {
+        text-align: center;
+        margin-top: 50px;
+        background: linear-gradient(#181818, #383838);
+    }
+
+    /* Test Selection Page */
+
+    .welcome-section
+    {
+        background: linear-gradient(#484848, #181818);
+        margin-top: 0;
+    }
+
+    .welcome-message
+    {
+        height: 150px;
+        font-size: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding-left: 10px;
+        width: 80%;
+        margin: 0 auto;
+    }
+
+    .main-content
+    {
+        width: 80%;
+        margin: 0 auto;
+    }
+
+    .section-title
+    {
+        margin-top: 50px;
+        padding-left: 2%;
+    }
+
+    .test-section
+    {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-top: 50px;
+        margin-left: 60px;
+        text-decoration: none;
+    }
+
+    .test-box
+    {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        border: 1px solid #eeeeee;
+        background-color: #282828;
+        flex-wrap: wrap;
+        width: 300px;
+        height: 250px;
+        margin: 10px;
+        margin-top: 30px;
+        text-decoration: none;
+        box-shadow: 5px 5px 15px rgba(32,32,32, 0.7);
+        box-shadow: inset 0 0 10px #111111;
+        border-radius: 10px;
+    }
+
+    @media screen and (max-width: 1600px) 
+    {
+        .test-box 
+        {
+            width: 230px;
+            height: 250px;
+        }
+
+        .test-section
+        {
+            margin-left: 30px;
+        }
+    }
+
+    .test-box a
+    {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: start;
+        width: 80%;
+        margin: 0 auto;
+        
+    }
+
+    .test-box h3
+    {
+        border-bottom: 1px solid white;
+        width: 100%;
+    }
+
+    .test-box h5
+    {
+        width: 100%;
+        margin-bottom: 50px;
+        color: #cccccc;
+    }
+
+    .test-box h6
+    {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .test-contents
+    {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 10px;
+        width: 300px;
+        height: 250px;
+        font-size: 20px;
+    }
+
+    .test-contents .btn-primary 
+    {
+        align-self: flex-end;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .test-box:hover
+    {
+        transform: scale(1.05);
+        transition: transform 0.1s ease;
+        box-shadow: -3px -3px 10px rgba(128, 128, 128, 0.5);
+    }
+
+    .btn-primary {
+        background-color: darkred;
+        border-color: darkred;
+    }
+    
+    .btn-primary:hover {
+        background-color: #5e0000;
+        border-color: #5e0000;
+    }
+
+    /* Testing Page */
+    .test-info
+    {
+        margin: 30px;
+        font-size: 20px;
+    }
+
+    .question
+     {
+        text-align: center;
+        margin-bottom: 20px;
+        width: 50%;
+        margin: 0 auto;
+        margin-top: 90px;
+        font-size: 28px;
+    }
+
+    .question-number
+     {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 20px;
+    }
+
+    .answers
+    {
+        position: absolute;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+        width: 75%;
+        height: 20%;
+        bottom: 25%;
+        left: 50%;
+        transform: translateX(-50%);
+        margin: 5px auto;
+        
+    }
+    .answer
+    {
+        border: 1px solid white;
+        padding: 10px;
+        text-align: center;
+        font-size: 24px;
+    }
+    .answer:hover
+    {
+        background-color: #666666;
+    }
+    .progress-bar
+    {
+        position: absolute;
+        width: 50%;
+        height: 10px;
+        left: 25%;
+        bottom: 52%;
+        background-color: #666666;
+        border: 1px solid white;
+    }
+
+    .test-info-container
+    {
+        background: linear-gradient(#484848, #181818);
+        margin-top: 0;
+    }
