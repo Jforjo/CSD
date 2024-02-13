@@ -40,8 +40,5 @@
         <div class="answer">Answer 3</div>
         <div class="answer">Answer 4</div>
     </div>
-    
-    
-    
 </body>
 </html>

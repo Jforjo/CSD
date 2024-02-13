@@ -220,7 +220,7 @@
         max-height: 128px;
         min-height: 128px;
         margin: 0 auto;
-        margin-top: 10px;
+        margin-top: 50px;
         font-size: 28px;
     }
 
@@ -240,7 +240,7 @@
         gap: 25px;
         width: 75%;
         height: 20%;
-        bottom: 10%;
+        bottom: 20%;
         left: 50%;
         transform: translateX(-50%);
         margin: 5px auto;
@@ -263,6 +263,32 @@
         width: 50%;
         height: 10px;
         left: 25%;
+        bottom: 50%;
         background-color: #666666;
         border: 1px solid white;
+    }
+
+    @media screen and (max-width: 1600px)
+    {
+
+        .question
+        {
+            margin-top: 5px;
+        }
+
+        .answers
+        {
+            bottom: 10%;
+        }
+
+        .answer:hover
+        {
+            background-color: #666666;
+        }
+
+        .progress-bar
+        {
+            bottom: 40%;
+        }
+
     }
