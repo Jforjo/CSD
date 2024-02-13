@@ -210,11 +210,17 @@
 
     .question
      {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
         text-align: center;
         margin-bottom: 20px;
-        width: 50%;
+        max-width: 900px;
+        min-width: 900px;
+        max-height: 128px;
+        min-height: 128px;
         margin: 0 auto;
-        margin-top: 25px;
+        margin-top: 10px;
         font-size: 28px;
     }
 
@@ -223,6 +229,7 @@
         text-align: center;
         margin-bottom: 20px;
         font-size: 20px;
+        padding-top: 10px;
     }
 
     .answers
@@ -256,7 +263,6 @@
         width: 50%;
         height: 10px;
         left: 25%;
-        bottom: 35%;
         background-color: #666666;
         border: 1px solid white;
     }
