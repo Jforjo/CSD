@@ -16,10 +16,10 @@
             </ul>
         </nav>
     </header>
-    <div class="test-info-container">
+    <div class="test-info-section">
     <div class="test-info">
-        <p>Subject</p>
-        <p>Test Name</p>
+        <h1>Subject</h1>
+        <h2>Test Name</h2>
     </div>
     </div>
     <div class="question">
