@@ -203,9 +203,9 @@
     {
         height: 150px;
         padding-left: 10px;
+        padding-top: 50px;
         width: 80%;
         margin: 0 auto;
-        padding: 50px;
     }
 
     .question
@@ -234,20 +234,19 @@
 
     .answers
     {
-        position: absolute;
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 25px;
         width: 75%;
         height: 20%;
-        bottom: 20%;
-        left: 50%;
-        transform: translateX(-50%);
-        margin: 5px auto;
-        
+        margin: 5px auto;   
+        margin-top: 70px; 
     }
     .answer
     {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         border: 1px solid white;
         padding: 10px;
         text-align: center;
@@ -259,13 +258,11 @@
     }
     .progress-bar
     {
-        position: absolute;
         width: 50%;
         height: 10px;
-        left: 25%;
-        bottom: 50%;
         background-color: #666666;
         border: 1px solid white;
+        margin: 0 auto;
     }
 
     @media screen and (max-width: 1600px)
@@ -279,6 +276,7 @@
         .answers
         {
             bottom: 10%;
+            
         }
 
         .answer:hover
