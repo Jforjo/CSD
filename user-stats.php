@@ -17,6 +17,9 @@
             </ul>
         </nav>
     </header>
+    <section class="welcome-section">
+        <h2 class="welcome-message">Stats for Chris</h2>
+    </section>
     <div id="chart-container">
 
     </div>
