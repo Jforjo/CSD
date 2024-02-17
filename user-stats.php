@@ -5,65 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Stats</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-    <style>
-    body
-    {
-        background-color: #181818;
-    }
-    *
-    {
-        font-family: Arial, Helvetica, sans-serif;
-        color: white;
-        background-color: #181818;
-    }
-    
-    nav ul 
-    {
-        display: flex;
-        list-style-type: none;
-        justify-content: center;
-    }
-
-    nav ul li
-    {
-        margin: 0 20px;
-    }
-
-    #chart-container
-    {
-        width: 800px;
-        height: 400px;
-        margin: 0 auto;
-        background-color: #555555;
-        margin-top: 60px;
-        
-    }
-
-    .user-scores
-    {
-        width: 400px;
-        margin: 0 auto;
-        text-align: center;
-    }
-
-    .past-tests
-    {
-        padding: 10px;
-        text-align: center;
-        background-color: #181818;
-    }
-
-    .tests
-    {
-        border: 1px solid white;
-        padding: 10px;
-        margin: 10px;
-        width: 80%;
-        height: 50px;
-        margin: 10px auto;
-        font-size: 20px;
-    }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
