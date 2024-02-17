@@ -24,8 +24,8 @@
 
     </div>
     <div class="user-scores">
-        <p>Total Points: 37</p>
-        <p>Average Score: 13.5</p>
+        <p>Total Points: 100</p>
+        <p>Average Score: 60%</p>
     </div>
     <div class="col-md-6 offset-md-3">
         <div class="past-tests">

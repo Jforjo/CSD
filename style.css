@@ -314,6 +314,10 @@
         width: 400px;
         margin: 0 auto;
         text-align: center;
+        font-size: 28px;
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
     }
 
     .past-tests
@@ -328,6 +332,7 @@
     {
         border: 1px solid white;
         margin-top: 20px;
+        box-shadow: 5px 5px 15px rgba(64, 64, 64, 0.7);
     }
 
     .table th
