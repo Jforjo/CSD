@@ -11,14 +11,14 @@
     <nav>
         <i class="glow"></i>
         <div class="top">
-            <span>
+            <a>
                 Qu<i>?</i>z
-            </span>
+            </a>
         </div>
         <ul>
             <i class="indicator" style="--pos:0;"></i>
             <li class="active">
-                <a data-link="admin/dashboard.html">
+                <a data-link="admin/dashboard">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="nc-int-icon-state-b">
                         <g stroke-linecap="square" transform="translate(0.5 0.5)" stroke-miterlimit="10" fill="none" stroke="currentColor" stroke-linejoin="miter" class="nc-icon-wrapper">
                             <g class="nc-int-icon js-nc-int-icon">
@@ -44,7 +44,7 @@
                 </a>
             </li>
             <li>
-                <a data-link="admin/student-management.html">
+                <a data-link="admin/student-management">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
                         <g stroke-linecap="square" transform="translate(0.5 0.5)" fill="none" stroke="currentColor" stroke-linejoin="miter" class="nc-icon-wrapper" stroke-miterlimit="10">
                             <g class="nc-int-icon js-nc-int-icon">
@@ -66,7 +66,7 @@
                 </a>
             </li>
             <li>
-                <a data-link="admin/quiz-management.html">
+                <a data-link="admin/quiz-management">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
                         <g stroke-linecap="square" transform="translate(0.5 0.5)" fill="none" stroke="currentColor" stroke-linejoin="miter" class="nc-icon-wrapper" stroke-miterlimit="10">
                             <g class="nc-int-icon js-nc-int-icon">

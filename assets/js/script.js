@@ -2,9 +2,9 @@
     "use strict";
 
     window.onload = (e) => {
-        LinkHandler('admin/dashboard.html', 'Dashboard', {
-            'admin': 'admin/dashboard.html',
-            'dashboard': 'admin/dashboard.html'
+        LinkHandler('admin/dashboard', 'Dashboard', {
+            'admin': 'admin/dashboard',
+            'dashboard': 'admin/dashboard'
         });
     };
 
@@ -36,7 +36,7 @@
     
     function LinkHandler(link, title = null, breadcrumbs = null) {
         if (link == null) return;
-        fetch(`/pages/${link}`, {
+        fetch(`/${link}`, {
             // body: formData
         }).then(res => {
             if (res.status >= 200 && res.status < 300) {
