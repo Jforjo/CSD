@@ -17,6 +17,27 @@
             </ul>
         </nav>
     </header>
+    <?php require_once('php/connection.php'); ?>
+    <?php
+    try 
+    {
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $stmt = $conn->prepare("SELECT subject FROM subjects");
+    $stmt->execute();
+
+    $subjects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    catch(PDOException $e) 
+    {
+        echo "Error: " . $e->getMessage();
+    }
+    $conn = null;
+
+
+    $sql = "CALL GetSubjectName(:subjectID)";
+    ?>
     <section class="welcome-section">
         <h2 class="welcome-message">Welcome, Chris</h2>
     </section>
@@ -27,38 +48,19 @@
         <h2 class="section-title">Tests to complete</h2>
         <!-- Area of page that contains the test boxes -->
         <div class="test-section">
+        <?php foreach ($subjects as $subject): ?>
             <div class="test-box">
             <div class="test-contents">
-                <h3>Test Subject</h3>
+                <h3><?php echo $sql = "CALL GetSubjectName(:subjectID)";?></h3>
                 <h5>Test Name</h5>
                 <h6>10 Questions</h6>
                 <a href="testing-page.php" class="btn btn-primary">Start Test</a>
             </div>
+            <?php endforeach; ?>
             </div>
-            <div class="test-box">
-            <div class="test-contents">
-                <h3>Test Subject</h3>
-                <h5>Test Name</h5>
-                <h6>10 Questions</h6>
-                <a href="testing-page.php" class="btn btn-primary">Start Test</a>
-            </div>
-            </div>
-            <div class="test-box">
-            <div class="test-contents">
-                <h3>Test Subject</h3>
-                <h5>Test Name</h5>
-                <h6>10 Questions</h6>
-                <a href="testing-page.php" class="btn btn-primary">Start Test</a>
-            </div>
-            </div>
-            <div class="test-box">
-            <div class="test-contents">
-                <h3>Test Subject</h3>
-                <h5>Test Name</h5>
-                <h6>10 Questions</h6>
-                <a href="testing-page.php" class="btn btn-primary">Start Test</a>
-            </div>
-            </div>
+            <?php if (!$subjects) {
+            die('<h2>No tests found</h2>');} ?>
+
         </div>
         
     </section>
