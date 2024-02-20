@@ -32,7 +32,7 @@
     </div>
 
     <div class="progress-bar">
-        
+        <i></i>
     </div>
 
     <div class="answers">
