@@ -2,10 +2,10 @@
     "use strict";
 
     window.onload = (e) => {
-        LinkHandler('admin/dashboard', 'Dashboard', {
-            'admin': 'admin/dashboard',
-            'dashboard': 'admin/dashboard'
-        });
+        // LinkHandler('admin/dashboard', 'Dashboard', {
+        //     'admin': 'admin/dashboard',
+        //     'dashboard': 'admin/dashboard'
+        // });
     };
 
     const navList = document.querySelectorAll('nav ul li');
@@ -83,5 +83,17 @@
         console.log(link)
     }
     */
+
+
+    document.querySelectorAll('.input-switch').forEach(inputSwitch => {
+        if (inputSwitch.classList.contains('events-listening')) return;
+        const slider = inputSwitch.querySelector('.input-switch-slider');
+        inputSwitch.querySelectorAll('.input-switch-option label').forEach((switchOption, index) => {
+            switchOption.addEventListener('click', () => {
+                slider.style.left = `${100 / inputSwitch.style.getPropertyValue('--count') * index}%`;
+            });
+        });
+        inputSwitch.classList.add('events-listening');
+    });
 
 })();

@@ -22,4 +22,12 @@ function GetInactiveStudentCount() {
     return $data['count'];
 }
 
+function GetAllStudentsData() {
+    $sql = "CALL GetAllStudentsData();";
+    $conn = newConn();
+    $data = $conn->query($sql)->fetchAll();
+    $conn = null;
+    return $data;
+}
+
 ?>
