@@ -19,24 +19,19 @@
     </header>
     <?php require_once('php/connection.php'); ?>
     <?php
-    try 
-    {
-    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $dsn = DB_DSN;
+    $user = DB_USERNAME;
+    $pass = DB_PASSWORD;
 
-    $stmt = $conn->prepare("SELECT subject FROM subjects");
-    $stmt->execute();
-
-    $subjects = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-    catch(PDOException $e) 
-    {
-        echo "Error: " . $e->getMessage();
-    }
-    $conn = null;
-
-
-    $sql = "CALL GetSubjectName(:subjectID)";
+    $opt = [
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES   => false,
+    ];
+    $pdo = new PDO($dsn, $user, $pass, $opt);
+    
+    $sql = "SELECT name FROM subjects";
+    $stmt = $pdo->query($sql);
     ?>
     <section class="welcome-section">
         <h2 class="welcome-message">Welcome, Chris</h2>
@@ -48,19 +43,16 @@
         <h2 class="section-title">Tests to complete</h2>
         <!-- Area of page that contains the test boxes -->
         <div class="test-section">
-        <?php foreach ($subjects as $subject): ?>
+        <?php while ($row = $stmt->fetch()): ?>
             <div class="test-box">
             <div class="test-contents">
-                <h3><?php echo $sql = "CALL GetSubjectName(:subjectID)";?></h3>
+                <h3><?php echo htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8'); ?></h3>
                 <h5>Test Name</h5>
                 <h6>10 Questions</h6>
                 <a href="testing-page.php" class="btn btn-primary">Start Test</a>
             </div>
-            <?php endforeach; ?>
+            <?php endwhile; ?>
             </div>
-            <?php if (!$subjects) {
-            die('<h2>No tests found</h2>');} ?>
-
         </div>
         
     </section>
