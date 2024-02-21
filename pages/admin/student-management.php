@@ -122,6 +122,10 @@ $studentCount = count($students);
                 <input type="text" name="lastname" id="form-lastname">
             </div>
             <div class="form-input">
+                <label for="form-stdentID">Student ID<i aria-hidden="true">*</i></label>
+                <input type="text" name="stdentID" id="form-stdentID">
+            </div>
+            <div class="form-input">
                 <label for="form-email">Email<i aria-hidden="true">*</i></label>
                 <input type="email" name="email" id="form-email">
             </div>

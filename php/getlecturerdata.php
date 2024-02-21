@@ -12,7 +12,7 @@ if (!isset($_SESSION['userID'])) {
 }
 require_once('dbfuncs.php');
 // Checks if their session id is valid
-if (!CheckUserExists($_SESSION['userID'])) {
+if (!CheckUserIDExists($_SESSION['userID'])) {
     session_unset();
     session_destroy();
     die(json_encode(array(
@@ -38,7 +38,7 @@ if (!isset($_POST['userID'])) die(json_encode(array(
     "msg" => "Invalid POST User ID"
 )));
 // Checks if the passed userID belongs to a valid user
-if (!CheckUserExists($_POST['userID'])) die(json_encode(array(
+if (!CheckUserIDExists($_POST['userID'])) die(json_encode(array(
     "type" => "error",
     "msg" => "User ID does not exist"
 )));
