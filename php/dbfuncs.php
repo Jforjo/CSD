@@ -60,5 +60,15 @@ function GetStudentData($userID) {
     $conn = null;
     return $data;
 }
+function GetLecturerData($userID) {
+    $sql = "CALL GetLecturerData(:userID);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":userID", $userID, PDO::PARAM_STR);
+    $stmt->execute();
+    $data = $stmt->fetch();
+    $conn = null;
+    return $data;
+}
 
 ?>
