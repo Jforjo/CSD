@@ -2,10 +2,10 @@
     "use strict";
 
     window.onload = (e) => {
-        // LinkHandler('admin/dashboard', 'Dashboard', {
-        //     'admin': 'admin/dashboard',
-        //     'dashboard': 'admin/dashboard'
-        // });
+        LinkHandler('admin/dashboard', 'Dashboard', {
+            'admin': 'admin/dashboard',
+            'dashboard': 'admin/dashboard'
+        });
     };
 
     const navList = document.querySelectorAll('nav ul li');
@@ -48,6 +48,7 @@
             title != null && (document.getElementById('page-title').innerText = title);
             // breadcrumbs != null && Breadcrumbs(breadcrumbs);
             // history.pushState({}, "", '/' + link.split('.')[0]);
+            LoadPageEvents();
         }).catch(error => {
             if (error === null || error === '') error = "An Unknown Error Occurred";
             console.error("error", error);
@@ -85,15 +86,60 @@
     */
 
 
-    document.querySelectorAll('.input-switch').forEach(inputSwitch => {
-        if (inputSwitch.classList.contains('events-listening')) return;
-        const slider = inputSwitch.querySelector('.input-switch-slider');
-        inputSwitch.querySelectorAll('.input-switch-option label').forEach((switchOption, index) => {
-            switchOption.addEventListener('click', () => {
-                slider.style.left = `${100 / inputSwitch.style.getPropertyValue('--count') * index}%`;
-            });
+    document.querySelectorAll('#user-management .table tr')?.forEach(tableRow => {
+        tableRow.querySelector('.icons .table-edit-btn')?.addEventListener('click', () => {
+            EditUser(tableRow?.dataset?.userid);
         });
-        inputSwitch.classList.add('events-listening');
-    });
+        tableRow.querySelector('.icons .table-delete-btn')?.addEventListener('click', () => {
+            DeleteUser(tableRow?.dataset?.userid);
+        });
+    })
+
+    function LoadPageEvents() {
+        document.querySelectorAll('.input-switch')?.forEach(inputSwitch => {
+            if (inputSwitch.classList.contains('events-listening')) return;
+            const slider = inputSwitch.querySelector('.input-switch-slider');
+            inputSwitch.querySelectorAll('.input-switch-option label')?.forEach((switchOption, index) => {
+                switchOption.addEventListener('change', () => {
+                    if (!switchOption?.checked == false) return;
+                    slider.style.left = `${100 / inputSwitch.style.getPropertyValue('--count') * index}%`;
+                });
+            });
+            inputSwitch.classList.add('events-listening');
+        });
+    }
+
+    function EditUser(userid) {
+        if (userid == null) return;
+    }
+    function DeleteUser(userid) {
+        if (userid == null) return;
+    }
+
+    function DisplayModel(id, isModal = true, data = []) {
+        if (id == null) return;
+        const modal = document.getElementById(id);
+        if (modal.tagName !== "DIALOG") return;
+        // Clear form. (should already be cleared anyway)
+        modal.querySelector('form')?.reset();
+        // The default [] is still an array
+        if (!Array.isArray(data)) return;
+        // Loop through data that is already in each input
+        data.forEach(row => {
+            const input = document.getElementById(row?.id);
+            if (input == null) return;
+            // Radio/Checkbox specific
+            if (input.type === "radio" || input.type === "checkbox") {
+                if (row?.value === true) input.checked = true;
+                else input.checked = false;
+            } else {
+                // If it doesn't have a value, just put an empty string
+                input.value = row?.value ?? '';
+            }
+        });
+
+        if (isModal) modal.showModal();
+        else modal.show();
+    }
 
 })();

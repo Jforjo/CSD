@@ -1,5 +1,26 @@
 <?php require_once('connection.php');
 
+function CheckUserExists($userID) {
+    $sql = "CALL CheckUserIDExists(:userID);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":userID", $userID, PDO::PARAM_STR);
+    $stmt->execute();
+    $data = $stmt->fetch();
+    $conn = null;
+    return $data;
+}
+function GetUserRole($userID) {
+    $sql = "CALL GetUserRole();";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":userID", $userID, PDO::PARAM_STR);
+    $stmt->execute();
+    $data = $stmt->fetch();
+    $conn = null;
+    return $data['role'];
+}
+
 function GetActiveStudentCount() {
     $sql = "CALL GetActiveStudentCount();";
     $conn = newConn();
@@ -26,6 +47,16 @@ function GetAllStudentsData() {
     $sql = "CALL GetAllStudentsData();";
     $conn = newConn();
     $data = $conn->query($sql)->fetchAll();
+    $conn = null;
+    return $data;
+}
+function GetStudentData($userID) {
+    $sql = "CALL GetStudentData(:userID);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":userID", $userID, PDO::PARAM_STR);
+    $stmt->execute();
+    $data = $stmt->fetch();
     $conn = null;
     return $data;
 }
