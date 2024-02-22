@@ -115,5 +115,16 @@
     <main>
         
     </main>
+    <dialog id="popup" aria-modal="true" aria-labelledby="popup-title" aria-describedby="popup-msg">
+        <form method="dialog">
+            <header>
+                <h3 id="popup-title">Error</h3>
+                <button onclick="this.closest('dialog').close('close');"><i></i></button>
+            </header>
+            <article>
+                <p id="popup-msg">This is a temp message</p>
+            </article>
+        </form>
+    </dialog>
 </body>
 </html>

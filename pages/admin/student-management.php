@@ -12,7 +12,7 @@ lastLogin
 */
 $studentCount = count($students);
 ?>
-<section id="user-management">
+<section class="user-management" id="student-management">
     <div class="table-header">
         <div class="table-perpage">
             Show
@@ -113,6 +113,7 @@ $studentCount = count($students);
 <dialog id="dialog-edit-user" aria-modal="true">
     <form method="dialog">
         <fieldset>
+            <span class="error-msg"></span>
             <div class="form-input">
                 <label for="form-firstname">Firstname<i aria-hidden="true">*</i></label>
                 <input type="text" name="firstname" id="form-firstname">
