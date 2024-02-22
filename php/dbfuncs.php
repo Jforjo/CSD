@@ -147,4 +147,14 @@ function EditStudent($userID, $firstname, $lastname, $studentID, $email, $state,
         && EditStudentID($userID, $studentID);
 }
 
+function DeleteUser($userID) {
+    $sql = "CALL DeleteUser(:userID);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":userID", $userID, PDO::PARAM_STR);
+    $success = $stmt->execute();
+    $conn = null;
+    return $success;
+}
+
 ?>
