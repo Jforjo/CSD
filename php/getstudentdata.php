@@ -58,6 +58,9 @@ if ($studentData === false) die(json_encode(array(
     "msg" => "An unknown error occurred while retrieving the user's data"
 )));
 // Return the user's data
-exit(json_encode($studentData));
+exit(json_encode(array(
+    "type" => "data",
+    "data" => $studentData
+)));
 
 ?>
