@@ -1,5 +1,25 @@
-<?php
+<?php session_start();
+// Checks if the user is logged in
+if (!isset($_SESSION['userID'])) die(json_encode(array(
+        "type" => "refresh"
+)));
 require_once(__DIR__ . '/../../php/dbfuncs.php');
+// Checks if their session id is valid
+if (!CheckUserIDExists($_SESSION['userID'])) {
+    session_unset();
+    session_destroy();
+    die(json_encode(array(
+        "type" => "refresh"
+    )));
+}
+// Checks if they have the correct permissions
+$role = GetUserRole($_SESSION['userID']);
+if (!($role == "lecturer" || $role == "admin")) {
+    die(json_encode(array(
+        "type" => "refresh"
+    )));
+}
+
 $activeStudentCount = GetActiveStudentCount();
 $pendingUserCount = GetPendingUserCount();
 $inactiveStudentCount = GetInactiveStudentCount();

@@ -1,5 +1,25 @@
-<?php
+<?php session_start();
+// Checks if the user is logged in
+if (!isset($_SESSION['userID'])) die(json_encode(array(
+        "type" => "refresh"
+)));
 require_once(__DIR__ . '/../../php/dbfuncs.php');
+// Checks if their session id is valid
+if (!CheckUserIDExists($_SESSION['userID'])) {
+    session_unset();
+    session_destroy();
+    die(json_encode(array(
+        "type" => "refresh"
+    )));
+}
+// Checks if they have the correct permissions
+$role = GetUserRole($_SESSION['userID']);
+if (!($role == "lecturer" || $role == "admin")) {
+    die(json_encode(array(
+        "type" => "refresh"
+    )));
+}
+
 $students = GetAllStudentsData();
 /*
 userID
@@ -17,7 +37,7 @@ $studentCount = count($students);
         <div class="table-perpage">
             Show
             <select id="user-management-perpage">
-                <option value="5">5</option>
+                <option value="5" selected>5</option>
                 <option value="10">10</option>
                 <option value="15">15</option>
                 <option value="20">20</option>
@@ -41,7 +61,7 @@ $studentCount = count($students);
                     <th>Manage</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody style="--shown-rows:<?php echo min($studentCount, 5); ?>">
                 <?php foreach($students as $student) { ?>
                 <tr data-userid="<?php echo $student['userID']; ?>">
                     <td>

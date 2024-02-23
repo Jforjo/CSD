@@ -44,6 +44,11 @@
             }
             throw new Error(res.statusText);
         }).then(data => {
+            if (data?.type === "refresh") {
+                window.location.reload();
+                // Shouldn't need the return
+                return;
+            }
             document.body.querySelector('main').innerHTML = data;
             title != null && (document.getElementById('page-title').innerText = title);
             // breadcrumbs != null && Breadcrumbs(breadcrumbs);

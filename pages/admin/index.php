@@ -1,3 +1,19 @@
+<?php session_start();
+// Checks if the user is logged in
+if (!isset($_SESSION['userID'])) header("Location: /");
+require_once(__DIR__ . '/../../php/dbfuncs.php');
+// Checks if their session id is valid
+if (!CheckUserIDExists($_SESSION['userID'])) {
+    session_unset();
+    session_destroy();
+    header("Location: /");
+}
+// Checks if they have the correct permissions
+$role = GetUserRole($_SESSION['userID']);
+if (!($role == "lecturer" || $role == "admin")) {
+    header("Location: /");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
