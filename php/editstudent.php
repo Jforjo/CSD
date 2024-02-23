@@ -70,10 +70,10 @@ if (!isset($_POST['email'])) die(json_encode(array(
     "type" => "error",
     "msg" => "Invalid POST email"
 )));
-// Checks if the 'status' value was passed to the file
-if (!isset($_POST['status'])) die(json_encode(array(
+// Checks if the 'state' value was passed to the file
+if (!isset($_POST['state'])) die(json_encode(array(
     "type" => "error",
-    "msg" => "Invalid POST status"
+    "msg" => "Invalid POST state"
 )));
 
 // Checks if the passed studentID belongs to a valid student
@@ -110,12 +110,12 @@ if (ctype_space($email) || $email == '') die(json_encode(array(
     "input" => "email",
     "msg" => "Email cannot be NULL or empty"
 )));
-// Checks if the 'status' is NULL or empty
-$status = $_POST['status'];
-if (ctype_space($status) || $status == '') die(json_encode(array(
+// Checks if the 'state' is NULL or empty
+$state = $_POST['state'];
+if (ctype_space($state) || $state == '') die(json_encode(array(
     "type" => "error",
-    "input" => "status",
-    "msg" => "Status cannot be NULL or empty"
+    "input" => "state",
+    "msg" => "state cannot be NULL or empty"
 )));
 
 // Checks the lenth of the `firstname` string
@@ -161,11 +161,11 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) die(json_encode(array(
     "input" => "email",
     "msg" => "Invalid email"
 )));
-// Checks if the 'status' is valid
-if ($status != "active" && $status != "inactive" && $status != "pending") die(json_encode(array(
+// Checks if the 'state' is valid
+if ($state != "active" && $state != "inactive" && $state != "pending") die(json_encode(array(
     "type" => "error",
-    "input" => "status",
-    "msg" => "Invalid status"
+    "input" => "state",
+    "msg" => "Invalid state"
 )));
 
 $password = null;

@@ -57,7 +57,7 @@ $studentCount = count($students);
                 <tr>
                     <th>Name</th>
                     <th>ID</th>
-                    <th>Status</th>
+                    <th>State</th>
                     <th>Manage</th>
                 </tr>
             </thead>
@@ -155,20 +155,20 @@ $studentCount = count($students);
                 <input type="password" name="password" id="form-password">
             </div>
             <div class="form-input">
-                <label for="form-email">Status<i aria-hidden="true">*</i></label>
+                <label>State<i aria-hidden="true">*</i></label>
                 <div class="input-switch" style="--count:3;">
                     <div>
                         <div class="input-switch-option">
-                            <input type="radio" name="status" id="form-status-1" value="inactive">
-                            <label for="form-status-1">Inactive</label>
+                            <input type="radio" name="state" id="form-state-1" value="inactive">
+                            <label for="form-state-1">Inactive</label>
                         </div>
                         <div class="input-switch-option">
-                            <input type="radio" name="status" id="form-status-2" value="pending">
-                            <label for="form-status-2">Pending</label>
+                            <input type="radio" name="state" id="form-state-2" value="pending">
+                            <label for="form-state-2">Pending</label>
                         </div>
                         <div class="input-switch-option">
-                            <input type="radio" name="status" id="form-status-3" value="active">
-                            <label for="form-status-3">Active</label>
+                            <input type="radio" name="state" id="form-state-3" value="active">
+                            <label for="form-state-3">Active</label>
                         </div>
                         <span class="input-switch-slider"></span>
                     </div>

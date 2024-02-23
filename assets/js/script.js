@@ -233,16 +233,16 @@
                 //     }
                 // });
                 // Gonna manually input all this bit for now
-                let statusID = "form-status-";
-                if (data?.data?.status = 'inactive') statusID + '1';
-                else if (data?.data?.status = 'pending') statusID + '2';
-                else if (data?.data?.status = 'active') statusID + '3';
+                let stateID = "form-state-";
+                if (data?.data?.state === 'inactive') stateID + '1';
+                else if (data?.data?.state === 'pending') stateID + '2';
+                else if (data?.data?.state === 'active') stateID + '3';
                 DisplayModel('dialog-edit-user', [
                     ['firstname', data?.data?.firstname],
                     ['lastname', data?.data?.lastname],
                     ['studentID', data?.data?.studentID],
                     ['email', data?.data?.email],
-                    [statusID, true],
+                    [stateID, true],
                 ], {
                     closeAll: true
                 });

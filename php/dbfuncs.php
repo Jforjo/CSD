@@ -1,17 +1,17 @@
 <?php require_once('connection.php');
 
 function CheckUserIDExists($userID) {
-    $sql = "CALL CheckUserIDExists(:userID);";
+    $sql = "SELECT CheckUserIDExists(:userID) AS 'exists';";
     $conn = newConn();
     $stmt = $conn->prepare($sql);
     $stmt->bindValue(":userID", $userID, PDO::PARAM_STR);
     $stmt->execute();
     $data = $stmt->fetch();
     $conn = null;
-    return $data;
+    return $data['exists'];
 }
 function CheckStudentIDExists($studentID) {
-    $sql = "CALL CheckUserIDExists(:studentID);";
+    $sql = "SELECT CheckUserIDExists(:studentID) AS 'exists';";
     $conn = newConn();
     $stmt = $conn->prepare($sql);
     $stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
@@ -21,7 +21,7 @@ function CheckStudentIDExists($studentID) {
     return $data;
 }
 function GetUserRole($userID) {
-    $sql = "CALL GetUserRole();";
+    $sql = "CALL GetUserRole(:userID);";
     $conn = newConn();
     $stmt = $conn->prepare($sql);
     $stmt->bindValue(":userID", $userID, PDO::PARAM_STR);
