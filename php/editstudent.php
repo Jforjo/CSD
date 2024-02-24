@@ -77,9 +77,9 @@ if (!isset($_POST['state'])) die(json_encode(array(
 )));
 
 // Checks if the passed studentID belongs to a valid student
-if (CheckStudentIDExists($_POST['userID'])) die(json_encode(array(
+if (!CheckStudentIDExists($_POST['userID'])) die(json_encode(array(
     "type" => "error",
-    "msg" => "A student with that ID already exists"
+    "msg" => "A student with that ID does not exists"
 )));
 
 // Checks if the 'firstname' is NULL or empty

@@ -91,6 +91,7 @@ $studentCount = GetStudentCount();
     <form method="dialog">
         <fieldset>
             <span class="error-msg"></span>
+            <input type="hidden" name="userID" id="form-userID">
             <div class="form-input">
                 <label for="form-firstname">Firstname<i aria-hidden="true">*</i></label>
                 <input type="text" name="firstname" id="form-firstname">
@@ -136,7 +137,7 @@ $studentCount = GetStudentCount();
         <footer>
             <menu>
                 <button autofocus type="reset" onclick="this.closest('dialog').close('cancel');">Cancel</button>
-                <button type="submit">Create</button>
+                <button type="submit">Edit</button>
             </menu>
         </footer>
     </form>

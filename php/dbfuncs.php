@@ -101,7 +101,7 @@ function GetLecturerData($userID) {
 }
 
 function EditUser($userID, $firstname, $lastname, $email) {
-    $sql = "CALL EditStudentID(:userID, :firstname, :lastname, :email);";
+    $sql = "CALL EditUser(:userID, :firstname, :lastname, :email);";
     $conn = newConn();
     $stmt = $conn->prepare($sql);
     $stmt->bindValue(":userID", $userID, PDO::PARAM_STR);
@@ -113,7 +113,7 @@ function EditUser($userID, $firstname, $lastname, $email) {
     return $success;
 }
 function EditUserState($userID, $state) {
-    $sql = "CALL EditStudentID(:userID, :state);";
+    $sql = "CALL EditUserState(:userID, :state);";
     $conn = newConn();
     $stmt = $conn->prepare($sql);
     $stmt->bindValue(":userID", $userID, PDO::PARAM_STR);
@@ -123,7 +123,7 @@ function EditUserState($userID, $state) {
     return $success;
 }
 function EditUserRole($userID, $role) {
-    $sql = "CALL EditStudentID(:userID, :role);";
+    $sql = "CALL EditUserRole(:userID, :role);";
     $conn = newConn();
     $stmt = $conn->prepare($sql);
     $stmt->bindValue(":userID", $userID, PDO::PARAM_STR);
@@ -133,7 +133,7 @@ function EditUserRole($userID, $role) {
     return $success;
 }
 function EditUserPassword($userID, $password) {
-    $sql = "CALL EditStudentID(:userID, :password);";
+    $sql = "CALL EditUserPassword(:userID, :password);";
     $conn = newConn();
     $stmt = $conn->prepare($sql);
     $stmt->bindValue(":userID", $userID, PDO::PARAM_STR);

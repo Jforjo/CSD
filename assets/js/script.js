@@ -237,6 +237,22 @@
                 e.target.classList.add('events-listening');
             });
         });
+        const editStudentForm = document.querySelector('#student-management + #dialog-edit-user form');
+        if (editStudentForm?.classList.contains('events-listening') === false) {
+            editStudentForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                ModifyUser(null, "/php/editstudent.php");
+            });
+            editStudentForm.classList.add('events-listening');
+        }
+        const editLecturerForm = document.querySelector('#lecturer-management + #dialog-edit-user form');
+        if (editLecturerForm?.classList.contains('events-listening') === false) {
+            editLecturerForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                ModifyUser(null, "/php/editlecturer.php");
+            });
+            editLecturerForm.classList.add('events-listening');
+        }
         // If there has been an error and a field has a red border
         //  then remove it if the input is modified.
         document.querySelectorAll('form .form-input')?.forEach(inputField => {
@@ -355,13 +371,13 @@
         });
     }
     function ModifyUser(userid, page) {
-        if (userid == null || page == null) return;
+        if (page == null) return;
         document.querySelectorAll(`#dialog-edit-user *[name]`).forEach(input => {
             input.classList.remove('error');
         });
         document.querySelector('#dialog-edit-user .error-msg').innerHTML = '';
-        const formData = new FormData();
-        formData.append('userID', userid);
+        const formData = new FormData(document.querySelector('#dialog-edit-user form'));
+        if (userid != null) formData.append('userID', userid);
         fetch(page, {
             method: "POST",
             body: formData,
@@ -408,6 +424,7 @@
                 else if (data?.data?.state == 'pending') stateID += '2';
                 else if (data?.data?.state == 'active') stateID += '3';
                 DisplayModel('dialog-edit-user', [
+                    ['form-userID', data?.data?.userID],
                     ['form-firstname', data?.data?.firstname],
                     ['form-lastname', data?.data?.lastname],
                     ['form-studentID', data?.data?.studentID],
