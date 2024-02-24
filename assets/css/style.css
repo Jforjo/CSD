@@ -19,6 +19,41 @@
     box-sizing: border-box;
     font-family: Arial, Helvetica, sans-serif;
 }
+.lds-ring {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+.lds-ring div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border: 8px solid #fff;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: #fff transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+    animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+    animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+    animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
 body {
     min-height: 100vh;
     min-height: 100svh;
@@ -398,6 +433,7 @@ body > main .dashboard-cards .card .ratio-bar i:nth-of-type(3) {
     display: initial;
     width: calc(var(--value3) * 100 / var(--total) * 1%);
 }
+.n-a,
 body > main .dashboard-cards .card > h3 {
     width: 100%;
     margin: auto 0;
@@ -556,8 +592,27 @@ section {
     min-height: calc(100% - 32px - 32px);
 }
 section .table {
+    position: relative;
     height: 100%;
     width: 100%;
+}
+section .table .n-a {
+    position: absolute;
+    inset: 0;
+    align-content: center;
+}
+section .table .lds-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    display: flex;
+}
+section .table .lds-ring.hidden {
+    display: none;
+}
+section .table .lds-ring div {
+    background-color: rgb(var(--primary));
 }
 section .table table tbody tr {
     height: 64px;
@@ -629,11 +684,17 @@ section .pagination nav ul li {
     border-radius: 8px;
     cursor: pointer;
 }
+section .pagination nav ul li.hidden {
+    display: none;
+}
 section .pagination nav ul li:hover {
     background-color: rgb(var(--elevate-4));
 }
 section .pagination nav ul li.active {
     background-color: rgb(var(--accent) / 90%);
+}
+section .pagination nav ul li.active:hover {
+    background-color: rgb(var(--accent));
 }
 section .pagination nav ul li span {
     font-size: 1.5em;
@@ -839,6 +900,10 @@ dialog {
     border-radius: 16px;
     z-index: 50;
 }
+dialog[open] {
+    display: flex;
+    flex-direction: column;
+}
 dialog#popup {
     z-index: 100;
 }
@@ -856,6 +921,7 @@ dialog > form {
     align-items: center;
     justify-content: space-between;
     flex-direction: column;
+    flex-grow: 1;
     /* Parent border-radius minus child inset */
     border-radius: 14px;
 }
@@ -1045,3 +1111,4 @@ dialog#popup > form footer menu button:hover {
         left: 100%;
     }
 }
+

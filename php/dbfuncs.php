@@ -31,6 +31,13 @@ function GetUserRole($userID) {
     return $data['role'];
 }
 
+function GetStudentCount() {
+    $sql = "CALL GetStudentCount();";
+    $conn = newConn();
+    $data = $conn->query($sql)->fetch();
+    $conn = null;
+    return $data['count'];
+}
 function GetActiveStudentCount() {
     $sql = "CALL GetActiveStudentCount();";
     $conn = newConn();
@@ -51,6 +58,18 @@ function GetInactiveStudentCount() {
     $data = $conn->query($sql)->fetch();
     $conn = null;
     return $data['count'];
+}
+
+function GetLimitedStudentsData($limit = 5, $offset = 0) {
+    $sql = "CALL GetLimitedStudentsData(:limit, :offset);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":limit", $limit, PDO::PARAM_INT);
+    $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
+    $stmt->execute();
+    $data = $stmt->fetchAll();
+    $conn = null;
+    return $data;
 }
 
 function GetAllStudentsData() {

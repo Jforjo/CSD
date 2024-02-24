@@ -90,16 +90,125 @@
     }
     */
 
+    function PopulateTable(tableID, page) {
+        if (page == null) return;
+        const section = document.getElementById(tableID);
+        if (section == null) return;
+        const loader = section.querySelector('.lds-ring');
+        loader.classList.remove('hidden');
+        const output = section.querySelector('.table table tbody');
+        const limit = document.getElementById('user-management-perpage').value;
+        // -1 because page 1 starts at offset of 0
+        const offset = ( document.querySelector('#pagination-menu li.active').dataset.id - 1 ) * limit;
+        const formData = new FormData();
+        formData.append('limit', limit);
+        formData.append('offset', offset);
+        fetch(page, {
+            method: "POST",
+            body: formData,
+        }).then(res => {
+            if (res.status >= 200 && res.status < 300) {
+               return res.text();
+            }
+            throw new Error(res.statusText);
+        }).then(data => {
+            try {
+                data = JSON.parse(data);
+                if (data?.type === "refresh") window.location.reload();
+                else if (data?.type === "error") {
+                    DisplayModel('popup', [
+                        ['popup-title', "Error"],
+                        ['popup-msg', data.msg]
+                    ], {
+                        class: "error"
+                    });
+                }
+            } catch {
+                output.innerHTML = data;
+            }
+        }).catch(error => {
+            if (error === null || error === '') error = "An Unknown Error Occurred";
+            console.error(error);
+            DisplayModel('popup', [
+                ['popup-title', "Error"],
+                ['popup-msg', error]
+            ], {
+                class: "error"
+            });
+        }).finally(() => {
+            loader.classList.add('hidden');
+            LoadPageEvents();
+            document.getElementById('pagination-showing').innerHTML = offset + 1;
+            document.getElementById('pagination-perpage').innerHTML = Math.min(offset + limit, document.getElementById('pagination-total').innerHTML);
+        });
+    }
+    function SetPagination(value) {
+        const menu = document.getElementById('pagination-menu');
+        if (menu == null) return;
+        const btns = menu.querySelectorAll('li');
+        if (value < 1 || value > btns.length) return;
+        btns.forEach(btn => {
+            btn.classList.remove('active', 'inactive');
+            btn.classList.add('hidden');
+        });
+        if (btns.length <= 5) {
+            btns.forEach(btn => {
+                btn.classList.replace('hidden', 'inactive');
+                if (btn.dataset.id == value) btn.classList.replace('inactive', 'active');
+            });
+        } else if (value < 3) {
+            btns.forEach(btn => {
+                if (btn.dataset.id <= 5) btn.classList.replace('hidden', 'inactive');
+                if (btn.dataset.id == value) btn.classList.replace('inactive', 'active');
+            });
+        } else if (value > btns.length - 2) {
+            btns.forEach(btn => {
+                if (btn.dataset.id > btns.length - 5) btn.classList.replace('hidden', 'inactive');
+                if (btn.dataset.id == value) btn.classList.replace('inactive', 'active');
+            });
+        } else {
+            btns.forEach(btn => {
+                if (btn.dataset.id > value - 2 && btn.dataset.id <= value + 2) btn.classList.replace('hidden', 'inactive');
+                if (btn.dataset.id == value) btn.classList.replace('inactive', 'active');
+            });
+        }
+    }
+    function SetPerPage() {
+        const total = document.getElementById('pagination-total').innerHTML;
+        const perpage = document.getElementById('user-management-perpage').value;
+        const paginationMenu = document.getElementById('pagination-menu');
+        paginationMenu.classList.remove('events-listening');
+        paginationMenu.innerHTML = '';
+        for (let i = 1; i <= Math.ceil(total / perpage); i++) {
+            paginationMenu.innerHTML += `
+                <li data-id="${i}">
+                    <span>${i}</span>
+                </li>
+            `;
+        }
+        SetPagination(1);
+        LoadPageEvents();
+    }
 
+    function SetInputSwitch(radioID) {
+        document.querySelectorAll('.input-switch')?.forEach(inputSwitch => {
+            const slider = inputSwitch.querySelector('.input-switch-slider');
+            inputSwitch.querySelectorAll('.input-switch-option input')?.forEach((switchOption, index) => {
+                if (switchOption.id != radioID) return;
+                inputSwitch.classList.remove('error');
+                switchOption.checked = true;
+                slider.style.left = `${100 / inputSwitch.style.getPropertyValue('--count') * index}%`;
+            });
+        });
+    }
     function LoadPageEvents() {
         document.querySelectorAll('.input-switch')?.forEach(inputSwitch => {
             if (inputSwitch.classList.contains('events-listening')) return;
             const slider = inputSwitch.querySelector('.input-switch-slider');
-            inputSwitch.querySelectorAll('.input-switch-option label')?.forEach((switchOption, index) => {
+            inputSwitch.querySelectorAll('.input-switch-option input')?.forEach((switchOption, index) => {
                 switchOption.addEventListener('change', () => {
-                    switchOption.classList.remove('error');
-                    if (!switchOption?.checked == false) return;
-                    slider.style.left = `${100 / inputSwitch.style.getPropertyValue('--count') * index}%`;
+                    if (switchOption?.checked == false) return;
+                    SetInputSwitch(switchOption.id)
                 });
             });
             inputSwitch.classList.add('events-listening');
@@ -139,6 +248,67 @@
                 input.classList.add('events-listening');
             });
         });
+
+
+        // Automatiicaly populate table on load
+        const studentManagement = document.getElementById('student-management');
+        const lecturerManagement = document.getElementById('lecturer-management');
+
+        if (studentManagement != null && studentManagement.classList.contains('loaded') == false) {
+            PopulateTable('student-management', '/php/loadstudenttable.php');
+            studentManagement.classList.add('loaded');
+        }
+        if (lecturerManagement != null && lecturerManagement.classList.contains('loaded') == false) {
+            PopulateTable('lecturer-management', '/php/loadlecturertable.php');
+            lecturerManagement.classList.add('loaded');
+        }
+
+        if (document.getElementById('user-management-perpage')?.classList.contains('events-listening') === false) {
+            document.querySelector('#student-management #user-management-perpage')?.addEventListener('change', () => {
+                SetPerPage();
+                PopulateTable('student-management', '/php/loadstudenttable.php');
+            });
+            document.querySelector('#lecturer-management #user-management-perpage')?.addEventListener('change', () => {
+                SetPerPage();
+                PopulateTable('lecturer-management', '/php/loadlecturertable.php');
+            });
+            document.getElementById('user-management-perpage').classList.add('events-listening');
+        }
+        if (document.getElementById('pagination-menu')?.classList.contains('events-listening') === false) {
+            document.querySelectorAll('#student-management #pagination-menu li')?.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    SetPagination(btn.dataset.id);
+                    PopulateTable('student-management', '/php/loadstudenttable.php');
+                });
+            });
+            document.querySelectorAll('#lecturer-management #pagination-menu li')?.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    SetPagination(btn.dataset.id);
+                    PopulateTable('lecturer-management', '/php/loadlecturertable.php');
+                });
+            });
+            document.getElementById('pagination-menu').classList.add('events-listening');
+        }
+
+        if (document.querySelector('.pagination')?.classList.contains('events-listening') === false) {
+            document.querySelectorAll('#student-management .pagination .arrow')[0]?.addEventListener('click', () => {
+                SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id - 1);
+                PopulateTable('student-management', '/php/loadstudenttable.php');
+            });
+            document.querySelectorAll('#student-management .pagination .arrow')[1]?.addEventListener('click', () => {
+                SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id + 1);
+                PopulateTable('student-management', '/php/loadstudenttable.php');
+            });
+            document.querySelectorAll('#lecturer-management .pagination .arrow')[0]?.addEventListener('click', () => {
+                SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id - 1);
+                PopulateTable('lecturer-management', '/php/loadlecturertable.php');
+            });
+            document.querySelectorAll('#lecturer-management .pagination .arrow')[1]?.addEventListener('click', () => {
+                SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id + 1);
+                PopulateTable('lecturer-management', '/php/loadlecturertable.php');
+            });
+            document.querySelector('.pagination').classList.add('events-listening');
+        }
     }
 
     function DeleteUser(userid, page) {
@@ -186,7 +356,7 @@
     }
     function ModifyUser(userid, page) {
         if (userid == null || page == null) return;
-        document.querySelectorAll(`#dialog-edit-user *[name="${data.inpuut}"]`).forEach(input => {
+        document.querySelectorAll(`#dialog-edit-user *[name]`).forEach(input => {
             input.classList.remove('error');
         });
         document.querySelector('#dialog-edit-user .error-msg').innerHTML = '';
@@ -234,14 +404,14 @@
                 // });
                 // Gonna manually input all this bit for now
                 let stateID = "form-state-";
-                if (data?.data?.state === 'inactive') stateID + '1';
-                else if (data?.data?.state === 'pending') stateID + '2';
-                else if (data?.data?.state === 'active') stateID + '3';
+                if (data?.data?.state == 'inactive') stateID += '1';
+                else if (data?.data?.state == 'pending') stateID += '2';
+                else if (data?.data?.state == 'active') stateID += '3';
                 DisplayModel('dialog-edit-user', [
-                    ['firstname', data?.data?.firstname],
-                    ['lastname', data?.data?.lastname],
-                    ['studentID', data?.data?.studentID],
-                    ['email', data?.data?.email],
+                    ['form-firstname', data?.data?.firstname],
+                    ['form-lastname', data?.data?.lastname],
+                    ['form-studentID', data?.data?.studentID],
+                    ['form-email', data?.data?.email],
                     [stateID, true],
                 ], {
                     closeAll: true
@@ -259,7 +429,7 @@
         });
     }
 
-    function DisplayModel(id, data = {}, options) {
+    function DisplayModel(id, data = [], options) {
         if (id == null) return;
         const modal = document.getElementById(id);
         if (modal.tagName !== "DIALOG") return;
@@ -277,11 +447,12 @@
             if (input == null) return;
             // Radio/Checkbox specific
             if (input.type === "radio" || input.type === "checkbox") {
-                if (row[1] === true) input.checked = true;
-                else input.checked = false;
-            } else {
+                if (row[1] === true) SetInputSwitch(row[0]);
+            } else if (input.tagName === "INPUT") {
                 // If it doesn't have a value, just put an empty string
                 input.value = row[1] ?? '';
+            } else {
+                input.innerHTML = row[1] ?? '';
             }
         });
 
