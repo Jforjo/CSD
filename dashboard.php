@@ -30,7 +30,9 @@
     ];
     $pdo = new PDO($dsn, $user, $pass, $opt);
     
-    $sql = "SELECT name FROM subjects";
+    $sql = "SELECT quizzes.quizID, quizzes.title, subjects.name 
+        FROM quizzes 
+        JOIN subjects ON quizzes.subjectID = subjects.subjectID";
     $stmt = $pdo->query($sql);
     ?>
     <section class="welcome-section">
@@ -47,7 +49,7 @@
             <div class="test-box">
             <div class="test-contents">
                 <h3><?php echo htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8'); ?></h3>
-                <h5>Test Name</h5>
+                <h5><?php echo htmlspecialchars($row['title'], ENT_QUOTES, 'UTF-8'); ?></h5>
                 <h6>10 Questions</h6>
                 <a href="testing-page.php" class="btn btn-primary">Start Test</a>
             </div>
