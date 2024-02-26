@@ -31,7 +31,7 @@
     $pdo = new PDO($dsn, $user, $pass, $opt);
     
    // Query for completed tests
-$sql = "SELECT quizzes.quizID, quizzes.title, subjects.name, studentQuizLink.TIMESTAMP 
+$sql = "SELECT quizzes.quizID, quizzes.title, subjects.name, studentQuizLink.TIMESTAMP, studentQuizLink.correctCount, studentQuizLink.questionCount
 FROM quizzes 
 JOIN subjects ON quizzes.subjectID = subjects.subjectID
 JOIN studentQuizLink ON quizzes.quizID = studentQuizLink.quizID
@@ -58,16 +58,21 @@ $testsToComplete = $stmt->fetchAll();
         <h2 class="section-title">Tests to complete</h2>
         <!-- Area of page that contains the test boxes -->
         <div class="test-section">
+        <?php if (empty($testsToComplete)): ?>
+            <p>No Tests to Complete!</p>
+        <?php else: ?>
         <?php foreach ($testsToComplete as $test): ?>
             <div class="test-box">
             <div class="test-contents">
                 <h3><?php echo htmlspecialchars($test['name'], ENT_QUOTES, 'UTF-8'); ?></h3>
                 <h5><?php echo htmlspecialchars($test['title'], ENT_QUOTES, 'UTF-8'); ?></h5>
                 <h6>10 Questions</h6>
+                <h6><?php echo date('d/m/Y', strtotime($test['TIMESTAMP'])); ?></h6>
                 <a href="testing-page.php" class="btn btn-primary">Start Test</a>
             </div>
             </div>
             <?php endforeach; ?>
+        <?php endif; ?>
         </div>
         
     </section>
@@ -82,7 +87,8 @@ $testsToComplete = $stmt->fetchAll();
                 <h3><?php echo htmlspecialchars($test['name'], ENT_QUOTES, 'UTF-8'); ?></h3>
                 <h5><?php echo htmlspecialchars($test['title'], ENT_QUOTES, 'UTF-8'); ?></h5>
                 <h6>Completed: <?php echo date('d/m/Y', strtotime($test['TIMESTAMP'])); ?></h6>
-                <h6>Score: 80%</h6>
+                <?php $score = ($test['correctCount'] / $test['questionCount']) * 100; ?>
+                <h6>Score: <?php echo round($score); ?>%</h6>
                 <h6>250 points</h6>
             </div>
             </div>
