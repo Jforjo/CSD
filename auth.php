@@ -10,10 +10,7 @@ function validateUser($email, $password) {
     $conn = null;
     if ($data === null || $data === false) return false;
     if (!password_verify($password, $data['password'])) return false;
-    return array(
-        "userID" => $data['userID'],
-        "state" => $data['state']
-    );
+   return$data;
 }
 
 $data = validateUser($_POST['email'], $_POST['password']);
@@ -21,7 +18,7 @@ $data = validateUser($_POST['email'], $_POST['password']);
 if ($data === false) {
     header('Location: error.html');
 } else {
-    header('Location: success.html');
+    header('Location: dashboard.php');
 }
 
 ?>

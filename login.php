@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="stylesheet.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Login page</title>
 </head>
 <body>
 
@@ -40,7 +40,7 @@ if ($_GET["e"]==6)
 
 if ($_GET["e"]==7)
 {
-    echo "<span class= 'error'>You are not logged in.</span>";
+    echo "<span class= 'error'>You are not login.</span>";
 }
 
 
