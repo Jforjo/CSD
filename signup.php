@@ -9,28 +9,8 @@
 </head>
 <body>
 
-<form method= "POST"action="auth.php">
+<form method="POST" action="createuser.php">
 <h2>Signup</h2>
-<label for="FirstName">FirstName:</label>
-<input name="FirstName" id="FirstName" type="FirstName" placeholder="John" required>
-
-<label for="LastName">LastName:</label>
-<input name="LastName" id="LastName" type="LastName" placeholder="Ward" required>
-
-<label for="email">Email:</label>
-<input name="email" id="email" type="email" placeholder="eg test@test.com" required>
-
-<label for="password">Password:</label>
-<input name="password" id="password" type="password" placeholder="password" required>
-
-
-<button type="signup"> You are sign up!</button>
-
-</form>
-
-</body>
-</html>
-
 <?php 
 if(isset($_GET["e"]))
 {
@@ -55,6 +35,27 @@ if ($_GET["e"]==7)
 }
 
 ?>
+
+<label for="FirstName">FirstName:</label>
+<input name="FirstName" id="FirstName" type="FirstName" required>
+
+<label for="LastName">LastName:</label>
+<input name="LastName" id="LastName" type="LastName" required>
+
+<label for="email">Email:</label>
+<input name="email" id="email" type="email" placeholder="eg test@test.com" required>
+
+<label for="password">Password:</label>
+<input name="password" id="password" type="password" placeholder="password" required>
+
+
+<button type="signup">signup!</button>
+
+</form>
+
+</body>
+</html>
+
 
 </body>
 </html>

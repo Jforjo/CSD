@@ -16,8 +16,10 @@ function validateUser($email, $password) {
 $data = validateUser($_POST['email'], $_POST['password']);
 
 if ($data === false) {
-    header('Location: error.html');
+    header('Location: login.php?e=5');
 } else {
+    session_start();
+    $_SESSION["userID"];
     header('Location: dashboard.php');
 }
 
