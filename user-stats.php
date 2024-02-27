@@ -21,7 +21,7 @@
         <h2 class="welcome-message">Stats for Chris</h2>
     </section>
     <div id="chart-container">
-
+        <canvas id="chart"></canvas>
     </div>
     <div class="user-scores">
         <p>Total Points: 100</p>
@@ -37,6 +37,7 @@
                         <th scope="col">Date Completed</th>
                         <th scope="col">Score</th>
                         <th scope="col">Percentage</th>
+                        <th scope="col">Points Earned</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -46,6 +47,7 @@
                         <td>31/01/2024</td>
                         <td>10/10</td>
                         <td>100%</td>
+                        <td>100</td>
                     </tr>
                     <tr>
                         <td>Maths Quiz 2</td>
@@ -53,6 +55,7 @@
                         <td>31/01/2024</td>
                         <td>17/20</td>
                         <td>85%</td>
+                        <td>100</td>
                     </tr>
                     <tr>
                         <td>Physics Test</td>
@@ -60,10 +63,45 @@
                         <td>31/01/2024</td>
                         <td>42/50</td>
                         <td>84%</td>
+                        <td>100</td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        var ctx = document.getElementById('chart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'bar', // specify the type of chart
+            data: {
+                labels: ['Maths Quiz 1', 'Maths Quiz 2', 'Physics Test'],
+                datasets: [{
+                    label: 'Percentage',
+                    data: [100, 85, 84],
+                    backgroundColor: [
+                        'darkred',
+                        'darkred',
+                        'darkred'
+                    ],
+                    borderColor: [
+                        'darkred',
+                        'darkred',
+                        'darkred'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>
