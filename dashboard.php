@@ -59,7 +59,9 @@ $testsToComplete = $stmt->fetchAll();
         <!-- Area of page that contains the test boxes -->
         <div class="test-section">
         <?php if (empty($testsToComplete)): ?>
-            <p>No Tests to Complete!</p>
+            <div class="no-test-message">
+                <p>No tests to complete!</p>
+            </div>
         <?php else: ?>
         <?php foreach ($testsToComplete as $test): ?>
             <div class="test-box">
@@ -68,7 +70,10 @@ $testsToComplete = $stmt->fetchAll();
                 <h5><?php echo htmlspecialchars($test['title'], ENT_QUOTES, 'UTF-8'); ?></h5>
                 <h6>10 Questions</h6>
                 <h6><?php echo date('d/m/Y', strtotime($test['TIMESTAMP'])); ?></h6>
-                <a href="testing-page.php" class="btn btn-primary">Start Test</a>
+                <form method="POST" action="testing-page.php">
+                    <input type="hidden" name="quizID" value="<?php echo htmlspecialchars($test['quizID'], ENT_QUOTES, 'UTF-8'); ?>">
+                    <button type="submit" class="btn btn-primary">Start Test</button>
+                </form>
             </div>
             </div>
             <?php endforeach; ?>
