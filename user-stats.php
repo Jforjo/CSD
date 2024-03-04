@@ -115,11 +115,12 @@
                     },
                     y: 
                     {
+                        beginAtZero: true,
                         ticks:
                         {
-                            color: 'white'
-                        },
-                        beginAtZero: true
+                            color: 'white',
+                            stepSize: 25
+                        }
                     }
                 }
             }
