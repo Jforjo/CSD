@@ -35,21 +35,17 @@ if ($_GET["e"]==7)
 }
 
 ?>
-<div class= "formcontainer">
 <label for="email">Email:</label>
 <input name="email" id="email" type="email" placeholder="eg test@test.com" required>
 
 <label for="password">Password:</label>
 <input name="password" id="password" type="password" placeholder="password" required>
 
-<button type="submit"> login!</button>
+<button type="submit"> Login</button>
 
 </form>
-</div>
 </body>
 </html>
 
 
 
-</body>
-</html>

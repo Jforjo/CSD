@@ -49,7 +49,7 @@ if ($_GET["e"]==7)
 <input name="password" id="password" type="password" placeholder="password" required>
 
 
-<button type="signup">signup!</button>
+<button type="signup">Signup</button>
 
 </form>
 
@@ -57,5 +57,3 @@ if ($_GET["e"]==7)
 </html>
 
 
-</body>
-</html>

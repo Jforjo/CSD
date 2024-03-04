@@ -19,7 +19,7 @@ if ($data === false) {
     header('Location: login.php?e=5');
 } else {
     session_start();
-    $_SESSION["userID"];
+    $_SESSION["userID"] = $data['userID'];
     header('Location: dashboard.php');
 }
 
