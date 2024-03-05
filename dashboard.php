@@ -17,8 +17,9 @@
             </ul>
         </nav>
     </header>
-    <?php require_once('php/connection.php'); ?>
-    <?php
+    <?php 
+    require_once('php/connection.php');
+    session_start();
     $dsn = DB_DSN;
     $user = DB_USERNAME;
     $pass = DB_PASSWORD;
@@ -29,11 +30,12 @@
         PDO::ATTR_EMULATE_PREPARES   => false,
     ];
     $pdo = new PDO($dsn, $user, $pass, $opt);
-    //Get the logged in user's name
-    session_start();
+
     $userID = $_SESSION["userID"];
-    $sql = "SELECT firstname FROM users WHERE userID = :userID";
     $conn = newConn();
+
+    //Get the logged in user's name
+    $sql = "SELECT firstname FROM users WHERE userID = :userID";
     $stmt = $conn->prepare($sql);
     $stmt->bindValue(":userID", $userID, PDO::PARAM_INT);
     $stmt->execute();
@@ -41,32 +43,32 @@
     
     //Get the student ID
     $sql = "SELECT studentID FROM students WHERE userID = :userID";
-    $conn = newConn();
     $stmt = $conn->prepare($sql);
     $stmt->bindValue(":userID", $userID, PDO::PARAM_INT);
     $stmt->execute();
     $studentID = $stmt->fetchColumn();
-   // Query for completed tests
-$sql = "SELECT quizzes.quizID, quizzes.title, subjects.name, studentQuizLink.TIMESTAMP, studentQuizLink.correctCount, studentQuizLink.questionCount
-FROM quizzes 
-JOIN subjects ON quizzes.subjectID = subjects.subjectID
-JOIN studentQuizLink ON quizzes.quizID = studentQuizLink.quizID AND studentQuizLink.studentID = :studentID
-WHERE studentQuizLink.completed = 1";
-$stmt = $conn->prepare($sql);
-$stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
-$stmt->execute();
-$completedTests = $stmt->fetchAll();
 
-// Query for tests to complete
-$sql = "SELECT quizzes.quizID, quizzes.title, subjects.name, studentQuizLink.TIMESTAMP  
-FROM quizzes 
-JOIN subjects ON quizzes.subjectID = subjects.subjectID
-JOIN studentQuizLink ON quizzes.quizID = studentQuizLink.quizID AND studentQuizLink.studentID = :studentID
-WHERE studentQuizLink.completed = 0";
-$stmt = $conn->prepare($sql);
-$stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
-$stmt->execute();
-$testsToComplete = $stmt->fetchAll();
+   // Query for completed tests
+    $sql = "SELECT quizzes.quizID, quizzes.title, subjects.name, studentQuizLink.TIMESTAMP, studentQuizLink.correctCount, studentQuizLink.questionCount, studentQuizLink.points
+    FROM quizzes 
+    JOIN subjects ON quizzes.subjectID = subjects.subjectID
+    JOIN studentQuizLink ON quizzes.quizID = studentQuizLink.quizID AND studentQuizLink.studentID = :studentID
+    WHERE studentQuizLink.completed = 1";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
+    $stmt->execute();
+    $completedTests = $stmt->fetchAll();
+
+    // Query for tests to complete
+    $sql = "SELECT quizzes.quizID, quizzes.title, subjects.name, studentQuizLink.TIMESTAMP  
+    FROM quizzes 
+    JOIN subjects ON quizzes.subjectID = subjects.subjectID
+    JOIN studentQuizLink ON quizzes.quizID = studentQuizLink.quizID AND studentQuizLink.studentID = :studentID
+    WHERE studentQuizLink.completed = 0";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
+    $stmt->execute();
+    $testsToComplete = $stmt->fetchAll();
     ?>
     <section class="welcome-section">
         <h2 class="welcome-message"><?php echo "Welcome, " . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></h2>
@@ -114,7 +116,7 @@ $testsToComplete = $stmt->fetchAll();
                 <h6>Completed: <?php echo date('d/m/Y', strtotime($test['TIMESTAMP'])); ?></h6>
                 <?php $score = ($test['correctCount'] / $test['questionCount']) * 100; ?>
                 <h6>Score: <?php echo round($score); ?>%</h6>
-                <h6>250 points</h6>
+                <h6><?php echo htmlspecialchars($test['points'], ENT_QUOTES, 'UTF-8'); ?> points</h6>
             </div>
             </div>
         <?php endforeach; ?>
