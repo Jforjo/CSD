@@ -33,9 +33,9 @@
     height: 64px;
     margin: 8px;
     border: 8px solid #fff;
+    border-color: #fff transparent transparent transparent;
     border-radius: 50%;
     animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    border-color: #fff transparent transparent transparent;
 }
 .lds-ring div:nth-child(1) {
     animation-delay: -0.45s;
@@ -308,7 +308,8 @@ body > main .dashboard-cards .card {
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    /* min-height: 512px; */
+    /* min-height: 196px; */
+    /* max-height: 256px; */
 }
 body > main .dashboard-cards .card:nth-child(1) {
     grid-area: card1;
@@ -321,9 +322,25 @@ body > main .dashboard-cards .card:nth-child(3) {
 }
 body > main .dashboard-cards .card:nth-child(4) {
     grid-area: card4;
+    /* min-height: 512px; */
+    /* max-height: unset; */
 }
 body > main .dashboard-cards .card:nth-child(5) {
     grid-area: card5;
+}
+@media (max-width: 1200px) {
+    body > main .dashboard-cards {
+        grid-template-areas:
+            'card1 card3'
+            'card4 card4'
+            'card5 card5'
+        ;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 2fr 1fr;
+    }
+    body > main .dashboard-cards .card:nth-child(2) {
+        display: none;
+    }
 }
 body > main .dashboard-cards .card h2 {
     display: flex;
@@ -444,40 +461,41 @@ body > main .dashboard-cards .card > h3 {
     cursor: default;
     user-select: none;
 }
-body > main .dashboard-cards .card .user-row {
+body > main .dashboard-cards .card form {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    padding: 8px;
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+}
+body > main .dashboard-cards .card form fieldset {
     position: relative;
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    padding: 8px clamp(8px, 5%, 32px);
-    border: 2px solid rgba(255,255,255,0.1);
-    border-radius: 16px;
+    border: none;
     gap: 8px;
 }
-body > main .dashboard-cards .card .user-row .details {
+body > main .dashboard-cards .card form legend {
     position: relative;
     width: 100%;
     display: flex;
     flex-direction: column;
-}
-body > main .dashboard-cards .card .user-row h4 {
     color: rgb(var(--text));
     font-size: 1.5em;
 }
-body > main .dashboard-cards .card .user-row span {
-    color: rgb(var(--primary));
-    font-size: 0.7em;
-}
-body > main .dashboard-cards .card .user-row input[type="text"] {
+body > main .dashboard-cards .card form input[type="text"] {
     background-color: transparent;
     border: 1px solid rgba(255,255,255,0.3);
     padding: 8px 16px;
     border-radius: 10px;
     color: rgb(var(--text));
 }
-body > main .dashboard-cards .card .user-row .user-row-btns {
+body > main .dashboard-cards .card form .user-row-btns {
     position: relative;
     width: 100%;
     display: flex;
@@ -485,7 +503,7 @@ body > main .dashboard-cards .card .user-row .user-row-btns {
     justify-content: space-evenly;
     gap: 16px;
 }
-body > main .dashboard-cards .card .user-row .user-row-btns button {
+body > main .dashboard-cards .card form .user-row-btns button {
     position: relative;
     /* width: clamp(128px, 100%, 512px); */
     width: 128px;
@@ -500,18 +518,18 @@ body > main .dashboard-cards .card .user-row .user-row-btns button {
     transition: letter-spacing 0.5s, background-color 0.5s, color 0.5s;
     cursor: pointer;
 }
-body > main .dashboard-cards .card .user-row .user-row-btns button.primary {
+body > main .dashboard-cards .card form .user-row-btns button.primary {
     background-color: rgb(var(--accent) / 50%);
     color: rgb(var(--text));
 }
-body > main .dashboard-cards .card .user-row .user-row-btns button:hover {
+body > main .dashboard-cards .card form .user-row-btns button:hover {
     letter-spacing: 1px;
     color: rgb(var(--text));
 }
-body > main .dashboard-cards .card .user-row .user-row-btns button.primary:hover {
+body > main .dashboard-cards .card form .user-row-btns button.primary:hover {
     background-color: rgb(var(--accent) / 75%);
 }
-body > main .dashboard-cards .card .user-row .user-row-btns button.to-error:hover {
+body > main .dashboard-cards .card form .user-row-btns button.to-error:hover {
     background-color: rgba(200,0,0,0.5);
 }
 
@@ -612,7 +630,8 @@ section .table .lds-ring.hidden {
     display: none;
 }
 section .table .lds-ring div {
-    background-color: rgb(var(--primary));
+    border: 8px solid rgb(var(--primary));
+    border-color: rgb(var(--primary)) transparent transparent transparent;
 }
 section .table table tbody tr {
     height: 64px;
@@ -1026,6 +1045,7 @@ dialog > form header button i::after {
     width: 2px;
     height: 90%;
     background-color: white;
+    border-radius: 1px;
 }
 dialog > form header button i::before {
     rotate: -45deg;

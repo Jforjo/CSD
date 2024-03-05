@@ -57,17 +57,18 @@ $inactiveStudentCount = GetInactiveStudentCount();
     <div class="card">
         <h2>Recent student</h2>
         <?php if($pendingUserCount > 0) { ?>
-            <div class="user-row">
-                <div class="details">
-                    <h4>Smith, John</h4>
-                    <!-- <span>WS123456</span> -->
-                </div>
-                <input type="text" maxlength="16" placeholder="Student number">
-                <div class="user-row-btns">
-                    <button class="primary">Accept</button>
-                    <button class="to-error">Decline</button>
-                </div>
-            </div>
+            <?php $student = GetRecentPendingStudentData(); ?>
+            <form id="recent-student">
+                <fieldset>
+                    <legend><?php echo ucfirst($student['firstname']) . ' ' . ucfirst($student['lastname']); ?></legend>
+                    <input type="hidden" name="userID" value="<?php echo $student['userID']; ?>">
+                    <input type="text" name="studentID" maxlength="16" placeholder="Student number" required>
+                    <div class="user-row-btns">
+                        <button type="submit" name="action" value="accept" class="primary">Accept</button>
+                        <button type="submit" name="action" value="decline" class="to-error">Decline</button>
+                    </div>
+                </fieldset>
+            </form>
         <?php } else { ?>
             <h3>N/A</h3>
         <?php }?>

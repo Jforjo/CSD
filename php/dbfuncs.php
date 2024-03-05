@@ -176,6 +176,19 @@ function GetLecturerData(string $lecturerID): mixed {
     return $data;
 }
 /**
+ * Fetches data of the most recently created student.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return mixed Array of mixed data of the student or FALSE on failure.
+ */
+function GetRecentPendingStudentData(): mixed {
+    $sql = "CALL GetRecentPendingStudentData();";
+    $conn = newConn();
+    $data = $conn->query($sql)->fetch();
+    $conn = null;
+    return $data;
+}
+/**
  * Edit the data of the user with the given ID.
  * 
  * @param string $userID The user's ID.
@@ -327,6 +340,25 @@ function DeleteUser(string $userID): bool {
     $conn = newConn();
     $stmt = $conn->prepare($sql);
     $stmt->bindValue(":userID", $userID, PDO::PARAM_STR);
+    $success = $stmt->execute();
+    $conn = null;
+    return $success;
+}
+/**
+ * Assign a user and student ID.
+ * 
+ * @param string $userID The user's ID.
+ * @param string $studentID The user's student ID
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE on success or FALSE on failure.
+ */
+function CreateStudent(string $userID, string $studentID): bool {
+    $sql = "CALL CreateStudent(:userID, :studentID);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":userID", $userID, PDO::PARAM_STR);
+    $stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
     $success = $stmt->execute();
     $conn = null;
     return $success;

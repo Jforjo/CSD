@@ -51,7 +51,7 @@ $studentCount = GetStudentCount();
                     <th>Manage</th>
                 </tr>
             </thead>
-            <tbody style="--shown-rows:<?php echo min($studentCount, 5); ?>">
+            <tbody style="--shown-rows:<?php echo min($studentCount, 5); ?>" class="autoload">
                 <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
             </tbody>
         </table>
@@ -94,38 +94,38 @@ $studentCount = GetStudentCount();
             <input type="hidden" name="userID" id="form-userID">
             <div class="form-input">
                 <label for="form-firstname">Firstname<i aria-hidden="true">*</i></label>
-                <input type="text" name="firstname" id="form-firstname">
+                <input type="text" name="firstname" id="form-firstname" required>
             </div>
             <div class="form-input">
                 <label for="form-lastname">Lastname<i aria-hidden="true">*</i></label>
-                <input type="text" name="lastname" id="form-lastname">
+                <input type="text" name="lastname" id="form-lastname" required>
             </div>
             <div class="form-input">
                 <label for="form-studentID">Student ID<i aria-hidden="true">*</i></label>
-                <input type="text" name="studentID" id="form-studentID">
+                <input type="text" name="studentID" id="form-studentID" required>
             </div>
             <div class="form-input">
                 <label for="form-email">Email<i aria-hidden="true">*</i></label>
-                <input type="email" name="email" id="form-email">
+                <input type="email" name="email" id="form-email" required>
             </div>
             <div class="form-input">
                 <label for="form-password">Password</label>
-                <input type="password" name="password" id="form-password">
+                <input type="password" name="password" id="form-password" required>
             </div>
             <div class="form-input">
                 <label>State<i aria-hidden="true">*</i></label>
                 <div class="input-switch" style="--count:3;">
                     <div>
                         <div class="input-switch-option">
-                            <input type="radio" name="state" id="form-state-1" value="inactive">
+                            <input type="radio" name="state" id="form-state-1" value="inactive" required>
                             <label for="form-state-1">Inactive</label>
                         </div>
                         <div class="input-switch-option">
-                            <input type="radio" name="state" id="form-state-2" value="pending">
+                            <input type="radio" name="state" id="form-state-2" value="pending" required>
                             <label for="form-state-2">Pending</label>
                         </div>
                         <div class="input-switch-option">
-                            <input type="radio" name="state" id="form-state-3" value="active">
+                            <input type="radio" name="state" id="form-state-3" value="active" required>
                             <label for="form-state-3">Active</label>
                         </div>
                         <span class="input-switch-slider"></span>

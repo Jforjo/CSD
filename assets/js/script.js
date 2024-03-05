@@ -2,11 +2,13 @@
     "use strict";
 
     window.onload = (e) => {
-        LinkHandler('admin/dashboard', 'Dashboard', {
-            'admin': 'admin/dashboard',
-            'dashboard': 'admin/dashboard'
-        });
+        // LinkHandler('admin/dashboard', 'Dashboard', {
+        //     'admin': 'admin/dashboard',
+        //     'dashboard': 'admin/dashboard'
+        // });
     };
+
+    LoadPageEvents();
 
     const navList = document.querySelectorAll('nav ul li');
     navList.forEach((navItem, index) => {
@@ -36,8 +38,11 @@
     
     function LinkHandler(link, title = null, breadcrumbs = null) {
         if (link == null) return;
+        const formData = new FormData();
+        formData.append('jsfetch', true);
         fetch(`/${link}`, {
-            // body: formData
+            method: "POST",
+            body: formData
         }).then(res => {
             if (res.status >= 200 && res.status < 300) {
                 return res.text();
@@ -49,10 +54,10 @@
                 // Shouldn't need the return
                 return;
             }
-            document.body.querySelector('main').innerHTML = data;
+            document.querySelector('main').innerHTML = data;
             title != null && (document.getElementById('page-title').innerText = title);
             // breadcrumbs != null && Breadcrumbs(breadcrumbs);
-            // history.pushState({}, "", '/' + link.split('.')[0]);
+            history.pushState({}, "", '/' + link);
             LoadPageEvents();
         }).catch(error => {
             if (error === null || error === '') error = "An Unknown Error Occurred";
@@ -98,7 +103,7 @@
         loader.classList.remove('hidden');
         const output = section.querySelector('.table table tbody');
         const limit = document.getElementById('user-management-perpage').value;
-        // -1 because page 1 starts at offset of 0
+        // -1 because page 1 starts at offset of 0s
         const offset = ( document.querySelector('#pagination-menu li.active').dataset.id - 1 ) * limit;
         const formData = new FormData();
         formData.append('limit', limit);
@@ -168,7 +173,7 @@
             });
         } else {
             btns.forEach(btn => {
-                if (btn.dataset.id > value - 2 && btn.dataset.id <= value + 2) btn.classList.replace('hidden', 'inactive');
+                if (btn.dataset.id >= value - 2 && btn.dataset.id <= value + 2) btn.classList.replace('hidden', 'inactive');
                 if (btn.dataset.id == value) btn.classList.replace('inactive', 'active');
             });
         }
@@ -201,7 +206,52 @@
             });
         });
     }
+
     function LoadPageEvents() {
+        const recentStudent = document.getElementById('recent-student');
+        if (recentStudent != null && recentStudent.classList.contains('events-listening') === false) {
+            recentStudent.addEventListener('submit', (e) => {
+                e.preventDefault();
+                fetch('/php/acceptstudent.php', {
+                    method: "POST",
+                    body: new FormData(e.target),
+                }).then(res => {
+                    if (res.status >= 200 && res.status < 300) {
+                       return res.text();
+                    }
+                    throw new Error(res.statusText);
+                }).then(data => {
+                    data = JSON.parse(data);
+                    if (data?.type === "refresh") window.location.reload();
+                    else if (data?.type === "error") {
+                        DisplayModel('popup', [
+                            ['popup-title', "Error"],
+                            ['popup-msg', data.msg]
+                        ], {
+                            class: "error"
+                        });
+                    } else if (data?.type === "success") {
+                        DisplayModel('popup', [
+                            ['popup-title', "Success"],
+                            ['popup-msg', data.msg]
+                        ], {
+                            class: "success",
+                            closeAll: true
+                        });
+                    }
+                }).catch(error => {
+                    if (error === null || error === '') error = "An Unknown Error Occurred";
+                    console.error(error);
+                    DisplayModel('popup', [
+                        ['popup-title', "Error"],
+                        ['popup-msg', error]
+                    ], {
+                        class: "error"
+                    });
+                });
+            });
+            recentStudent.classList.contains('events-listening');
+        }
         document.querySelectorAll('.input-switch')?.forEach(inputSwitch => {
             if (inputSwitch.classList.contains('events-listening')) return;
             const slider = inputSwitch.querySelector('.input-switch-slider');
@@ -214,28 +264,26 @@
             inputSwitch.classList.add('events-listening');
         });
         document.querySelectorAll('#student-management .table tr')?.forEach(tableRow => {
-            tableRow.querySelector('.icons .table-edit-btn')?.addEventListener('click', (e) => {
-                if (e.target.classList.contains('events-listening')) return;
-                ModifyUser(tableRow?.dataset?.userid, "/php/getstudentdata.php");
-                e.target.classList.add('events-listening');
-            });
-            tableRow.querySelector('.icons .table-delete-btn')?.addEventListener('click', (e) => {
-                if (e.target.classList.contains('events-listening')) return;
-                DeleteUser(tableRow?.dataset?.userid, "/php/deletestudent.php");
-                e.target.classList.add('events-listening');
-            });
+            if (tableRow.classList.contains('events-listening') === false) {
+                tableRow.querySelector('.icons .table-edit-btn')?.addEventListener('click', () => {
+                    ModifyUser(tableRow?.dataset?.userid, "/php/getstudentdata.php");
+                });
+                tableRow.querySelector('.icons .table-delete-btn')?.addEventListener('click', () => {
+                    DeleteUser(tableRow?.dataset?.userid, "/php/deletestudent.php");
+                });
+                tableRow.classList.add('events-listening');
+            }
         });
         document.querySelectorAll('#lecturer-management .table tr')?.forEach(tableRow => {
-            tableRow.querySelector('.icons .table-edit-btn')?.addEventListener('click', (e) => {
-                if (e.target.classList.contains('events-listening')) return;
-                ModifyUser(tableRow?.dataset?.userid, "/php/getlecturerdata.php");
-                e.target.classList.add('events-listening');
-            });
-            tableRow.querySelector('.icons .table-delete-btn')?.addEventListener('click', (e) => {
-                if (e.target.classList.contains('events-listening')) return;
-                DeleteUser(tableRow?.dataset?.userid, "/php/deletelecturer.php");
-                e.target.classList.add('events-listening');
-            });
+            if (tableRow.classList.contains('events-listening') === false) {
+                tableRow.querySelector('.icons .table-edit-btn')?.addEventListener('click', () => {
+                    ModifyUser(tableRow?.dataset?.userid, "/php/getlecturerdata.php");
+                });
+                tableRow.querySelector('.icons .table-delete-btn')?.addEventListener('click', () => {
+                    DeleteUser(tableRow?.dataset?.userid, "/php/deletelecturer.php");
+                });
+                tableRow.classList.add('events-listening');
+            }
         });
         const editStudentForm = document.querySelector('#student-management + #dialog-edit-user form');
         if (editStudentForm?.classList.contains('events-listening') === false) {
