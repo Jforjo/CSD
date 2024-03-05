@@ -1,4 +1,6 @@
-<?php session_start();
+<?php
+defined('APP_RAN') or header("Location: /404");
+session_start();
 // Checks if the user is logged in
 if (!isset($_SESSION['userID'])) header("Location: /");
 require_once(__DIR__ . '/../../php/dbfuncs.php');
