@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Stats</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link defer href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script defer src="graph.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -69,62 +71,5 @@
             </table>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <script>
-        var ctx = document.getElementById('chart').getContext('2d');
-        var chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Maths Quiz 1', 'Maths Quiz 2', 'Physics Test', 'Test', 'Test', 'Test', 'Test', 'Test'],
-                datasets: [{
-                    label: 'Percentage',
-                    data: [100, 85, 84, 50, 57, 81, 73, 65],
-                    backgroundColor: 
-                    [
-                        'red'
-                    ],
-                    borderColor: 
-                    [
-                        'red'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: 
-            {
-                plugins:
-                {
-                    legend:
-                    {
-                        labels:
-                        {
-                            color: 'white'
-                        }
-                    }
-                },
-                scales:
-                {
-                    x:
-                    {
-                        ticks:
-                        {
-                            color: 'white'
-                        }
-                    },
-                    y: 
-                    {
-                        beginAtZero: true,
-                        ticks:
-                        {
-                            color: 'white',
-                            stepSize: 25
-                        }
-                    }
-                }
-            }
-        });
-    </script>
 </body>
 </html>
