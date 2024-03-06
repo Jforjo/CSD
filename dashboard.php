@@ -34,19 +34,14 @@
     $userID = $_SESSION["userID"];
     $conn = newConn();
 
-    //Get the logged in user's name
-    $sql = "SELECT firstname FROM users WHERE userID = :userID";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindValue(":userID", $userID, PDO::PARAM_INT);
+    //Get the logged in user's details, things like the first name and studentID
+    $stmt = $conn->prepare("CALL GetStudentData(:userID)");
+    $stmt->bindValue(":userID", $userID, PDO::PARAM_STR);
     $stmt->execute();
-    $userName = $stmt->fetchColumn();
-    
-    //Get the student ID
-    $sql = "SELECT studentID FROM students WHERE userID = :userID";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindValue(":userID", $userID, PDO::PARAM_INT);
-    $stmt->execute();
-    $studentID = $stmt->fetchColumn();
+    $studentData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $userName = $studentData['firstname'];
+    $studentID = $studentData['studentID'];
 
    // Query for completed tests
     $sql = "SELECT quizzes.quizID, quizzes.title, subjects.name, studentQuizLink.TIMESTAMP, studentQuizLink.correctCount, studentQuizLink.questionCount, studentQuizLink.points
