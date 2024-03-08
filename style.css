@@ -9,9 +9,7 @@
     
     body
     {
-        background-color: #181818;
-        margin: 0 auto;
-        
+        background-color: #181818; 
     }
 
     nav
@@ -189,7 +187,6 @@
     .btn-primary:hover {
         background-color: #5e0000;
         border-color: #5e0000;
-
     }
 
     /* Testing Page */
@@ -291,7 +288,7 @@
             bottom: 10%;
             
         }
-
+      
         .answer
         {
             height: 50px;
@@ -308,7 +305,6 @@
         }
 
     }
-
     @media screen and (max-width: 1000px)
     {
         .answers
@@ -321,4 +317,62 @@
         {
             height: 50px;
         }
+    }
+
+/* User Stats Page */
+
+    #chart-container
+    {
+        width: 800px;
+        height: 400px;
+        margin: 0 auto;
+        margin-top: 10px;
+        
+    }
+
+    .user-scores
+    {
+        width: 400px;
+        margin: 0 auto;
+        text-align: center;
+        font-size: 28px;
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .past-tests
+    {
+        padding: 10px;
+        text-align: center;
+        background-color: #181818;
+        border-top: 2px solid white;
+    }
+
+    .table
+    {
+        border: 1px solid white;
+        margin-top: 20px;
+        box-shadow: 5px 5px 15px rgba(64, 64, 64, 0.7);
+    }
+
+    .table th
+    {
+        background-color: #383838;
+    }
+
+    .table tr:hover 
+    {
+        background-color: #242424;
+    }
+
+    .tests
+    {
+        border: 1px solid white;
+        padding: 10px;
+        margin: 10px;
+        width: 80%;
+        height: 50px;
+        margin: 10px auto;
+        font-size: 20px;
     }
