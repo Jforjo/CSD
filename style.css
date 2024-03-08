@@ -9,8 +9,7 @@
     
     body
     {
-        background-color: #181818;
-        
+        background-color: #181818; 
     }
 
     nav
@@ -213,11 +212,8 @@
         justify-content: center;
         align-items: center;
         text-align: center;
-        margin-bottom: 20px;
         max-width: 900px;
-        min-width: 900px;
-        max-height: 100px;
-        min-height: 100px;
+        height: 100px;
         margin: 0 auto;
         margin-top: 50px;
         font-size: 28px;
@@ -248,6 +244,7 @@
         align-items: center;
         border: 1px solid #dddddd;
         padding: 10px;
+        height: 150px;
         text-align: center;
         font-size: 24px;
         border-radius: 5px;
@@ -269,6 +266,14 @@
         border: 1px solid white;
         margin: 0 auto;
     }
+    .progress-bar i
+    {
+        display: block;
+        height: 8px;
+        inset: 0;
+        width: 75%;
+        background-color: darkred;
+    }
 
     @media screen and (max-width: 1600px)
     {
@@ -283,6 +288,11 @@
             bottom: 10%;
             
         }
+      
+        .answer
+        {
+            height: 50px;
+        }
 
         .answer:hover
         {
@@ -294,6 +304,19 @@
             bottom: 40%;
         }
 
+    }
+    @media screen and (max-width: 1000px)
+    {
+        .answers
+        {
+            display: grid;
+            grid-template-columns: 1fr;
+        }
+
+        .answer
+        {
+            height: 50px;
+        }
     }
 
 /* User Stats Page */
