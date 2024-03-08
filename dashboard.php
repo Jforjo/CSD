@@ -43,27 +43,23 @@
     $userName = $studentData['firstname'];
     $studentID = $studentData['studentID'];
 
-   // Query for completed tests
-    $sql = "SELECT quizzes.quizID, quizzes.title, subjects.name, studentQuizLink.TIMESTAMP, studentQuizLink.correctCount, studentQuizLink.questionCount, studentQuizLink.points
-    FROM quizzes 
-    JOIN subjects ON quizzes.subjectID = subjects.subjectID
-    JOIN studentQuizLink ON quizzes.quizID = studentQuizLink.quizID AND studentQuizLink.studentID = :studentID
-    WHERE studentQuizLink.completed = 1";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
-    $stmt->execute();
-    $completedTests = $stmt->fetchAll();
-
-    // Query for tests to complete
-    $sql = "SELECT quizzes.quizID, quizzes.title, subjects.name, studentQuizLink.TIMESTAMP  
-    FROM quizzes 
-    JOIN subjects ON quizzes.subjectID = subjects.subjectID
-    JOIN studentQuizLink ON quizzes.quizID = studentQuizLink.quizID AND studentQuizLink.studentID = :studentID
-    WHERE studentQuizLink.completed = 0";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
-    $stmt->execute();
-    $testsToComplete = $stmt->fetchAll();
+   //Query to get the tests
+   $sql = "SELECT quizzes.quizID, quizzes.title, subjects.name, studentQuizLink.TIMESTAMP, studentQuizLink.correctCount, studentQuizLink.questionCount, studentQuizLink.points, studentQuizLink.completed
+   FROM quizzes 
+   JOIN subjects ON quizzes.subjectID = subjects.subjectID
+   JOIN studentQuizLink ON quizzes.quizID = studentQuizLink.quizID AND studentQuizLink.studentID = :studentID";
+   $stmt = $conn->prepare($sql);
+   $stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
+   $stmt->execute();
+   $allTests = $stmt->fetchAll();
+   
+   //Get the completed tests and the tests to complete
+   $completedTests = array_filter($allTests, function($test) {
+       return $test['completed'] == 1;
+   });
+   $testsToComplete = array_filter($allTests, function($test) {
+       return $test['completed'] == 0;
+   });
     ?>
     <section class="welcome-section">
         <h2 class="welcome-message"><?php echo "Welcome, " . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></h2>
@@ -85,7 +81,16 @@
             <div class="test-contents">
                 <h3><?php echo htmlspecialchars($test['name'], ENT_QUOTES, 'UTF-8'); ?></h3>
                 <h5><?php echo htmlspecialchars($test['title'], ENT_QUOTES, 'UTF-8'); ?></h5>
-                <h6>10 Questions</h6>
+                <?php
+                //Get the question count for the current test
+                $sql = "SELECT COUNT(*) as questionCount FROM quizQuestionLink WHERE quizID = :quizID";
+                $stmt = $conn->prepare($sql);
+                $stmt->bindValue(":quizID", $test['quizID'], PDO::PARAM_STR);
+                $stmt->execute();
+                $result = $stmt->fetch();
+                $questionCount = $result['questionCount'];
+                ?>
+                <h6><?php echo $questionCount; ?> Questions</h6>
                 <h6><?php echo date('d/m/Y', strtotime($test['TIMESTAMP'])); ?></h6>
                 <form method="POST" action="testing-page.php">
                     <input type="hidden" name="quizID" value="<?php echo htmlspecialchars($test['quizID'], ENT_QUOTES, 'UTF-8'); ?>">
