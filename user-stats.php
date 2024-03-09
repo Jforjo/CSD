@@ -19,8 +19,52 @@
             </ul>
         </nav>
     </header>
+    <?php 
+    require_once('php/connection.php');
+    session_start();
+    $dsn = DB_DSN;
+    $user = DB_USERNAME;
+    $pass = DB_PASSWORD;
+
+    $opt = [
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES   => false,
+    ];
+    $pdo = new PDO($dsn, $user, $pass, $opt);
+
+    $userID = $_SESSION["userID"];
+    $conn = newConn();
+
+    //Get the logged in user's details, things like the first name and studentID
+    $stmt = $conn->prepare("CALL GetStudentData(:userID)");
+    $stmt->bindValue(":userID", $userID, PDO::PARAM_STR);
+    $stmt->execute();
+    $studentData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $userName = $studentData['firstname'];
+    $studentID = $studentData['studentID'];
+
+    //Query to get the tests
+   $sql = "SELECT quizzes.quizID, quizzes.title, subjects.name, studentQuizLink.TIMESTAMP, studentQuizLink.correctCount, studentQuizLink.questionCount, studentQuizLink.points, studentQuizLink.completed
+   FROM quizzes 
+   JOIN subjects ON quizzes.subjectID = subjects.subjectID
+   JOIN studentQuizLink ON quizzes.quizID = studentQuizLink.quizID AND studentQuizLink.studentID = :studentID";
+   $stmt = $conn->prepare($sql);
+   $stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
+   $stmt->execute();
+   $allTests = $stmt->fetchAll();
+   
+   //Get the completed tests and the tests to complete
+   $completedTests = array_filter($allTests, function($test) {
+       return $test['completed'] == 1;
+   });
+   $testsToComplete = array_filter($allTests, function($test) {
+       return $test['completed'] == 0;
+   });
+    ?>
     <section class="welcome-section">
-        <h2 class="welcome-message">Stats for Chris</h2>
+    <h2 class="welcome-message"><?php echo "Stats for " . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></h2>
     </section>
     <div id="chart-container">
         <canvas id="chart"></canvas>
@@ -43,30 +87,16 @@
                     </tr>
                 </thead>
                 <tbody>
+                <?php foreach ($completedTests as $test): ?>
                     <tr>
-                        <td>Maths Quiz 1</td>
-                        <td>Maths</td>
-                        <td>31/01/2024</td>
-                        <td>10/10</td>
-                        <td>100%</td>
-                        <td>100</td>
+                        <td><?php echo htmlspecialchars($test['title'], ENT_QUOTES, 'UTF-8'); ?></td>
+                        <td><?php echo htmlspecialchars($test['name'], ENT_QUOTES, 'UTF-8'); ?></td>
+                        <td><?php echo date('d/m/Y', strtotime($test['TIMESTAMP'])); ?></td>
+                        <td><?php echo $test['correctCount'] . '/' . $test['questionCount']; ?></td>
+                        <td><?php echo (($test['correctCount'] / $test['questionCount']) * 100) . '%'; ?></td>
+                        <td><?php echo $test['points']; ?></td>
                     </tr>
-                    <tr>
-                        <td>Maths Quiz 2</td>
-                        <td>Maths</td>
-                        <td>31/01/2024</td>
-                        <td>17/20</td>
-                        <td>85%</td>
-                        <td>100</td>
-                    </tr>
-                    <tr>
-                        <td>Physics Test</td>
-                        <td>Science</td>
-                        <td>31/01/2024</td>
-                        <td>42/50</td>
-                        <td>84%</td>
-                        <td>100</td>
-                    </tr>
+                <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
