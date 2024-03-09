@@ -91,6 +91,15 @@
         text-decoration: none;
     }
 
+    .no-test-message
+    {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        font-size: 28px;
+    }
+
     .test-box
     {
         display: flex;
@@ -123,7 +132,7 @@
         }
     }
 
-    .test-box a
+    .test-box button
     {
         display: flex;
         flex-wrap: wrap;
