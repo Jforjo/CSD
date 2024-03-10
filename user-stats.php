@@ -62,6 +62,20 @@
    $testsToComplete = array_filter($allTests, function($test) {
        return $test['completed'] == 0;
    });
+
+    //Calculate the total points and average score
+    $totalPoints = 0;
+    $totalScore = 0;
+    $NoOfTests = 0;
+
+    foreach ($completedTests as $test) {
+        $totalPoints += $test['points'];
+        $score = ($test['correctCount'] / $test['questionCount']) * 100;
+        $totalScore += $score;
+        $NoOfTests++;
+    }
+
+    $averageScore = $NoOfTests > 0 ? round($totalScore / $NoOfTests) : 0;
     ?>
     <section class="welcome-section">
     <h2 class="welcome-message"><?php echo "Stats for " . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></h2>
@@ -70,8 +84,8 @@
         <canvas id="chart"></canvas>
     </div>
     <div class="user-scores">
-        <p>Total Points: 100</p>
-        <p>Average Score: 60%</p>
+        <p>Total Points: <?php echo $totalPoints; ?></p>
+        <p>Average Score: <?php echo $averageScore; ?>%</p>
     </div>
     <div class="col-md-6 offset-md-3">
         <div class="past-tests">
