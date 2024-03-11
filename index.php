@@ -15,22 +15,48 @@ switch ($url) {
         break;
 
     case 'admin':
+        $routerPage = '/dashboard.php';
         include_once(__DIR__ . '/pages/admin/index.php');
         break;
     case 'admin/dashboard':
-        include_once(__DIR__ . '/pages/admin/dashboard.php');
+        if (isset($_POST['jsfetch'])) {
+            include_once(__DIR__ . '/pages/admin/dashboard.php');
+        } else {
+            $routerPage = '/dashboard.php';
+            include_once(__DIR__ . '/pages/admin/index.php');
+        }
         break;
     case 'admin/lecturer-management':
-        include_once(__DIR__ . '/pages/admin/lecturer-management.php');
+        if (isset($_POST['jsfetch'])) {
+            include_once(__DIR__ . '/pages/admin/lecturer-management.php');
+        } else {
+            $routerPage = '/lecturer-management.php';
+            include_once(__DIR__ . '/pages/admin/index.php');
+        }
         break;
     case 'admin/student-management':
-        include_once(__DIR__ . '/pages/admin/student-management.php');
+        if (isset($_POST['jsfetch'])) {
+            include_once(__DIR__ . '/pages/admin/student-management.php');
+        } else {
+            $routerPage = '/student-management.php';
+            include_once(__DIR__ . '/pages/admin/index.php');
+        }
         break;
     case 'admin/subject-management':
-        include_once(__DIR__ . '/pages/admin/subject-management.php');
+        if (isset($_POST['jsfetch'])) {
+            include_once(__DIR__ . '/pages/admin/subject-management.php');
+        } else {
+            $routerPage = '/subject-management.php';
+            include_once(__DIR__ . '/pages/admin/index.php');
+        }
         break;
     case 'admin/quiz-management':
-        include_once(__DIR__ . '/pages/admin/quiz-management.php');
+        if (isset($_POST['jsfetch'])) {
+            include_once(__DIR__ . '/pages/admin/quiz-management.php');
+        } else {
+            $routerPage = '/quiz-management.php';
+            include_once(__DIR__ . '/pages/admin/index.php');
+        }
         break;
 
     default:
