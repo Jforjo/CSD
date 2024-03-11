@@ -36,11 +36,11 @@ if ($_GET["e"]==7)
 
 ?>
 
-<label for="FirstName">FirstName:</label>
-<input name="FirstName" id="FirstName" type="FirstName" required>
+<label for="firstName">firstName:</label>
+<input name="firstName" id="firstName" type="FirstName" required>
 
-<label for="LastName">LastName:</label>
-<input name="LastName" id="LastName" type="LastName" required>
+<label for="lastName">lastName:</label>
+<input name="lastName" id="lastName" type="LastName" required>
 
 <label for="email">Email:</label>
 <input name="email" id="email" type="email" placeholder="eg test@test.com" required>
@@ -49,7 +49,7 @@ if ($_GET["e"]==7)
 <input name="password" id="password" type="password" placeholder="password" required>
 
 
-<button type="signup">Signup</button>
+<button type="submit">Signup</button>
 
 </form>
 

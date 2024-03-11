@@ -1,51 +1,32 @@
 <?php
-
-session_start();
-if(isset($_SESSION["auth"])){  
-
-if($_SESSION["auth"] == "2")  
-{
- 
-}
-else
-{
-    header("Location: login.php?e=4");
- die("You are not Signed in.");  }  
-}
-
-$sql = "UPDATE
-`users`
-SET
-`firstname` = '$f_name',
-`lastname` = '$l_name',
-`email` = '$email',
-`password` = '$password'
-WHERE
-`users`.`userid` = $uid";
-
-if(mysqli_query($db_connect,$sql))
-{
-    header("Location: login.php");
+require_once('php/connection.php');
+function CreateUser($firstname,$lastname,$email, $password) {
+    $sql = "CALL CreateUser(:ID,:firstname,:lastname,:email,:password);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    
+    $stmt->bindValue(":ID",bin2hex(random_bytes(16)), PDO::PARAM_STR);
+    $stmt->bindValue(":firstname", $firstname, PDO::PARAM_STR);
+    $stmt->bindValue(":lastname", $lastname, PDO::PARAM_STR);
+    $stmt->bindValue(":email", $email, PDO::PARAM_STR);
+    $stmt->bindValue(":password", password_hash($password,PASSWORD_DEFAULT), PDO::PARAM_STR);
+    $success=$stmt->execute();
+   
+    $conn = null;
+    
+    
+   return$success;
 }
 
-echo mysqli_error($db_connect);
+$data = CreateUser($_POST["firstname"],$_POST["lastname"],$_POST['email'], $_POST['password']);
 
-header("Location: signup.php");
-
-if(isset($_GET["userid"]))
-{
-    require_once("includes/_connect.php");//database connection
-    $uid = $_GET["userid"];
-    $sql = "SELECT * FROM `users` WHERE `userID` = '$uid' LIMIT 1"; //SQL Query
-    $query = mysqli_query($db_connect,$sql);//get the results
-    $result = mysqli_fetch_assoc($query);
-
-
+if ($data === false) {
+    header('Location: signup.php?e=5');
+} else {
+  
+    header('Location: login.php');
 }
 
-else { die("No user selected!");}
 ?>
-<h2>Edit user:       <?php echo $result["email"]; ?>              </h2>
-
 
     
