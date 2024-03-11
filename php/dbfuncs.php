@@ -6,7 +6,7 @@
  * @param string $userID The user ID to check exists.
  * 
  * @author Jforjo <https://github.com/Jforjo>
- * @return bool TRUE if the user ID exists or FALSE if it doesnn't. Also, FALSE is returned on failure.
+ * @return bool TRUE if the user ID exists or FALSE if it doesn't. Also, FALSE is returned on failure.
  */
 function CheckUserIDExists(string $userID): bool {
     $sql = "SELECT CheckUserIDExists(:userID) AS 'exists';";
@@ -24,13 +24,31 @@ function CheckUserIDExists(string $userID): bool {
  * @param string $studentID The student ID to check exists.
  * 
  * @author Jforjo <https://github.com/Jforjo>
- * @return bool TRUE if the student ID exists or FALSE if it doesnn't. Also, FALSE is returned on failure.
+ * @return bool TRUE if the student ID exists or FALSE if it doesn't. Also, FALSE is returned on failure.
  */
 function CheckStudentIDExists(string $studentID): bool {
     $sql = "SELECT CheckStudentIDExists(:studentID) AS 'exists';";
     $conn = newConn();
     $stmt = $conn->prepare($sql);
     $stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
+    $stmt->execute();
+    $data = $stmt->fetch();
+    $conn = null;
+    return $data['exists'];
+}
+/**
+ * Checks if the a user with the give ID has been assigned a student number.
+ * 
+ * @param string $userID The user's ID.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE if the user has been assigned a student number or FALSE if it doesn't. Also, FALSE is returned on failure.
+ */
+function CheckUserIsStudent(string $userID): bool {
+    $sql = "SELECT CheckUserIsStudent(:userID) AS 'exists';";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":userID", $userID, PDO::PARAM_STR);
     $stmt->execute();
     $data = $stmt->fetch();
     $conn = null;
@@ -53,6 +71,24 @@ function GetUserRole(string $userID): mixed {
     $data = $stmt->fetch();
     $conn = null;
     return $data['role'];
+}
+/**
+ * Fetches the user's state.
+ * 
+ * @param string $userID The user's ID.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return mixed The user's state as a string or FALSE on failure.
+ */
+function GetUserState(string $userID): mixed {
+    $sql = "CALL GetUserState(:userID);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":userID", $userID, PDO::PARAM_STR);
+    $stmt->execute();
+    $data = $stmt->fetch();
+    $conn = null;
+    return $data['state'];
 }
 /**
  * Fetches the amount of students.
@@ -342,7 +378,24 @@ function DeleteUser(string $userID): bool {
     $stmt->bindValue(":userID", $userID, PDO::PARAM_STR);
     $success = $stmt->execute();
     $conn = null;
-    return $success;
+    return $success && !CheckUserIDExists($userID);
+}
+/**
+ * Deletes the student entry with the given userID.
+ * 
+ * @param string $userID The user's ID.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE on success or FALSE on failure.
+ */
+function DeleteStudent(string $userID): bool {
+    $sql = "CALL DeleteStudent(:userID);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":userID", $userID, PDO::PARAM_STR);
+    $success = $stmt->execute();
+    $conn = null;
+    return $success && !CheckUserIsStudent($userID);
 }
 /**
  * Assign a user and student ID.
@@ -361,7 +414,7 @@ function CreateStudent(string $userID, string $studentID): bool {
     $stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
     $success = $stmt->execute();
     $conn = null;
-    return $success;
+    return $success && CheckUserIsStudent($userID);
 }
 
 ?>

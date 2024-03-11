@@ -49,11 +49,14 @@
             }
             throw new Error(res.statusText);
         }).then(data => {
-            if (data?.type === "refresh") {
-                window.location.reload();
-                // Shouldn't need the return
-                return;
-            }
+            try {
+                data = JSON.parse(data);
+                if (data?.type === "refresh") {
+                    window.location.reload();
+                    // Shouldn't need the return
+                    return;
+                }
+            } catch {};
             document.querySelector('main').innerHTML = data;
             title != null && (document.getElementById('page-title').innerText = title);
             // breadcrumbs != null && Breadcrumbs(breadcrumbs);
@@ -264,26 +267,30 @@
             inputSwitch.classList.add('events-listening');
         });
         document.querySelectorAll('#student-management .table tr')?.forEach(tableRow => {
-            if (tableRow.classList.contains('events-listening') === false) {
-                tableRow.querySelector('.icons .table-edit-btn')?.addEventListener('click', () => {
-                    ModifyUser(tableRow?.dataset?.userid, "/php/getstudentdata.php");
-                });
-                tableRow.querySelector('.icons .table-delete-btn')?.addEventListener('click', () => {
-                    DeleteUser(tableRow?.dataset?.userid, "/php/deletestudent.php");
-                });
-                tableRow.classList.add('events-listening');
-            }
+            if (tableRow.classList.contains('events-listening') != false) return;
+            tableRow.querySelector('.icons .table-edit-btn')?.addEventListener('click', () => {
+                ModifyUser(tableRow?.dataset?.userid, "/php/getstudentdata.php");
+            });
+            tableRow.querySelector('.icons .table-delete-btn')?.addEventListener('click', () => {
+                DeleteUser(tableRow?.dataset?.userid, "/php/deletestudent.php");
+            });
+            tableRow.querySelector('.icons .table-promote-btn')?.addEventListener('click', () => {
+                PromoteUser(tableRow?.dataset?.userid, "/php/promotestudent.php");
+            });
+            tableRow.classList.add('events-listening');
         });
         document.querySelectorAll('#lecturer-management .table tr')?.forEach(tableRow => {
-            if (tableRow.classList.contains('events-listening') === false) {
-                tableRow.querySelector('.icons .table-edit-btn')?.addEventListener('click', () => {
-                    ModifyUser(tableRow?.dataset?.userid, "/php/getlecturerdata.php");
-                });
-                tableRow.querySelector('.icons .table-delete-btn')?.addEventListener('click', () => {
-                    DeleteUser(tableRow?.dataset?.userid, "/php/deletelecturer.php");
-                });
-                tableRow.classList.add('events-listening');
-            }
+            if (tableRow.classList.contains('events-listening') != false) return;
+            tableRow.querySelector('.icons .table-edit-btn')?.addEventListener('click', () => {
+                ModifyUser(tableRow?.dataset?.userid, "/php/getlecturerdata.php");
+            });
+            tableRow.querySelector('.icons .table-delete-btn')?.addEventListener('click', () => {
+                DeleteUser(tableRow?.dataset?.userid, "/php/deletelecturer.php");
+            });
+            tableRow.querySelector('.icons .table-demote-btn')?.addEventListener('click', () => {
+                DemoteUser(tableRow?.dataset?.userid, "/php/demotelecturer.php");
+            });
+            tableRow.classList.add('events-listening');
         });
         const editStudentForm = document.querySelector('#student-management + #dialog-edit-user form');
         if (editStudentForm?.classList.contains('events-listening') === false) {
@@ -375,9 +382,7 @@
         }
     }
 
-    function DeleteUser(userid, page) {
-        if (userid == null || page == null) return;
-        if (!confirm("Are you sure you wish to delete this user?")) return;
+    function SimpleForm(userid, page) {
         const formData = new FormData();
         formData.append('userID', userid);
         fetch(page, {
@@ -417,6 +422,21 @@
                 class: "error"
             });
         });
+    }
+    function PromoteUser(userid, page) {
+        if (userid == null || page == null) return;
+        if (!confirm("Are you sure you wish to promote this user?")) return;
+        SimpleForm(userid, page);
+    }
+    function DemoteUser(userid, page) {
+        if (userid == null || page == null) return;
+        if (!confirm("Are you sure you wish to demote this user?")) return;
+        SimpleForm(userid, page);
+    }
+    function DeleteUser(userid, page) {
+        if (userid == null || page == null) return;
+        if (!confirm("Are you sure you wish to delete this user?")) return;
+        SimpleForm(userid, page);
     }
     function ModifyUser(userid, page) {
         if (page == null) return;

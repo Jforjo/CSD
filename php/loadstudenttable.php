@@ -30,7 +30,6 @@ if (!($role == "lecturer" || $role == "admin")) {
         "type" => "refresh"
     )));
 }
-unset($role);
 
 $limit = $_POST['limit'];
 if (!isset($_POST['limit']) || $_POST['limit'] < 5) $limit = 5;
@@ -79,6 +78,15 @@ $studentCount = count($students);
                         <path d="M4,9V28c-.024,2.185,1.728,3.976,3.914,4,.029,0,.058,0,.086,0H24c2.185,.024,3.976-1.728,4-3.914,0-.029,0-.058,0-.086V9H4Zm7,16c0,.552-.447,1-1,1s-1-.448-1-1v-9c0-.552,.447-1,1-1s1,.448,1,1v9Zm6,0c0,.552-.447,1-1,1s-1-.448-1-1v-9c0-.552,.447-1,1-1s1,.448,1,1v9Zm6,0c0,.552-.447,1-1,1s-1-.448-1-1v-9c0-.552,.447-1,1-1s1,.448,1,1v9Z"></path>
                     </g>
                 </svg>
+                <?php if ($role == "admin") { ?>
+                    <!-- Promote Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="table-promote-btn">
+                        <g fill="currentColor" class="nc-icon-wrapper">
+                            <path d="M5,18h6v8a1,1,0,0,0,1,1h8a1,1,0,0,0,1-1V18h6a1,1,0,0,0,.807-1.591l-11-15a1.037,1.037,0,0,0-1.614,0l-11,15A1,1,0,0,0,5,18Z" fill="currentColor"></path>
+                            <path data-color="color-2" d="M20,29H12a1,1,0,0,0,0,2h8a1,1,0,0,0,0-2Z" fill="currentColor"></path>
+                        </g>
+                    </svg>
+                <?php } ?>
             </div>
         </td>
     </tr>

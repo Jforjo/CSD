@@ -21,7 +21,7 @@ if (!CheckUserIDExists($_SESSION['userID'])) {
 }
 // Checks if they have the correct permissions
 $role = GetUserRole($_SESSION['userID']);
-if (!($role == "lecturer" || $role == "admin")) {
+if ($role != "admin") {
     // They shouldn't have been able to access this file without
     //  these permissions, so log them out just incase.
     session_unset();
@@ -46,18 +46,21 @@ if (!CheckUserIDExists($_POST['userID'])) die(json_encode(array(
 $role = GetUserRole($_POST['userID']);
 if ($role != "student") die(json_encode(array(
     "type" => "error",
-    "msg" => "You do not have permission to delete this user"
+    "msg" => "You do not have permission to promote this user"
 )));
 unset($role);
 
-if (!DeleteUser($_POST['userID'])) die(json_encode(array(
-    "type" => "error",
-    "msg" => "Failed to delete the student"
-)));
+if (!(EditUserRole($_POST['userID'], "lecturer") && DeleteStudent($_POST['userID']))) {
+    EditUserRole($_POST['userID'], "student");
+    die(json_encode(array(
+        "type" => "error",
+        "msg" => "Failed to promote the student"
+    )));
+}
 
 exit(json_encode(array(
     "type" => "success",
-    "msg" => "Successfully deleted the student"
+    "msg" => "Successfully promoted the student"
 )));
 
 ?>
