@@ -1,9 +1,65 @@
+<?php session_start();
+// Checks if the user is logged in
+if (!isset($_SESSION['userID'])) header("Location: /");
+require_once(__DIR__ . '/../../php/dbfuncs.php');
+// Checks if their session id is valid
+if (!CheckUserIDExists($_SESSION['userID'])) {
+    session_unset();
+    session_destroy();
+    header("Location: /");
+}
+// Checks if they have the correct permissions
+$role = GetUserRole($_SESSION['userID']);
+if (!($role === "lecturer" || $role === "admin")) {
+    header("Location: /");
+}
+
+// Bruteforce...
+$pageData = array(
+    "title" => "Admin | Dashboard",
+    "header-title" => "Dashboard",
+    "pos" => "0"
+);
+if ($role === 'admin') {
+    if ($routerPage === '/lecturer-management.php') $pageData = array(
+        "title" => "Admin | Lecturer Management",
+        "header-title" => "Lecturer Management",
+        "pos" => "1"
+    );
+    else if ($routerPage === '/student-management.php') $pageData = array(
+        "title" => "Admin | Student Management",
+        "header-title" => "Student Management",
+        "pos" => "2"
+    );
+    else if ($routerPage === '/quiz-management.php') $pageData = array(
+        "title" => "Admin | Quiz Management",
+        "header-title" => "Quiz Management",
+        "pos" => "3"
+    );
+    else if ($routerPage === '/subject-management.php') $pageData = array(
+        "title" => "Admin | Subject Management",
+        "header-title" => "Subject Management",
+        "pos" => "4"
+    );
+} else {
+    if ($routerPage === '/student-management.php') $pageData = array(
+        "title" => "Admin | Student Management",
+        "header-title" => "Student Management",
+        "pos" => "1"
+    );
+    else if ($routerPage === '/quiz-management.php') $pageData = array(
+        "title" => "Admin | Quiz Management",
+        "header-title" => "Quiz Management",
+        "pos" => "2"
+    );
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title><?php echo $pageData['title']; ?></title>
     <script defer src="/assets/js/script.js"></script>
     <link rel="stylesheet" href="/assets/css/style.css">
 </head>
@@ -11,15 +67,15 @@
     <nav>
         <i class="glow"></i>
         <div class="top">
-            <span>
+            <a>
                 Qu<i>?</i>z
-            </span>
+            </a>
         </div>
         <ul>
-            <i class="indicator" style="--pos:0;"></i>
-            <li class="active">
-                <a data-link="admin/dashboard.html">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="nc-int-icon-state-b">
+            <i class="indicator" style="--pos:<?php echo $pageData['pos']; ?>;"></i>
+            <li <?php if ($routerPage == '/dashboard.php') echo 'class="active"'; ?>>
+                <a data-link="admin/dashboard">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="<?php if ($routerPage == '/dashboard.php') echo 'nc-int-icon-state-b'; ?>">
                         <g stroke-linecap="square" transform="translate(0.5 0.5)" stroke-miterlimit="10" fill="none" stroke="currentColor" stroke-linejoin="miter" class="nc-icon-wrapper">
                             <g class="nc-int-icon js-nc-int-icon">
                                 <g class="nc-int-icon-a">
@@ -43,9 +99,38 @@
                     </span>
                 </a>
             </li>
-            <li>
-                <a data-link="admin/student-management.html">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+            <?php if ($role === "admin") { ?>
+            <li <?php if ($routerPage == '/lecturer-management.php') echo 'class="active"'; ?>>
+                <a data-link="admin/lecturer-management">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="<?php if ($routerPage == '/lecturer-management.php') echo 'nc-int-icon-state-b'; ?>">
+                        <g stroke-linecap="square" transform="translate(0.5 0.5)" fill="none" stroke="currentColor" stroke-linejoin="miter" class="nc-icon-wrapper" stroke-miterlimit="10">
+                            <g class="nc-int-icon js-nc-int-icon">
+                                <g class="nc-int-icon-a">
+                                    <circle cx="14" cy="8" r="6"></circle>
+                                    <polyline points="26 8 59 8 59 46 28 46"></polyline>
+                                    <line x1="45" y1="46" x2="55" y2="62" data-cap="butt" stroke-linecap="butt"></line>
+                                    <path d="M40.44,19H11a6,6,0,0,0-6,6V58.831A3.115,3.115,0,0,0,7.84,62,3,3,0,0,0,11,59V42h5V58.831A3.115,3.115,0,0,0,18.84,62,3,3,0,0,0,22,59V25l18.412-.877a2.666,2.666,0,0,0,2.579-2.342A2.56,2.56,0,0,0,40.44,19Z"></path>
+                                    <line x1="35" y1="8" x2="35" y2="3"></line>
+                                </g>
+                                <g class="nc-int-icon-b">
+                                    <path d="M48.082,49H44.543l7.685,12.3a1.5,1.5,0,0,0,2.544-1.59Z" stroke="none" fill="currentColor"></path>
+                                    <circle cx="12" cy="8" r="6" fill="currentColor" stroke="none"></circle>
+                                    <path d="M58,7H36V3a1,1,0,0,0-2,0V7H19.931a7.876,7.876,0,0,1-2.657,7H39.268a4.672,4.672,0,0,1,4.7,4.018,4.552,4.552,0,0,1-4.318,5.091L22,23.911V47H58a2,2,0,0,0,2-2V9A2,2,0,0,0,58,7Z" stroke="none" fill="currentColor"></path>
+                                    <path d="M39.443,16H10a6,6,0,0,0-6,6V58.935A3.065,3.065,0,0,0,7.065,62h0a3.065,3.065,0,0,0,3.062-2.932L11,39h2l.873,20.068A3.065,3.065,0,0,0,16.935,62h0A3.065,3.065,0,0,0,20,58.935V22l19.559-.889A2.556,2.556,0,0,0,42,18.557h0A2.557,2.557,0,0,0,39.443,16Z" fill="currentColor" stroke="none"></path>
+                                </g>
+                            </g>
+                            <style fill="currentColor" stroke="none">.nc-int-icon{position:relative;}.nc-int-icon-b{position: absolute;top: calc(50% - 0.5em);left: calc(50% - 0.5em);opacity: 0;}.nc-int-icon-a,.nc-int-icon-b{transform-origin:center center;}.nc-int-icon-scale .nc-int-icon-a,.nc-int-icon-scale .nc-int-icon-b{transition: opacity 0s calc(var(--animation-duration)/2), transform var(--animation-duration);}.nc-int-icon-scale .nc-int-icon-b{transform: scale(0.8);}.nc-int-icon-state-b .nc-int-icon-a{opacity: 0;}.nc-int-icon-state-b .nc-int-icon-b{opacity: 1;}.nc-int-icon-scale.nc-int-icon-state-b .nc-int-icon-a{transform: scale(0.8);}.nc-int-icon-scale.nc-int-icon-state-b .nc-int-icon-b{transform: scale(1);}</style>
+                        </g>
+                    </svg>
+                    <span>
+                        Lecturers
+                    </span>
+                </a>
+            </li>
+            <?php } ?>
+            <li <?php if ($routerPage == '/student-management.php') echo 'class="active"'; ?>>
+                <a data-link="admin/student-management">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="<?php if ($routerPage == '/student-management.php') echo 'nc-int-icon-state-b'; ?>">
                         <g stroke-linecap="square" transform="translate(0.5 0.5)" fill="none" stroke="currentColor" stroke-linejoin="miter" class="nc-icon-wrapper" stroke-miterlimit="10">
                             <g class="nc-int-icon js-nc-int-icon">
                                 <g class="nc-int-icon-a">
@@ -65,9 +150,9 @@
                     </span>
                 </a>
             </li>
-            <li>
-                <a data-link="admin/quiz-management.html">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+            <li <?php if ($routerPage == '/quiz-management.php') echo 'class="active"'; ?>>
+                <a data-link="admin/quiz-management">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="<?php if ($routerPage == '/quiz-management.php') echo 'nc-int-icon-state-b'; ?>">
                         <g stroke-linecap="square" transform="translate(0.5 0.5)" fill="none" stroke="currentColor" stroke-linejoin="miter" class="nc-icon-wrapper" stroke-miterlimit="10">
                             <g class="nc-int-icon js-nc-int-icon">
                                 <g class="nc-int-icon-a">
@@ -100,7 +185,7 @@
                 <i>/</i>
                 <a data-link="">dashboard</a>
             </span> -->
-            <h1 id="page-title">Dashboard</h1>
+            <h1 id="page-title"><?php echo $pageData['header-title']; ?></h1>
         </div>
         <div class="search">
             <div class="search-box">
@@ -113,7 +198,21 @@
         </div>
     </header>
     <main>
-        
+        <?php if(isset($routerPage)) {
+            $_POST['jsfetch'] = true;
+            include(__dir__ . $routerPage);
+        } ?>
     </main>
+    <dialog id="popup" aria-modal="true" aria-labelledby="popup-title" aria-describedby="popup-msg">
+        <form method="dialog">
+            <header>
+                <h3 id="popup-title"></h3>
+                <button onclick="this.closest('dialog').close('close');"><i></i></button>
+            </header>
+            <article>
+                <p id="popup-msg"></p>
+            </article>
+        </form>
+    </dialog>
 </body>
 </html>

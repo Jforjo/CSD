@@ -1,7 +1,11 @@
 :root {
-    --text: #ffffff;
-    --background: #181818;
-    --primary: #a3a3a3;
+    --text: 255 255 255;
+    --background: 15 15 15;
+    --elevate-1: 20 20 20;
+    --elevate-2: 24 24 24;
+    --elevate-3: 32 32 32;
+    --elevate-4: 44 44 44;
+    --primary: 163 163 163;
     --secondary: #2c2c2c;
     /* TODO: Change all variables to numbers instead of hex values */
     --accent: 255 121 157;
@@ -15,13 +19,57 @@
     box-sizing: border-box;
     font-family: Arial, Helvetica, sans-serif;
 }
+.lds-ring {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+.lds-ring div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border: 8px solid #fff;
+    border-color: #fff transparent transparent transparent;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+}
+.lds-ring div:nth-child(1) {
+    animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+    animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+    animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
 body {
     min-height: 100vh;
     min-height: 100svh;
     max-width: 100vw;
     max-width: 100svw;
     width: 100%;
-    background-color: #0f0f0f;
+    background-color: rgb(var(--background));
+    background:
+        rgb(var(--background))
+        linear-gradient(
+            to right,
+            transparent,
+            rgb(var(--accent) / 10%),
+            transparent
+        )
+    ;
     display: grid;
     grid-template-columns:
         [full-width-start navbar-start]
@@ -39,9 +87,9 @@ body {
         1fr
         [full-height-end main-row-end]
     ;
-    overflow-x: clip;
+    /* overflow-x: clip; */
 }
-header {
+body > header {
     grid-column: header;
     grid-row: header-row;
     width: 100%;
@@ -51,72 +99,78 @@ header {
     align-items: center;
     padding: 32px;
 }
-header .title {
+body > header .title {
     display: flex;
     justify-content: center;
     flex-direction: column;
 }
-header .title #page-title {
-    color: var(--text);
+body > header .title #page-title {
+    color: rgb(var(--text));
     margin: 2px 0;
 }
-header .title #breadcrumbs {
-    color: var(--primary);
+body > header .title #breadcrumbs {
+    color: rgb(var(--primary));
     margin: 2px 0;
     display: flex;
 }
-header .title #breadcrumbs a {
+body > header .title #breadcrumbs a {
     color: inherit;
 }
-header .title #breadcrumbs a[data-link] {
+body > header .title #breadcrumbs a[data-link] {
     text-decoration: underline;
 }
-header .title #breadcrumbs a:hover {
-    color: var(--text);
+body > header .title #breadcrumbs a:hover {
+    color: rgb(var(--text));
 }
-header .title #breadcrumbs i {
+body > header .title #breadcrumbs i {
     margin: 0 8px;
 }
-header .search {
+body > header .search {
     position: relative;
-    background: #141414;
+    background: rgb(var(--elevate-1));
     border-radius: 28px;
     min-width: 256px;
     height: 48px;
     z-index: 1;
     transition: min-width 0.5s;
 }
-header .search .search-box {
+body > header .search .search-box {
     position: absolute;
     inset: 4px;
 }
-header .search .search-box form {
+body > header .search .search-box form {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100%;
-    background: rgba(0,0,0,0.7);
+    background-color: rgb(var(--background));
     border-radius: 28px;
     padding: 0 8px;
+    transition: background-color 0.5s;
 }
-header .search .search-box form input {
+body > header .search .search-box form input {
     padding: 0 8px;
     background: none;
     outline: none;
     border: none;
     font-size: 1rem;
-    color: var(--text);
+    color: rgb(var(--text));
     width: 100%;
 }
-header .search:has(.search-box form input:focus),
-header .search:has(.search-box form input:focus-visible),
-header .search:has(.search-box form input:not(:placeholder-shown)) {
+body > header .search .search-box form:has(input:focus),
+body > header .search .search-box form:has(input:focus-visible),
+body > header .search .search-box form:has(input:not(:placeholder-shown)) {
+    background-color: rgba(0,0,0,0.7);
+}
+body > header .search:has(.search-box form input:focus),
+body > header .search:has(.search-box form input:focus-visible),
+body > header .search:has(.search-box form input:not(:placeholder-shown)) {
     min-width: 512px;
 }
-header .search .search-box form input::placeholder {
-    color: var(--primary);
+body > header .search .search-box form input::placeholder {
+    color: rgb(var(--primary));
 }
-header .search::before {
+body > header .search::before {
     position: absolute;
     content: '';
     inset: 0;
@@ -126,29 +180,29 @@ header .search::before {
     transition: opacity 0.5s;
     opacity: 0;
 }
-header .search:has(.search-box form input:focus)::before,
-header .search:has(.search-box form input:focus-visible)::before,
-header .search:has(.search-box form input:not(:placeholder-shown))::before {
+body > header .search:has(.search-box form input:focus)::before,
+body > header .search:has(.search-box form input:focus-visible)::before,
+body > header .search:has(.search-box form input:not(:placeholder-shown))::before {
     opacity: 1;
 }
 
-nav {
+body > nav {
     position: relative;
     grid-column: navbar;
     grid-row: full-height;
     /* height: 100vh; */
     /* height: 100svh; */
     height: 100%;
-    background-color: #141414;
+    background-color: rgb(var(--elevate-1));
 }
-nav .top {
+body > nav .top {
     height: 128px;
     border-bottom: 1px solid rgba(255,255,255,0.1);
     display: flex;
     justify-content: center;
     align-items: center;
 }
-nav .glow {
+body > nav .glow {
     position: absolute;
     left: 50%;
     translate: -50% -50%;
@@ -158,7 +212,7 @@ nav .glow {
     border-radius: 48px;
     filter: blur(64px);
 }
-nav .indicator {
+body > nav .indicator {
     position: absolute;
     right: 0;
     top: calc(40px + calc(var(--pos) * 64px));
@@ -168,7 +222,7 @@ nav .indicator {
     border-radius: 1em;
     transition: top 0.5s;
 }
-nav ul {
+body > nav ul {
     position: sticky;
     top: -24px;
     display: flex;
@@ -176,43 +230,45 @@ nav ul {
     flex-direction: column;
     padding-top: 32px;
 }
-nav ul li {
+body > nav ul li {
     height: 64px;
     /* padding: 16px 0; */
     cursor: pointer;
     list-style: none;
 }
-nav ul li a {
+body > nav ul li a {
     height: 100%;
     text-decoration: none;
-    color: var(--primary);
+    color: rgb(var(--primary));
     display: flex;
     align-items: center;
     padding: 0 16px;
     transition: color 0.5s;
 }
-nav ul li:hover a {
-    color: var(--text);
+body > nav ul li:hover a {
+    color: rgb(var(--text));
 }
-nav ul li.active a {
+body > nav ul li.active a {
     color: rgb(var(--accent));
 }
-nav ul li a svg {
+body > nav ul li a svg {
     width: 24px;
     stroke-width: 3px;
 }
-nav ul li a span {
+body > nav ul li a span {
     margin: 0 16px;
     font-size: 1rem;
 }
-nav .top span {
+body > nav .top > a {
     font-size: 2rem;
     text-transform: uppercase;
+    text-decoration: none;
     font-weight: 600;
-    color: var(--text);
+    color: rgb(var(--text));
     letter-spacing: 2px;
+    cursor: pointer;
 }
-nav .top span i {
+body > nav .top > a i {
     font-style: normal;
     color: rgb(var(--accent));
 }
@@ -220,17 +276,21 @@ nav .top span i {
 
 
 
-main {
+body > main {
     position: relative;
     grid-column: header;
     grid-row: main-row;
     padding: 0 32px;
-    display: grid;
+    /* display: grid; */
+    display: flex;
+    flex-direction: column;
     width: 100%;
     height: 100%;
+    color: rgb(var(--primary));
 }
-main .dashboard-cards {
+body > main .dashboard-cards {
     position: relative;
+    min-height: 100%;
     display: grid;
     grid-template-areas:
         'card1 card4'
@@ -240,32 +300,49 @@ main .dashboard-cards {
     grid-template-columns: 1fr 2fr;
     grid-template-rows: 1fr 1fr 1fr;
 }
-main .dashboard-cards .card {
-    background-color: #181818;
+body > main .dashboard-cards .card {
+    background-color: rgb(var(--elevate-2));
     margin: 16px;
     padding: 16px;
     border-radius: 16px;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    /* min-height: 512px; */
+    /* min-height: 196px; */
+    /* max-height: 256px; */
 }
-main .dashboard-cards .card:nth-child(1) {
+body > main .dashboard-cards .card:nth-child(1) {
     grid-area: card1;
 }
-main .dashboard-cards .card:nth-child(2) {
+body > main .dashboard-cards .card:nth-child(2) {
     grid-area: card2;
 }
-main .dashboard-cards .card:nth-child(3) {
+body > main .dashboard-cards .card:nth-child(3) {
     grid-area: card3;
 }
-main .dashboard-cards .card:nth-child(4) {
+body > main .dashboard-cards .card:nth-child(4) {
     grid-area: card4;
+    /* min-height: 512px; */
+    /* max-height: unset; */
 }
-main .dashboard-cards .card:nth-child(5) {
+body > main .dashboard-cards .card:nth-child(5) {
     grid-area: card5;
 }
-main .dashboard-cards .card h2 {
+@media (max-width: 1200px) {
+    body > main .dashboard-cards {
+        grid-template-areas:
+            'card1 card3'
+            'card4 card4'
+            'card5 card5'
+        ;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 2fr 1fr;
+    }
+    body > main .dashboard-cards .card:nth-child(2) {
+        display: none;
+    }
+}
+body > main .dashboard-cards .card h2 {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -273,14 +350,14 @@ main .dashboard-cards .card h2 {
     margin-bottom: 16px;
     margin-left: 16px;
 }
-main .dashboard-cards .card h2 i {
+body > main .dashboard-cards .card h2 i {
     --plus-width: 3px;
     position: relative;
     height: 80%;
     aspect-ratio: 1 / 1;
     cursor: pointer;
 }
-main .dashboard-cards .card h2 i::before {
+body > main .dashboard-cards .card h2 i::before {
     position: absolute;
     content: '';
     inset: 50%;
@@ -291,7 +368,7 @@ main .dashboard-cards .card h2 i::before {
     background-color: #777;
     transition: 0.5s background-color;
 }
-main .dashboard-cards .card h2 i::after {
+body > main .dashboard-cards .card h2 i::after {
     position: absolute;
     content: '';
     inset: 50%;
@@ -302,20 +379,20 @@ main .dashboard-cards .card h2 i::after {
     background-color: #777;
     transition: 0.5s background-color;
 }
-main .dashboard-cards .card h2 i:hover::before {
-    background-color: var(--text);
+body > main .dashboard-cards .card h2 i:hover::before {
+    background-color: rgb(var(--text));
 }
-main .dashboard-cards .card h2 i:hover::after {
-    background-color: var(--text);
+body > main .dashboard-cards .card h2 i:hover::after {
+    background-color: rgb(var(--text));
 }
-main .dashboard-cards .card .stats {
+body > main .dashboard-cards .card .stats {
     width: 100%;
     margin: 16px 0;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-main .dashboard-cards .card .stats > div {
+body > main .dashboard-cards .card .stats > div {
     width: 30%;
     padding: 8px;
     display: flex;
@@ -324,58 +401,57 @@ main .dashboard-cards .card .stats > div {
     flex-direction: column;
     flex-grow: 1;
 }
-main .dashboard-cards .card .stats > div h3 {
+body > main .dashboard-cards .card .stats > div h3 {
     color: #ddd;
     font-size: 2em;
 }
-main .dashboard-cards .card .stats > div span {
+body > main .dashboard-cards .card .stats > div span {
     color: #777;
     letter-spacing: 1px;
     font-weight: 600;
     font-size: 0.8em;
 }
-main .dashboard-cards .card .stats > div hr {
+body > main .dashboard-cards .card .stats > div hr {
     width: 100%;
     margin: 4px 0;
     border-color: #fff;
     opacity: 0.1;
     transition: opacity 0.5s, border-color 0.5s;
 }
-main .dashboard-cards .card .stats > div:hover hr {
+body > main .dashboard-cards .card .stats > div:hover hr {
     border-color: var(--clr);
     opacity: 0.5;
 }
-main .dashboard-cards .card .ratio-bar {
+body > main .dashboard-cards .card .ratio-bar {
     --total: calc(var(--value1) + var(--value2) + var(--value3));
     position: relative;
     display: flex;
     width: 100%;
     height: 32px;
+    border-radius: 1rem;
+    overflow: hidden;
 }
-main .dashboard-cards .card .ratio-bar i {
+body > main .dashboard-cards .card .ratio-bar i {
     position: relative;
     display: none;
     height: 100%;
-    background-color: var(--primary);
+    background-color: rgb(var(--primary));
     opacity: 0.3;
 }
-main .dashboard-cards .card .ratio-bar i:nth-of-type(1) {
+body > main .dashboard-cards .card .ratio-bar i:nth-of-type(1) {
     display: initial;
     width: calc(var(--value1) * 100 / var(--total) * 1%);
-    border-top-left-radius: 1rem;
-    border-bottom-left-radius: 1rem;
 }
-main .dashboard-cards .card .ratio-bar i:nth-of-type(2) {
+body > main .dashboard-cards .card .ratio-bar i:nth-of-type(2) {
     display: initial;
     width: calc(var(--value2) * 100 / var(--total) * 1%);
 }
-main .dashboard-cards .card .ratio-bar i:nth-of-type(3) {
+body > main .dashboard-cards .card .ratio-bar i:nth-of-type(3) {
     display: initial;
     width: calc(var(--value3) * 100 / var(--total) * 1%);
-    border-top-right-radius: 1rem;
-    border-bottom-right-radius: 1rem;
 }
-main .dashboard-cards .card > h3 {
+.n-a,
+body > main .dashboard-cards .card > h3 {
     width: 100%;
     margin: auto 0;
     text-align: center;
@@ -385,73 +461,293 @@ main .dashboard-cards .card > h3 {
     cursor: default;
     user-select: none;
 }
-main .dashboard-cards .card .user-row {
+body > main .dashboard-cards .card form {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    padding: 8px;
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+}
+body > main .dashboard-cards .card form fieldset {
     position: relative;
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    padding: 8px clamp(8px, 5%, 32px);
-    border: 2px solid rgba(255,255,255,0.1);
-    border-radius: 16px;
+    border: none;
     gap: 8px;
 }
-main .dashboard-cards .card .user-row .details {
+body > main .dashboard-cards .card form legend {
     position: relative;
     width: 100%;
     display: flex;
     flex-direction: column;
-}
-main .dashboard-cards .card .user-row h4 {
-    color: var(--text);
+    color: rgb(var(--text));
     font-size: 1.5em;
 }
-main .dashboard-cards .card .user-row span {
-    color: var(--primary);
-    font-size: 0.7em;
-}
-main .dashboard-cards .card .user-row input[type="text"] {
+body > main .dashboard-cards .card form input[type="text"] {
     background-color: transparent;
     border: 1px solid rgba(255,255,255,0.3);
     padding: 8px 16px;
     border-radius: 10px;
-    color: var(--text);
+    color: rgb(var(--text));
 }
-main .dashboard-cards .card .user-row .user-row-btns {
+body > main .dashboard-cards .card form .user-row-btns {
     position: relative;
     width: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
+    gap: 16px;
 }
-main .dashboard-cards .card .user-row .user-row-btns button {
+body > main .dashboard-cards .card form .user-row-btns button {
     position: relative;
-    width: clamp(128px, 100%, 512px);
-    margin: 0 16px;
+    /* width: clamp(128px, 100%, 512px); */
+    width: 128px;
+    /* margin: 0 16px; */
     background-color: var(--secondary);
     border: unset;
     padding: 8px 16px;
-    color: var(--primary);
+    color: rgb(var(--primary));
     font-weight: 600;
     text-transform: uppercase;
     border-radius: 10px;
     transition: letter-spacing 0.5s, background-color 0.5s, color 0.5s;
     cursor: pointer;
 }
-main .dashboard-cards .card .user-row .user-row-btns button.primary {
+body > main .dashboard-cards .card form .user-row-btns button.primary {
     background-color: rgb(var(--accent) / 50%);
-    color: var(--text);
+    color: rgb(var(--text));
 }
-main .dashboard-cards .card .user-row .user-row-btns button:hover {
+body > main .dashboard-cards .card form .user-row-btns button:hover {
     letter-spacing: 1px;
-    color: var(--text);
+    color: rgb(var(--text));
 }
-main .dashboard-cards .card .user-row .user-row-btns button.primary:hover {
+body > main .dashboard-cards .card form .user-row-btns button.primary:hover {
     background-color: rgb(var(--accent) / 75%);
 }
-main .dashboard-cards .card .user-row .user-row-btns button.to-error:hover {
+body > main .dashboard-cards .card form .user-row-btns button.to-error:hover {
     background-color: rgba(200,0,0,0.5);
+}
+
+/* Student Management */
+section.user-management {
+    background-color: rgb(var(--elevate-2));
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: 16px;
+    margin: 16px;
+    border-radius: 16px;
+    gap: 8px;
+}
+table {
+    width: 100%;
+    color: #fff;
+    border-collapse: collapse;
+}
+table thead tr {
+    text-align: left;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+}
+table tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+table tr th,
+table tr td {
+    padding: 8px 12px;
+}
+table th:last-of-type,
+table td:last-of-type {
+    text-align: center;
+}
+table td:last-of-type > div {
+    justify-content: center;
+    flex-direction: row;
+}
+table td > * {
+    margin: 4px 0;
+}
+table td > div {
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: flex-start;
+}
+table td > div span {
+    font-size: 1em;
+    color: rgb(var(--text));
+}
+table td > div a {
+    font-size: 0.8em;
+    color: #aaa;
+    text-decoration: none;
+}
+table td > div a:hover {
+    color: rgb(var(--accent));
+    text-decoration: underline;
+}
+table td > div.icons {
+    flex-direction: row;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 0;
+}
+table td > div.icons svg {
+    height: 100%;
+    color: rgb(var(--primary));
+    cursor: pointer;
+}
+table td > div.icons svg:hover {
+    height: 100%;
+    color: rgb(var(--accent));
+}
+section {
+    min-height: calc(100% - 32px - 32px);
+}
+section .table {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+section .table .n-a {
+    position: absolute;
+    inset: 0;
+    align-content: center;
+}
+section .table .lds-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    display: flex;
+}
+section .table .lds-ring.hidden {
+    display: none;
+}
+section .table .lds-ring div {
+    border: 8px solid rgb(var(--primary));
+    border-color: rgb(var(--primary)) transparent transparent transparent;
+}
+section .table table tbody tr {
+    height: 64px;
+}
+section .table-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+section .table-header .table-perpage {
+    /* margin-bottom: 8px; */
+    padding: 8px 12px;
+    color: rgb(var(--primary));
+}
+section .table-header .table-perpage select {
+    margin: 0 4px;
+    padding: 3px;
+    font-size: 1.1em;
+    background-color: transparent;
+    color: rgb(var(--primary));
+}
+section .table-header .table-btns {
+    height: 100%;
+    padding: 4px;
+}
+section .table-header .table-btns button {
+    height: 100%;
+    padding: 4px 12px;
+    font-size: 0.9rem;
+    /* font-weight: 600; */
+    background-color: transparent;
+    border: 2px solid rgb(var(--accent));
+    border-radius: 8px;
+    color: rgb(var(--text));
+    cursor: pointer;
+    transition: background-color 0.5s;
+}
+section .table-header .table-btns button:hover {
+    background-color: rgb(var(--accent));
+}
+section .pagination {
+    width: 100%;
+    margin: 16px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+section .pagination nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+section .pagination nav ul {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 8px;
+}
+section .pagination nav ul li {
+    width: 48px;
+    aspect-ratio: 1 / 1;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(var(--elevate-3));
+    border-radius: 8px;
+    cursor: pointer;
+}
+section .pagination nav ul li.hidden {
+    display: none;
+}
+section .pagination nav ul li:hover {
+    background-color: rgb(var(--elevate-4));
+}
+section .pagination nav ul li.active {
+    background-color: rgb(var(--accent) / 90%);
+}
+section .pagination nav ul li.active:hover {
+    background-color: rgb(var(--accent));
+}
+section .pagination nav ul li span {
+    font-size: 1.5em;
+    color: rgb(var(--primary));
+    user-select: none;
+}
+section .pagination nav ul li:hover span {
+    color: rgb(var(--text));
+}
+section .pagination nav ul li.active span {
+    color: rgb(var(--text));
+}
+section .pagination .arrow {
+    width: 48px;
+    height: 48px;
+    padding: 4px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+section .pagination .arrow:hover {
+    background-color: rgb(var(--elevate-3));
+}
+section .pagination .arrow svg {
+    width: 100%;
+    height: 100%;
+    color: rgb(var(--primary));
+    stroke-width: 2px;
+}
+section .pagination .arrow:hover svg {
+    color: rgb(var(--text));
+}
+section .pagination span {
+    padding: 8px 12px;
+    color: rgb(var(--text));
 }
 
 
@@ -507,15 +803,15 @@ main .dashboard-cards .card .user-row .user-row-btns button.to-error:hover {
     height: clamp(0%, calc(var(--value) * 1%), 100%);
     background: linear-gradient(
         to bottom,
-        #2c2c2c,
-        #181818
+        rgb(var(--elevate-3)),
+        rgb(var(--elevate-2))
     );
 }
 .bar-chart .bar-chart-graph .bar-chart-bar:hover i {
     background: linear-gradient(
         to bottom,
         rgb(var(--accent)),
-        #181818
+        rgb(var(--elevate-2))
     );
 }
 .bar-chart .bar-chart-graph .bar-chart-bar i::after {
@@ -527,10 +823,10 @@ main .dashboard-cards .card .user-row .user-row-btns button.to-error:hover {
     left: 50%;
     translate: -50% -125%;
     padding: 4px 12px;
-    background-color: #2c2c2c;
+    background-color: rgb(var(--elevate-3));
     border-radius: 1rem;
     border: 1px solid rgb(var(--accent));
-    color: var(--text);
+    color: rgb(var(--text));
     text-align: center;
     font-size: 1.2em;
     z-index: 1;
@@ -538,6 +834,273 @@ main .dashboard-cards .card .user-row .user-row-btns button.to-error:hover {
 .bar-chart .bar-chart-graph .bar-chart-bar:hover i::after {
     display: initial;
 }
+
+
+
+
+.input-switch {
+    position: relative;
+    width: 100%;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(var(--accent));
+    background:
+        linear-gradient(
+            to right,
+            var(--accent-gradient-1),
+            var(--accent-gradient-2)
+        )
+    ;
+    background: rgba(255,255,255,0.3);
+    border-radius: 1rem;
+}
+.input-switch > div {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0,0,0,0.3);
+    border-radius: 1rem;
+}
+.input-switch .input-switch-option {
+    position: relative;
+    min-width: 96px;
+    width: 100%;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.input-switch .input-switch-option label {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 1rem;
+    color: rgb(var(--primary));
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: pointer;
+    z-index: 1;
+}
+.input-switch .input-switch-option input:checked ~ label {
+    color: rgb(var(--text));
+}
+.input-switch .input-switch-option input {
+    width: 0;
+    height: 0;
+    opacity: 0;
+}
+.input-switch .input-switch-slider {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: calc(100 / var(--count) * 1%);
+    background-color: rgba(0,0,0,0.3);
+    border-radius: 1rem;
+    transition: left 0.5s;
+}
+
+
+dialog {
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    padding: 2px;
+    background: whitesmoke;
+    border: none;
+    width: clamp(25vw, 512px, 95vw);
+    min-height: 256px;
+    border-radius: 16px;
+    z-index: 50;
+}
+dialog[open] {
+    display: flex;
+    flex-direction: column;
+}
+dialog#popup {
+    z-index: 100;
+}
+dialog#popup.error {
+    background-color: darkred;
+}
+dialog#popup.success {
+    background-color: darkgreen;
+}
+dialog > form {
+    position: relative;
+    padding: 16px;
+    background-color: rgba(0,0,0,0.85);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    flex-grow: 1;
+    /* Parent border-radius minus child inset */
+    border-radius: 14px;
+}
+dialog#popup > form {
+    padding: 3px;
+}
+dialog > form fieldset {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border: none;
+}
+dialog > form fieldset .form-input {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+}
+dialog > form fieldset .form-input label {
+    width: 100%;
+    color: rgb(var(--primary));
+}
+dialog > form fieldset .form-input label i {
+    color: red;
+}
+dialog > form fieldset .form-input input {
+    width: 100%;
+    font-size: 1rem;
+    padding: 8px 12px;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 0.5rem;
+    background-color: rgba(255,255,255,0.1);
+    color: rgb(var(--text));
+}
+dialog > form fieldset .form-input.error > input {
+    border: 1px solid red;
+}
+dialog > form fieldset .form-input.error > .input-switch {
+    box-shadow: inset 0 0 2px 2px red;
+}
+dialog > form hr {
+    width: 100%;
+    height: 1px;
+    margin: 16px 0;
+    border: none;
+    background-color: rgb(var(--text) / 30%);
+}
+dialog > form article {
+    flex-grow: 1;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+dialog > form article p {
+    color: rgb(var(--text));
+}
+dialog > form header {
+    width: 100%;
+    padding: 4px;
+    border-radius: 12px 12px 4px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgba(255,255,255,0.1);
+}
+dialog > form header h3 {
+    margin-left: 4px;
+    font-size: 1.5em;
+    font-weight: 600;
+    color: rgb(var(--text));
+}
+dialog > form header button {
+    height: 32px;
+    aspect-ratio: 1 / 1;
+    border-radius: 8px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    transition: background-color 0.5s;
+}
+dialog > form header button:hover {
+    background-color: rgba(255,255,255,0.1);
+}
+dialog > form header button i {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+dialog > form header button i::before,
+dialog > form header button i::after {
+    position: absolute;
+    content: '';
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    width: 2px;
+    height: 90%;
+    background-color: white;
+    border-radius: 1px;
+}
+dialog > form header button i::before {
+    rotate: -45deg;
+}
+dialog > form header button i::after {
+    rotate: 45deg;
+}
+dialog > form footer {
+    width: 100%;
+    padding: 4px;
+    border-radius: 4px 4px 12px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+dialog#popup > form footer {
+    background-color: rgba(255,255,255,0.1);
+}
+dialog > form footer menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+dialog > form footer menu button {
+    padding: 8px 12px;
+    border: 1px solid rgb(var(--text) / 30%);
+    border-radius: 0.5rem;
+    background-color: transparent;
+    color: rgb(var(--primary));
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.5s, color 0.5s;
+}
+dialog > form footer menu button:hover {
+    background-color: rgb(var(--text) / 5%);
+    color: rgb(var(--text));
+}
+dialog > form footer menu button[type="submit"] {
+    background-color: rgb(var(--accent) / 80%);
+    color: rgb(var(--text));
+}
+dialog > form footer menu button[type="submit"]:hover {
+    background-color: rgb(var(--accent));
+}
+dialog#popup > form footer menu button {
+    background-color: rgba(255,255,255,0.8);
+    color: #181818;
+}
+dialog#popup > form footer menu button:hover {
+    background-color: rgba(255,255,255,1);
+    letter-spacing: unset;
+}
+
 
 .loader-bar {
     position: relative;
@@ -568,3 +1131,4 @@ main .dashboard-cards .card .user-row .user-row-btns button.to-error:hover {
         left: 100%;
     }
 }
+
