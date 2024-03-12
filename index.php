@@ -17,6 +17,10 @@ switch ($url) {
         include_once(__DIR__ . '/pages/logout.php');
         break;
 
+    case 'dashboard':
+        include_once(__DIR__ . '/pages/student/index.php');
+        break;
+
     case 'admin':
         $routerPage = '/dashboard.php';
         include_once(__DIR__ . '/pages/admin/index.php');
