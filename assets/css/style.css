@@ -127,6 +127,8 @@ body > header .title #breadcrumbs i {
 }
 body > header .search {
     position: relative;
+    display: flex;
+    gap: 2px;
     background: rgb(var(--elevate-1));
     border-radius: 28px;
     min-width: 256px;
@@ -134,9 +136,43 @@ body > header .search {
     z-index: 1;
     transition: min-width 0.5s;
 }
+body > header .search #logout {
+    padding: 8px;
+    background-color: rgb(var(--background));
+    aspect-ratio: 1 / 1;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.5s;
+}
+body > header .search #logout svg {
+    color: rgb(var(--primary));
+    stroke-width: 4px;
+    transition: color 0.5s;
+}
+body > header .search #logout:hover {
+    background-color: rgb(var(--elevate-4));
+}
+body > header .search #logout:hover svg {
+    color: rgb(var(--text));
+}
 body > header .search .search-box {
-    position: absolute;
-    inset: 4px;
+    width: 100%;
+    overflow: hidden;
+}
+body > header .search > * {
+    height: calc(100% - 8px);
+    margin: 4px 0;
+    border-radius: 8px;
+}
+body > header .search > *:last-child {
+    border-top-right-radius: 28px;
+    border-bottom-right-radius: 28px;
+    margin-right: 4px;
+}
+body > header .search > *:first-child {
+    border-top-left-radius: 28px;
+    border-bottom-left-radius: 28px;
+    margin-left: 4px;
 }
 body > header .search .search-box form {
     display: flex;
@@ -144,7 +180,6 @@ body > header .search .search-box form {
     justify-content: center;
     height: 100%;
     background-color: rgb(var(--background));
-    border-radius: 28px;
     padding: 0 8px;
     transition: background-color 0.5s;
 }
@@ -157,10 +192,18 @@ body > header .search .search-box form input {
     color: rgb(var(--text));
     width: 100%;
 }
+body > header .search:has(.search-box form input:focus) #logout,
+body > header .search:has(.search-box form input:focus-visible) #logout,
+body > header .search:has(.search-box form input:not(:placeholder-shown)) #logout,
 body > header .search .search-box form:has(input:focus),
 body > header .search .search-box form:has(input:focus-visible),
 body > header .search .search-box form:has(input:not(:placeholder-shown)) {
     background-color: rgba(0,0,0,0.7);
+}
+body > header .search:has(.search-box form input:focus) #logout:hover,
+body > header .search:has(.search-box form input:focus-visible) #logout:hover,
+body > header .search:has(.search-box form input:not(:placeholder-shown)) #logout:hover {
+    background-color: rgb(var(--elevate-4) / 70%);
 }
 body > header .search:has(.search-box form input:focus),
 body > header .search:has(.search-box form input:focus-visible),
@@ -194,6 +237,7 @@ body > nav {
     /* height: 100svh; */
     height: 100%;
     background-color: rgb(var(--elevate-1));
+    overflow: clip;
 }
 body > nav .top {
     height: 128px;
@@ -228,6 +272,7 @@ body > nav ul {
     display: flex;
     justify-content: center;
     flex-direction: column;
+    align-items: flex-start;
     padding-top: 32px;
 }
 body > nav ul li {
@@ -273,6 +318,25 @@ body > nav .top > a i {
     color: rgb(var(--accent));
 }
 
+@media (max-width: 1100px) {
+    body {
+        grid-template-columns:
+            [full-width-start navbar-start]
+            56px
+            [main-start navbar-end header-start]
+            1fr
+            [main-end aside-start]
+            minmax(200px, 12%)
+            [full-width-end header-end aside-end]
+        ;
+    }
+    body > nav .top > a span {
+        display: none;
+    }
+    body > nav .top > a i {
+        font-size: 3rem;
+    }
+}
 
 
 

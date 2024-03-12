@@ -68,7 +68,7 @@ if ($role === 'admin') {
         <i class="glow"></i>
         <div class="top">
             <a>
-                Qu<i>?</i>z
+                <span>Qu</span><i>?</i><span>z</span>
             </a>
         </div>
         <ul>
@@ -195,6 +195,15 @@ if ($role === 'admin') {
                     </form>
                 <!-- </search> -->
             </div>
+            <button id="logout">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+                    <g stroke-linecap="square" stroke-miterlimit="10" fill="currentColor" stroke-linejoin="miter" class="nc-icon-wrapper">
+                        <line data-cap="butt" data-color="color-2" x1="20" y1="32" x2="56" y2="32" fill="none" stroke="currentColor" stroke-linecap="butt"></line>
+                        <polyline data-color="color-2" points="44 44 56 32 44 20" fill="none" stroke="currentColor"></polyline>
+                        <path d="M50,12V8a5,5,0,0,0-5-5H15a5,5,0,0,0-5,5V56a5,5,0,0,0,5,5H45a5,5,0,0,0,5-5V52" fill="none" stroke="currentColor"></path>
+                    </g>
+                </svg>
+            </button>
         </div>
     </header>
     <main>

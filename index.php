@@ -1,4 +1,4 @@
-<?php
+<?php define('APP_RAN', 1);
 
 $url = '';
 if (isset($_GET['url'])) $url = $_GET['url'];
@@ -12,6 +12,9 @@ switch ($url) {
         break;
     case 'login':
         include_once(__DIR__ . '/pages/login.php');
+        break;
+    case 'logout':
+        include_once(__DIR__ . '/pages/logout.php');
         break;
 
     case 'admin':
