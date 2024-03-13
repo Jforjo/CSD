@@ -54,7 +54,6 @@ $lecturerCount = GetLecturerCount();
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>ID</th>
                     <th>State</th>
                     <th>Manage</th>
                 </tr>
