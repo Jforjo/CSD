@@ -12,6 +12,13 @@ if (!CheckUserIDExists($_SESSION['userID'])) {
         "type" => "refresh"
     )));
 }
+// Checks if their account is active
+if (GetUserState($_SESSION['userID']) !== "active") {
+    DestroySession();
+    die(json_encode(array(
+        "type" => "refresh"
+    )));
+}
 // Checks if they have the correct permissions
 $role = GetUserRole($_SESSION['userID']);
 if (!($role == "lecturer" || $role == "admin")) {
