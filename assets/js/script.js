@@ -6,9 +6,8 @@
         //     'admin': 'admin/dashboard',
         //     'dashboard': 'admin/dashboard'
         // });
+        LoadPageEvents();
     };
-
-    LoadPageEvents();
 
     const navList = document.querySelectorAll('nav ul li');
     navList.forEach((navItem, index) => {
@@ -211,6 +210,14 @@
     }
 
     function LoadPageEvents() {
+        const logoutbtn = document.getElementById('logout');
+        if (logoutbtn != null && logoutbtn.classList.contains('events-listening') === false) {
+            logoutbtn.addEventListener('click', () => {
+                if (confirm("Are you sure you wish to log out?")) window.location = '/logout';
+            });
+            logoutbtn.classList.add('events-listening');
+        }
+
         const recentStudent = document.getElementById('recent-student');
         if (recentStudent != null && recentStudent.classList.contains('events-listening') === false) {
             recentStudent.addEventListener('submit', (e) => {
