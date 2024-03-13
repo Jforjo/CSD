@@ -16,7 +16,9 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
     } else if (password_verify($_POST['password'], $data['password'])) {
         session_start();
         $_SESSION['userID'] = $data['userID'];
-        header("Location: /admin");
+        if ($data['role'] === "admin" || $data['role'] === "lecturer") header("Location: /admin");
+        else if ($data['role'] === "student") header("Location: /dashboard");
+        else $error = "Invalid User Role";
     } else {
         $error = "Incorrect Password";
     }
