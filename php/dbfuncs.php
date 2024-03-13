@@ -1,6 +1,24 @@
 <?php require_once('connection.php');
 
 /**
+ * Destroys all session data.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ */
+function DestroySession() {
+    // This saves copy and pasting it
+    //  although, it does mean this entire file needs to load...
+    // Current solution:
+    //  copy and paste it but if this file is required
+    //  then might as well use it.
+    session_start();
+    session_unset();
+    session_destroy();
+    session_write_close();
+    setcookie(session_name(),'',0,'/');
+    session_regenerate_id(true);
+}
+/**
  * Checks if the a user with the ID already exists.
  * 
  * @param string $userID The user ID to check exists.
@@ -98,6 +116,19 @@ function GetUserState(string $userID): mixed {
  */
 function GetStudentCount(): mixed {
     $sql = "CALL GetStudentCount();";
+    $conn = newConn();
+    $data = $conn->query($sql)->fetch();
+    $conn = null;
+    return $data['count'];
+}
+/**
+ * Fetches the amount of lecturers.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return mixed The amount of lecturers as an int or FALSE on failure.
+ */
+function GetLecturerCount(): mixed {
+    $sql = "CALL GetLecturerCount();";
     $conn = newConn();
     $data = $conn->query($sql)->fetch();
     $conn = null;
