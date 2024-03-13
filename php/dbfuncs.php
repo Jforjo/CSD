@@ -194,6 +194,26 @@ function GetLimitedStudentsData(int|null $limit = 5, int|null $offset = 0): mixe
     return $data;
 }
 /**
+ * Fetches a specified range of lecturer data.
+ * 
+ * @param int $limit [optional] The max amount of rows to return.
+ * @param int $offset [optional] The row offset.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return mixed Array of mixed data of lecturers or FALSE on failure.
+ */
+function GetLimitedLecturersData(int|null $limit = 5, int|null $offset = 0): mixed {
+    $sql = "CALL GetLimitedLecturersData(:limit, :offset);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":limit", $limit, PDO::PARAM_INT);
+    $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
+    $stmt->execute();
+    $data = $stmt->fetchAll();
+    $conn = null;
+    return $data;
+}
+/**
  * Fetches all student data.
  * 
  * @author Jforjo <https://github.com/Jforjo>
