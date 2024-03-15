@@ -8,9 +8,6 @@
 function DestroySession() {
     // This saves copy and pasting it
     //  although, it does mean this entire file needs to load...
-    // Current solution:
-    //  copy and paste it but if this file is required
-    //  then might as well use it.
     session_start();
     session_unset();
     session_destroy();
