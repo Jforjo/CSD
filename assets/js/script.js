@@ -9,7 +9,7 @@
         LoadPageEvents();
     };
 
-    const navList = document.querySelectorAll('nav ul li');
+    const navList = document.querySelectorAll('body > nav ul li');
     navList.forEach((navItem, index) => {
         if (navItem.classList.contains('listening')) return;
         navItem.addEventListener('click', (e) => {
