@@ -348,6 +348,20 @@
         margin-top: 10px;
         display: flex;
         justify-content: space-between;
+        padding: 10px;
+    }
+
+    .total-points, .average-score
+    {
+        background-color: darkred; /* Box color for dark theme */
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        flex: 1;
+        margin: 0 10px;
+    }
+
+    .total-points p, .average-score p {
+        margin: 0;
     }
 
     .past-tests

@@ -1,24 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Stats</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script defer src="graph.js"></script>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Stats</a></li>
-                <li><a href="#">Leaderboards</a></li>
-            </ul>
-        </nav>
-    </header>
     <?php 
     require_once('php/connection.php');
     session_start();
@@ -63,6 +42,25 @@
        return $test['completed'] == 0;
    });
 
+   if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] === 'getTestData') {
+    // Get test names
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
+    $stmt->execute();
+    $allTests = $stmt->fetchAll();
+    $testNames = array_column($allTests, 'title');
+
+    // Get percentages
+    $stmt = $conn->prepare("CALL GetStudentsQuizPercentages(:studentID)");
+    $stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
+    $stmt->execute();
+    $percentages = $stmt->fetchAll(PDO::FETCH_COLUMN, 0); // Fetch only the first column of each row
+
+    header('Content-Type: application/json');
+    echo json_encode(['testNames' => $testNames, 'percentages' => $percentages]);
+    exit;
+}
+
     //Calculate the total points and average score
     $totalPoints = 0;
     $totalScore = 0;
@@ -77,6 +75,31 @@
 
     $averageScore = $NoOfTests > 0 ? round($totalScore / $NoOfTests) : 0;
     ?>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Stats</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script defer src="graph.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Stats</a></li>
+                <li><a href="#">Leaderboards</a></li>
+            </ul>
+        </nav>
+    </header>
     <section class="welcome-section">
     <h2 class="welcome-message"><?php echo "Stats for " . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></h2>
     </section>
@@ -84,8 +107,12 @@
         <canvas id="chart"></canvas>
     </div>
     <div class="user-scores">
-        <p>Total Points: <?php echo $totalPoints; ?></p>
-        <p>Average Score: <?php echo $averageScore; ?>%</p>
+        <div class="total-points" title="Total Points">
+        <p><i class="fas fa-trophy"></i> <?php echo $totalPoints; ?></p>
+        </div>
+        <div class="average-score" title="Average Score">
+        <p><i class="fas fa-chart-line"></i> <?php echo $averageScore; ?>%</p>
+        </div>
     </div>
     <div class="col-md-6 offset-md-3">
         <div class="past-tests">
@@ -115,5 +142,14 @@
             </table>
         </div>
     </div>
+    <script type="text/javascript">
+$(document).ready(function() {
+    $('.table').DataTable({
+        "searching": false,
+        "pageLength": 10,
+        "lengthChange": false
+    });
+});
+</script>
 </body>
 </html>
