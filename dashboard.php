@@ -11,25 +11,16 @@
 <header>
         <nav>
             <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Stats</a></li>
+                <li><a href="dashboard.php">Home</a></li>
+                <li><a href="user-stats.php">Stats</a></li>
                 <li><a href="#">Leaderboards</a></li>
+                <li><a href="/logout" class="btn btn-primary logout-button">Logout</a></li>
             </ul>
         </nav>
     </header>
     <?php 
     require_once('php/connection.php');
     session_start();
-    $dsn = DB_DSN;
-    $user = DB_USERNAME;
-    $pass = DB_PASSWORD;
-
-    $opt = [
-        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_EMULATE_PREPARES   => false,
-    ];
-    $pdo = new PDO($dsn, $user, $pass, $opt);
 
     $userID = $_SESSION["userID"];
     $conn = newConn();
@@ -108,6 +99,11 @@
         <h2 class="section-title">Completed Tests</h2>
         <!-- Area of page that contains the test boxes -->
         <div class="test-section">
+            <?php if (empty($completedTests)): ?>
+            <div class="no-test-message">
+                <p>As you complete tests they will show up here</p>
+            </div>
+        <?php else: ?>
         <?php foreach ($completedTests as $test): ?>
             <div class="test-box">
             <div class="test-contents">
@@ -120,6 +116,7 @@
             </div>
             </div>
         <?php endforeach; ?>
+        <?php endif; ?>
         </div>
     </section>
     </div>

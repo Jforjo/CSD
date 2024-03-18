@@ -43,6 +43,11 @@
         text-decoration: underline;
     }
 
+    .logout-button
+    {
+        margin-left: 40px;
+    }
+
     footer
     {
         text-align: center;
