@@ -331,14 +331,17 @@
         // Automatiicaly populate table on load
         const studentManagement = document.getElementById('student-management');
         const lecturerManagement = document.getElementById('lecturer-management');
+        const quizManagement = document.getElementById('quiz-management');
 
         if (studentManagement != null && studentManagement.classList.contains('loaded') == false) {
             PopulateTable('student-management', '/php/loadstudenttable.php');
             studentManagement.classList.add('loaded');
-        }
-        if (lecturerManagement != null && lecturerManagement.classList.contains('loaded') == false) {
+        } else if (lecturerManagement != null && lecturerManagement.classList.contains('loaded') == false) {
             PopulateTable('lecturer-management', '/php/loadlecturertable.php');
             lecturerManagement.classList.add('loaded');
+        } else if (quizManagement != null && quizManagement.classList.contains('loaded') == false) {
+            PopulateTable('quiz-management', '/php/loadquiztable.php');
+            quizManagement.classList.add('loaded');
         }
 
         if (document.getElementById('user-management-perpage')?.classList.contains('events-listening') === false) {
@@ -349,6 +352,10 @@
             document.querySelector('#lecturer-management #user-management-perpage')?.addEventListener('change', () => {
                 SetPerPage();
                 PopulateTable('lecturer-management', '/php/loadlecturertable.php');
+            });
+            document.querySelector('#quiz-management #user-management-perpage')?.addEventListener('change', () => {
+                SetPerPage();
+                PopulateTable('quiz-management', '/php/loadquiztable.php');
             });
             document.getElementById('user-management-perpage').classList.add('events-listening');
         }
@@ -363,6 +370,12 @@
                 btn.addEventListener('click', () => {
                     SetPagination(btn.dataset.id);
                     PopulateTable('lecturer-management', '/php/loadlecturertable.php');
+                });
+            });
+            document.querySelectorAll('#quiz-management #pagination-menu li')?.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    SetPagination(btn.dataset.id);
+                    PopulateTable('quiz-management', '/php/loadquiztable.php');
                 });
             });
             document.getElementById('pagination-menu').classList.add('events-listening');
@@ -384,6 +397,14 @@
             document.querySelectorAll('#lecturer-management .pagination .arrow')[1]?.addEventListener('click', () => {
                 SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id + 1);
                 PopulateTable('lecturer-management', '/php/loadlecturertable.php');
+            });
+            document.querySelectorAll('#quiz-management .pagination .arrow')[0]?.addEventListener('click', () => {
+                SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id - 1);
+                PopulateTable('quiz-management', '/php/loadquiztable.php');
+            });
+            document.querySelectorAll('#quiz-management .pagination .arrow')[1]?.addEventListener('click', () => {
+                SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id + 1);
+                PopulateTable('quiz-management', '/php/loadquiztable.php');
             });
             document.querySelector('.pagination').classList.add('events-listening');
         }

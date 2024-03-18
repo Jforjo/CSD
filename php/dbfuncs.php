@@ -171,6 +171,32 @@ function GetInactiveStudentCount(): mixed {
     return $data['count'];
 }
 /**
+ * Fetches the amount of quizzes.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return mixed The amount of quizzes as an int or FALSE on failure.
+ */
+function GetQuizCount(): mixed {
+    $sql = "CALL GetQuizCount();";
+    $conn = newConn();
+    $data = $conn->query($sql)->fetch();
+    $conn = null;
+    return $data['count'];
+}
+/**
+ * Fetches the amount of questions.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return mixed The amount of questions as an int or FALSE on failure.
+ */
+function GetQuestionCount(): mixed {
+    $sql = "CALL GetQuestionCount();";
+    $conn = newConn();
+    $data = $conn->query($sql)->fetch();
+    $conn = null;
+    return $data['count'];
+}
+/**
  * Fetches a specified range of student data.
  * 
  * @param int $limit [optional] The max amount of rows to return.
@@ -211,6 +237,46 @@ function GetLimitedLecturersData(int|null $limit = 5, int|null $offset = 0): mix
     return $data;
 }
 /**
+ * Fetches a specified range of quiz data.
+ * 
+ * @param int $limit [optional] The max amount of rows to return.
+ * @param int $offset [optional] The row offset.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return mixed Array of mixed data of quizzes or FALSE on failure.
+ */
+function GetLimitedQuizzesData(int|null $limit = 5, int|null $offset = 0): mixed {
+    $sql = "CALL GetLimitedQuizzesData(:limit, :offset);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":limit", $limit, PDO::PARAM_INT);
+    $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
+    $stmt->execute();
+    $data = $stmt->fetchAll();
+    $conn = null;
+    return $data;
+}
+/**
+ * Fetches a specified range of question data.
+ * 
+ * @param int $limit [optional] The max amount of rows to return.
+ * @param int $offset [optional] The row offset.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return mixed Array of mixed data of questions or FALSE on failure.
+ */
+function GetLimitedQuestionsData(int|null $limit = 5, int|null $offset = 0): mixed {
+    $sql = "CALL GetLimitedQuestionsData(:limit, :offset);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":limit", $limit, PDO::PARAM_INT);
+    $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
+    $stmt->execute();
+    $data = $stmt->fetchAll();
+    $conn = null;
+    return $data;
+}
+/**
  * Fetches all student data.
  * 
  * @author Jforjo <https://github.com/Jforjo>
@@ -218,6 +284,19 @@ function GetLimitedLecturersData(int|null $limit = 5, int|null $offset = 0): mix
  */
 function GetAllStudentsData(): mixed {
     $sql = "CALL GetAllStudentsData();";
+    $conn = newConn();
+    $data = $conn->query($sql)->fetchAll();
+    $conn = null;
+    return $data;
+}
+/**
+ * Fetches all subject data.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return mixed Array of arrays of mixed data of subjects or FALSE on failure.
+ */
+function GetAllSubjects(): mixed {
+    $sql = "CALL GetAllSubjects();";
     $conn = newConn();
     $data = $conn->query($sql)->fetchAll();
     $conn = null;
