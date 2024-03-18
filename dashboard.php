@@ -35,11 +35,7 @@
     $studentID = $studentData['studentID'];
 
    //Query to get the tests
-   $sql = "SELECT quizzes.quizID, quizzes.title, subjects.name, studentQuizLink.TIMESTAMP, studentQuizLink.correctCount, studentQuizLink.questionCount, studentQuizLink.points, studentQuizLink.completed
-   FROM quizzes 
-   JOIN subjects ON quizzes.subjectID = subjects.subjectID
-   JOIN studentQuizLink ON quizzes.quizID = studentQuizLink.quizID AND studentQuizLink.studentID = :studentID";
-   $stmt = $conn->prepare($sql);
+   $stmt = $conn->prepare("CALL GetStudentsQuizzes(:studentID)");
    $stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
    $stmt->execute();
    $allTests = $stmt->fetchAll();
@@ -70,8 +66,8 @@
         <?php foreach ($testsToComplete as $test): ?>
             <div class="test-box">
             <div class="test-contents">
-                <h3><?php echo htmlspecialchars($test['name'], ENT_QUOTES, 'UTF-8'); ?></h3>
-                <h5><?php echo htmlspecialchars($test['title'], ENT_QUOTES, 'UTF-8'); ?></h5>
+                <h3><?php echo htmlspecialchars($test['subject'], ENT_QUOTES, 'UTF-8'); ?></h3>
+                <h5><?php echo htmlspecialchars($test['quiz'], ENT_QUOTES, 'UTF-8'); ?></h5>
                 <?php
                 //Get the question count for the current test
                 $sql = "SELECT COUNT(*) as questionCount FROM quizQuestionLink WHERE quizID = :quizID";
@@ -82,7 +78,7 @@
                 $questionCount = $result['questionCount'];
                 ?>
                 <h6><?php echo $questionCount; ?> Questions</h6>
-                <h6><?php echo date('d/m/Y', strtotime($test['TIMESTAMP'])); ?></h6>
+                <h6><?php echo date('d/m/Y', strtotime($test['dateSet'])); ?></h6>
                 <form method="POST" action="testing-page.php">
                     <input type="hidden" name="quizID" value="<?php echo htmlspecialchars($test['quizID'], ENT_QUOTES, 'UTF-8'); ?>">
                     <button type="submit" class="btn btn-primary">Start Test</button>
@@ -107,9 +103,9 @@
         <?php foreach ($completedTests as $test): ?>
             <div class="test-box">
             <div class="test-contents">
-                <h3><?php echo htmlspecialchars($test['name'], ENT_QUOTES, 'UTF-8'); ?></h3>
-                <h5><?php echo htmlspecialchars($test['title'], ENT_QUOTES, 'UTF-8'); ?></h5>
-                <h6>Completed: <?php echo date('d/m/Y', strtotime($test['TIMESTAMP'])); ?></h6>
+                <h3><?php echo htmlspecialchars($test['subject'], ENT_QUOTES, 'UTF-8'); ?></h3>
+                <h5><?php echo htmlspecialchars($test['quiz'], ENT_QUOTES, 'UTF-8'); ?></h5>
+                <h6>Completed: <?php echo date('d/m/Y', strtotime($test['dateCompleted'])); ?></h6>
                 <?php $score = ($test['correctCount'] / $test['questionCount']) * 100; ?>
                 <h6>Score: <?php echo round($score); ?>%</h6>
                 <h6><?php echo htmlspecialchars($test['points'], ENT_QUOTES, 'UTF-8'); ?> points</h6>
