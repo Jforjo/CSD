@@ -36,7 +36,7 @@ function displayChart(testNames, percentages)
                     },
                     y: 
                     {
-                        beginAtZero: true,
+                        beginAtZero: false,
                         ticks:
                         {
                             color: 'white',

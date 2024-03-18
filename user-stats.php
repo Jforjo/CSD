@@ -1,16 +1,6 @@
     <?php 
     require_once('php/connection.php');
     session_start();
-    $dsn = DB_DSN;
-    $user = DB_USERNAME;
-    $pass = DB_PASSWORD;
-
-    $opt = [
-        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_EMULATE_PREPARES   => false,
-    ];
-    $pdo = new PDO($dsn, $user, $pass, $opt);
 
     $userID = $_SESSION["userID"];
     $conn = newConn();
@@ -25,14 +15,10 @@
     $studentID = $studentData['studentID'];
 
     //Query to get the tests
-   $sql = "SELECT quizzes.quizID, quizzes.title, subjects.name, studentQuizLink.TIMESTAMP, studentQuizLink.correctCount, studentQuizLink.questionCount, studentQuizLink.points, studentQuizLink.completed
-   FROM quizzes 
-   JOIN subjects ON quizzes.subjectID = subjects.subjectID
-   JOIN studentQuizLink ON quizzes.quizID = studentQuizLink.quizID AND studentQuizLink.studentID = :studentID";
-   $stmt = $conn->prepare($sql);
-   $stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
-   $stmt->execute();
-   $allTests = $stmt->fetchAll();
+    $stmt = $conn->prepare("CALL GetStudentsQuizzes(:studentID)");
+    $stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
+    $stmt->execute();
+    $allTests = $stmt->fetchAll();
    
    //Get the completed tests and the tests to complete
    $completedTests = array_filter($allTests, function($test) {
@@ -44,11 +30,11 @@
 
    if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] === 'getTestData') {
     // Get test names
-    $stmt = $conn->prepare($sql);
+    $stmt = $conn->prepare("CALL GetStudentsQuizzes(:studentID)");
     $stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
     $stmt->execute();
     $allTests = $stmt->fetchAll();
-    $testNames = array_column($allTests, 'title');
+    $testNames = array_column($allTests, 'quiz');
 
     // Get percentages
     $stmt = $conn->prepare("CALL GetStudentsQuizPercentages(:studentID)");
@@ -97,6 +83,7 @@
                 <li><a href="#">Home</a></li>
                 <li><a href="#">Stats</a></li>
                 <li><a href="#">Leaderboards</a></li>
+                <li><a href="/logout" class="btn btn-primary logout-button">Logout</a></li>
             </ul>
         </nav>
     </header>
@@ -130,9 +117,9 @@
                 <tbody>
                 <?php foreach ($completedTests as $test): ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($test['title'], ENT_QUOTES, 'UTF-8'); ?></td>
-                        <td><?php echo htmlspecialchars($test['name'], ENT_QUOTES, 'UTF-8'); ?></td>
-                        <td><?php echo date('d/m/Y', strtotime($test['TIMESTAMP'])); ?></td>
+                        <td><?php echo htmlspecialchars($test['quiz'], ENT_QUOTES, 'UTF-8'); ?></td>
+                        <td><?php echo htmlspecialchars($test['subject'], ENT_QUOTES, 'UTF-8'); ?></td>
+                        <td><?php echo date('d/m/Y', strtotime($test['dateCompleted'])); ?></td>
                         <td><?php echo $test['correctCount'] . '/' . $test['questionCount']; ?></td>
                         <td><?php echo (($test['correctCount'] / $test['questionCount']) * 100) . '%'; ?></td>
                         <td><?php echo $test['points']; ?></td>
