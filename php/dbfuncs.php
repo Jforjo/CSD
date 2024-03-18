@@ -52,6 +52,24 @@ function CheckStudentIDExists(string $studentID): bool {
     return $data['exists'];
 }
 /**
+ * Checks if the a quiz with the ID already exists.
+ * 
+ * @param string $quizID The quiz ID to check exists.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE if the quiz ID exists or FALSE if it doesn't. Also, FALSE is returned on failure.
+ */
+function CheckQuizIDExists(string $quizID): bool {
+    $sql = "SELECT CheckQuizIDExists(:quizID) AS 'exists';";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":quizID", $quizID, PDO::PARAM_STR);
+    $stmt->execute();
+    $data = $stmt->fetch();
+    $conn = null;
+    return $data['exists'];
+}
+/**
  * Checks if the a user with the give ID has been assigned a student number.
  * 
  * @param string $userID The user's ID.
@@ -333,6 +351,24 @@ function GetLecturerData(string $lecturerID): mixed {
     $conn = newConn();
     $stmt = $conn->prepare($sql);
     $stmt->bindValue(":lecturerID", $lecturerID, PDO::PARAM_STR);
+    $stmt->execute();
+    $data = $stmt->fetch();
+    $conn = null;
+    return $data;
+}
+/**
+ * Fetches all data of a quiz with the given ID.
+ * 
+ * @param string $quizID The quiz's ID.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return mixed Array of mixed data of the quiz or FALSE on failure.
+ */
+function GetQuizData(string $quizID): mixed {
+    $sql = "CALL GetQuizData(:quizID);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":quizID", $quizID, PDO::PARAM_STR);
     $stmt->execute();
     $data = $stmt->fetch();
     $conn = null;

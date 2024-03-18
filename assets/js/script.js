@@ -302,10 +302,10 @@
         document.querySelectorAll('#quiz-management .table tr')?.forEach(tableRow => {
             if (tableRow.classList.contains('events-listening') != false) return;
             tableRow.querySelector('.icons .table-edit-btn')?.addEventListener('click', () => {
-                ModifyUser(tableRow?.dataset?.userid, "/php/getquizdata.php");
+                ModifyQuiz(tableRow?.dataset?.quizid, "/php/getquizdata.php");
             });
             tableRow.querySelector('.icons .table-delete-btn')?.addEventListener('click', () => {
-                DeleteUser(tableRow?.dataset?.userid, "/php/deletequiz.php");
+                DeleteQuiz(tableRow?.dataset?.quizid, "/php/deletequiz.php");
             });
             tableRow.classList.add('events-listening');
         });
@@ -329,7 +329,7 @@
         if (editQuizForm?.classList.contains('events-listening') === false) {
             editQuizForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                ModifyUser(null, "/php/editquiz.php");
+                ModifyQuiz(null, "/php/editquiz.php");
             });
             editQuizForm.classList.add('events-listening');
         }
@@ -428,9 +428,11 @@
         }
     }
 
-    function SimpleForm(userid, page) {
+    function SimpleForm(opt, page) {
         const formData = new FormData();
-        formData.append('userID', userid);
+        opt.forEach(option => {
+            formData.append(option[0], option[1]);
+        });
         fetch(page, {
             method: "POST",
             body: formData,
@@ -472,17 +474,22 @@
     function PromoteUser(userid, page) {
         if (userid == null || page == null) return;
         if (!confirm("Are you sure you wish to promote this user?")) return;
-        SimpleForm(userid, page);
+        SimpleForm([["userID", userid]], page);
     }
     function DemoteUser(userid, page) {
         if (userid == null || page == null) return;
         if (!confirm("Are you sure you wish to demote this user?")) return;
-        SimpleForm(userid, page);
+        SimpleForm([["userID", userid]], page);
     }
     function DeleteUser(userid, page) {
         if (userid == null || page == null) return;
         if (!confirm("Are you sure you wish to delete this user?")) return;
-        SimpleForm(userid, page);
+        SimpleForm([["userID", userid]], page);
+    }
+    function DeleteQuiz(quizid, page) {
+        if (quizid == null || page == null) return;
+        if (!confirm("Are you sure you wish to delete this quiz?")) return;
+        SimpleForm([["quizID", quizid]], page);
     }
     function ModifyUser(userid, page) {
         if (page == null) return;
@@ -559,6 +566,66 @@
             });
         });
     }
+    function ModifyQuiz(quizid, page) {
+        if (page == null) return;
+        document.querySelectorAll(`#dialog-edit-quiz *[name]`).forEach(input => {
+            input.classList.remove('error');
+        });
+        document.querySelector('#dialog-edit-quiz .error-msg').innerHTML = '';
+        const formData = new FormData(document.querySelector('#dialog-edit-quiz form'));
+        if (quizid != null) formData.append('quizID', quizid);
+        fetch(page, {
+            method: "POST",
+            body: formData,
+        }).then(res => {
+            if (res.status >= 200 && res.status < 300) {
+               return res.text();
+            }
+            throw new Error(res.statusText);
+        }).then(data => {
+            data = JSON.parse(data);
+            if (data?.type === "refresh") window.location.reload();
+            else if (data?.type === "error") {
+                if (data?.input != null) {
+                    document.querySelector(`#dialog-edit-quiz *[name="${data.inpuut}"]`).classList.add('error');
+                    document.querySelector('#dialog-edit-quiz .error-msg').innerHTML = data.msg;
+                } else {
+                    DisplayModel('popup', [
+                        ['popup-title', "Error"],
+                        ['popup-msg', data.msg]
+                    ], {
+                        class: "error"
+                    });
+                }
+            } else if (data?.type === "success") {
+                DisplayModel('popup', [
+                    ['popup-title', "Success"],
+                    ['popup-msg', data.msg]
+                ], {
+                    class: "success",
+                    closeAll: true
+                });
+            } else if (data?.type === "data") {
+                DisplayModel('dialog-edit-quiz', [
+                    ['form-quizID', data?.data?.quizID],
+                    ['form-title', data?.data?.title],
+                    ['form-subject', data?.data?.subject],
+                    ['form-available', data?.data?.available],
+                ], {
+                    closeAll: true
+                });
+            }
+        }).catch(error => {
+            if (error === null || error === '') error = "An Unknown Error Occurred";
+            console.error(error);
+            DisplayModel('popup', [
+                ['popup-title', "Error"],
+                ['popup-msg', error]
+            ], {
+                class: "error"
+            });
+        });
+    }
 
     function DisplayModel(id, data = [], options) {
         if (id == null) return;
@@ -579,6 +646,10 @@
             // Radio/Checkbox specific
             if (input.type === "radio" || input.type === "checkbox") {
                 if (row[1] === true) SetInputSwitch(row[0]);
+            } else if (input.tagName === "SELECT") {
+                // If it doesn't have a value, just put an empty string
+                input.value = row[1] ?? '';
+                // input.querySelector(`option[value='${row[1]}']`).selected = true;
             } else if (input.tagName === "INPUT") {
                 // If it doesn't have a value, just put an empty string
                 input.value = row[1] ?? '';

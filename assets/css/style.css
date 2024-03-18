@@ -1043,6 +1043,9 @@ dialog > form fieldset .form-input input {
     background-color: rgba(255,255,255,0.1);
     color: rgb(var(--text));
 }
+dialog > form fieldset .form-input select option {
+    color: rgb(var(--background));
+}
 dialog > form fieldset .form-input.error > select,
 dialog > form fieldset .form-input.error > input {
     border: 1px solid red;
