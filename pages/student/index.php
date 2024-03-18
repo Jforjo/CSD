@@ -87,8 +87,7 @@
             </div>
             <?php endforeach; ?>
         <?php endif; ?>
-        </div>
-        
+        </div>  
     </section>
     <section>
         <!-- Completed tests section -->
