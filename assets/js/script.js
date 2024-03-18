@@ -299,6 +299,16 @@
             });
             tableRow.classList.add('events-listening');
         });
+        document.querySelectorAll('#quiz-management .table tr')?.forEach(tableRow => {
+            if (tableRow.classList.contains('events-listening') != false) return;
+            tableRow.querySelector('.icons .table-edit-btn')?.addEventListener('click', () => {
+                ModifyUser(tableRow?.dataset?.userid, "/php/getquizdata.php");
+            });
+            tableRow.querySelector('.icons .table-delete-btn')?.addEventListener('click', () => {
+                DeleteUser(tableRow?.dataset?.userid, "/php/deletequiz.php");
+            });
+            tableRow.classList.add('events-listening');
+        });
         const editStudentForm = document.querySelector('#student-management + #dialog-edit-user form');
         if (editStudentForm?.classList.contains('events-listening') === false) {
             editStudentForm.addEventListener('submit', (e) => {
@@ -314,6 +324,14 @@
                 ModifyUser(null, "/php/editlecturer.php");
             });
             editLecturerForm.classList.add('events-listening');
+        }
+        const editQuizForm = document.querySelector('#quiz-management + #dialog-edit-quiz form');
+        if (editQuizForm?.classList.contains('events-listening') === false) {
+            editQuizForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                ModifyUser(null, "/php/editquiz.php");
+            });
+            editQuizForm.classList.add('events-listening');
         }
         // If there has been an error and a field has a red border
         //  then remove it if the input is modified.
