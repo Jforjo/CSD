@@ -124,7 +124,7 @@ $subjectCount = count($subjects);
             </div>
             <div class="form-input">
                 <label for="form-available">Available</label>
-                <input type="datetime" name="available" id="form-available">
+                <input type="datetime-local" name="available" id="form-available">
             </div>
         </fieldset>
         <hr>
