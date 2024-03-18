@@ -4,9 +4,15 @@ if (!isset($_SESSION['userID'])) header("Location: /");
 require_once(__DIR__ . '/../../php/dbfuncs.php');
 // Checks if their session id is valid
 if (!CheckUserIDExists($_SESSION['userID'])) {
-    session_unset();
-    session_destroy();
+    DestroySession();
     header("Location: /");
+}
+// Checks if their account is active
+if (GetUserState($_SESSION['userID']) !== "active") {
+    DestroySession();
+    die(json_encode(array(
+        "type" => "refresh"
+    )));
 }
 // Checks if they have the correct permissions
 $role = GetUserRole($_SESSION['userID']);

@@ -1,6 +1,21 @@
 <?php require_once('connection.php');
 
 /**
+ * Destroys all session data.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ */
+function DestroySession() {
+    // This saves copy and pasting it
+    //  although, it does mean this entire file needs to load...
+    session_start();
+    session_unset();
+    session_destroy();
+    session_write_close();
+    setcookie(session_name(),'',0,'/');
+    session_regenerate_id(true);
+}
+/**
  * Checks if the a user with the ID already exists.
  * 
  * @param string $userID The user ID to check exists.
@@ -104,6 +119,19 @@ function GetStudentCount(): mixed {
     return $data['count'];
 }
 /**
+ * Fetches the amount of lecturers.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return mixed The amount of lecturers as an int or FALSE on failure.
+ */
+function GetLecturerCount(): mixed {
+    $sql = "CALL GetLecturerCount();";
+    $conn = newConn();
+    $data = $conn->query($sql)->fetch();
+    $conn = null;
+    return $data['count'];
+}
+/**
  * Fetches the amount of students with the 'active' state.
  * 
  * @author Jforjo <https://github.com/Jforjo>
@@ -153,6 +181,26 @@ function GetInactiveStudentCount(): mixed {
  */
 function GetLimitedStudentsData(int|null $limit = 5, int|null $offset = 0): mixed {
     $sql = "CALL GetLimitedStudentsData(:limit, :offset);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":limit", $limit, PDO::PARAM_INT);
+    $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
+    $stmt->execute();
+    $data = $stmt->fetchAll();
+    $conn = null;
+    return $data;
+}
+/**
+ * Fetches a specified range of lecturer data.
+ * 
+ * @param int $limit [optional] The max amount of rows to return.
+ * @param int $offset [optional] The row offset.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return mixed Array of mixed data of lecturers or FALSE on failure.
+ */
+function GetLimitedLecturersData(int|null $limit = 5, int|null $offset = 0): mixed {
+    $sql = "CALL GetLimitedLecturersData(:limit, :offset);";
     $conn = newConn();
     $stmt = $conn->prepare($sql);
     $stmt->bindValue(":limit", $limit, PDO::PARAM_INT);

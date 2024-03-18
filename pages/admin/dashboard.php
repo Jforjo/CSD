@@ -6,8 +6,14 @@ if (!isset($_SESSION['userID'])) die(json_encode(array(
 require_once(__DIR__ . '/../../php/dbfuncs.php');
 // Checks if their session id is valid
 if (!CheckUserIDExists($_SESSION['userID'])) {
-    session_unset();
-    session_destroy();
+    DestroySession();
+    die(json_encode(array(
+        "type" => "refresh"
+    )));
+}
+// Checks if their account is active
+if (GetUserState($_SESSION['userID']) !== "active") {
+    DestroySession();
     die(json_encode(array(
         "type" => "refresh"
     )));

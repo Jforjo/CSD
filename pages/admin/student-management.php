@@ -8,8 +8,14 @@ if (!isset($_SESSION['userID'])) die(json_encode(array(
 require_once(__DIR__ . '/../../php/dbfuncs.php');
 // Checks if their session id is valid
 if (!CheckUserIDExists($_SESSION['userID'])) {
-    session_unset();
-    session_destroy();
+    DestroySession();
+    die(json_encode(array(
+        "type" => "refresh"
+    )));
+}
+// Checks if their account is active
+if (GetUserState($_SESSION['userID']) !== "active") {
+    DestroySession();
     die(json_encode(array(
         "type" => "refresh"
     )));
@@ -59,7 +65,7 @@ $studentCount = GetStudentCount();
         </table>
     </div>
     <div class="pagination">
-        <span>Showing <i id="pagination-showing">1</i> to <i id="pagination-perpage">5</i> of <i id="pagination-total"><?php echo $studentCount; ?></i> entries</span>
+        <span>Showing <i id="pagination-showing">1</i> to <i id="pagination-perpage"><?php echo min($studentCount, 5); ?></i> of <i id="pagination-total"><?php echo $studentCount; ?></i> entries</span>
         <nav>
             <div class="arrow">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">

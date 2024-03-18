@@ -36,7 +36,7 @@ if ($role != "admin") {
 }
 unset($role);
 
-// Checks if the user's ID to retireve data has been passed to this file
+// Checks if the user's ID has been passed to this file
 if (!isset($_POST['userID'])) die(json_encode(array(
     "type" => "error",
     "msg" => "Invalid POST User ID"
@@ -48,26 +48,24 @@ if (!CheckUserIDExists($_POST['userID'])) die(json_encode(array(
 )));
 // Checks if the passed userID belongs to a lecturer
 $role = GetUserRole($_POST['userID']);
-// This will also throw an error if the user's role is a student
-//  even though an admin has edit permissions for them,
-//  but there is a seperate file for getting a student's data.
 if ($role != "lecturer") die(json_encode(array(
     "type" => "error",
-    "msg" => "You do not have permission to view this user"
+    "msg" => "You do not have permission to demote this user"
 )));
 unset($role);
 
-// Retrieve the user's data from the database
-$lecturerData = GetLecturerData($_POST['userID']);
-// Checks if, for some reason, FALSE was returned
-if ($lecturerData === false) die(json_encode(array(
-    "type" => "error",
-    "msg" => "An unknown error occurred while retrieving the user's data"
-)));
-// Return the user's data
+// Make pending so they need to be assigned a student ID first. (done in student management)
+if (!(EditUserRole($_POST['userID'], "student") && EditUserState($_POST['userID'], "pending"))) {
+    EditUserRole($_POST['userID'], "lecturer");
+    die(json_encode(array(
+        "type" => "error",
+        "msg" => "Failed to demote the lecturer"
+    )));
+}
+
 exit(json_encode(array(
-    "type" => "data",
-    "data" => $lecturerData
+    "type" => "success",
+    "msg" => "Successfully demoted the lecturer"
 )));
 
 ?>
