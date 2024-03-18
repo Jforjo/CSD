@@ -2,13 +2,14 @@
     "use strict";
 
     window.onload = (e) => {
-        LinkHandler('admin/dashboard.html', 'Dashboard', {
-            'admin': 'admin/dashboard.html',
-            'dashboard': 'admin/dashboard.html'
-        });
+        // LinkHandler('admin/dashboard', 'Dashboard', {
+        //     'admin': 'admin/dashboard',
+        //     'dashboard': 'admin/dashboard'
+        // });
+        LoadPageEvents();
     };
 
-    const navList = document.querySelectorAll('nav ul li');
+    const navList = document.querySelectorAll('body > nav ul li');
     navList.forEach((navItem, index) => {
         if (navItem.classList.contains('listening')) return;
         navItem.addEventListener('click', (e) => {
@@ -36,18 +37,30 @@
     
     function LinkHandler(link, title = null, breadcrumbs = null) {
         if (link == null) return;
-        fetch(`/pages/${link}`, {
-            // body: formData
+        const formData = new FormData();
+        formData.append('jsfetch', true);
+        fetch(`/${link}`, {
+            method: "POST",
+            body: formData
         }).then(res => {
             if (res.status >= 200 && res.status < 300) {
                 return res.text();
             }
             throw new Error(res.statusText);
         }).then(data => {
-            document.body.querySelector('main').innerHTML = data;
+            try {
+                data = JSON.parse(data);
+                if (data?.type === "refresh") {
+                    window.location.reload();
+                    // Shouldn't need the return
+                    return;
+                }
+            } catch {};
+            document.querySelector('main').innerHTML = data;
             title != null && (document.getElementById('page-title').innerText = title);
             // breadcrumbs != null && Breadcrumbs(breadcrumbs);
-            // history.pushState({}, "", '/' + link.split('.')[0]);
+            history.pushState({}, "", '/' + link);
+            LoadPageEvents();
         }).catch(error => {
             if (error === null || error === '') error = "An Unknown Error Occurred";
             console.error("error", error);
@@ -83,5 +96,462 @@
         console.log(link)
     }
     */
+
+    function PopulateTable(tableID, page) {
+        if (page == null) return;
+        const section = document.getElementById(tableID);
+        if (section == null) return;
+        const loader = section.querySelector('.lds-ring');
+        loader.classList.remove('hidden');
+        const output = section.querySelector('.table table tbody');
+        const limit = document.getElementById('user-management-perpage').value;
+        // -1 because page 1 starts at offset of 0s
+        const offset = ( document.querySelector('#pagination-menu li.active').dataset.id - 1 ) * limit;
+        const formData = new FormData();
+        formData.append('limit', limit);
+        formData.append('offset', offset);
+        fetch(page, {
+            method: "POST",
+            body: formData,
+        }).then(res => {
+            if (res.status >= 200 && res.status < 300) {
+               return res.text();
+            }
+            throw new Error(res.statusText);
+        }).then(data => {
+            try {
+                data = JSON.parse(data);
+                if (data?.type === "refresh") window.location.reload();
+                else if (data?.type === "error") {
+                    DisplayModel('popup', [
+                        ['popup-title', "Error"],
+                        ['popup-msg', data.msg]
+                    ], {
+                        class: "error"
+                    });
+                }
+            } catch {
+                output.innerHTML = data;
+            }
+        }).catch(error => {
+            if (error === null || error === '') error = "An Unknown Error Occurred";
+            console.error(error);
+            DisplayModel('popup', [
+                ['popup-title', "Error"],
+                ['popup-msg', error]
+            ], {
+                class: "error"
+            });
+        }).finally(() => {
+            loader.classList.add('hidden');
+            LoadPageEvents();
+            document.getElementById('pagination-showing').innerHTML = offset + 1;
+            document.getElementById('pagination-perpage').innerHTML = Math.min(offset + limit, document.getElementById('pagination-total').innerHTML);
+        });
+    }
+    function SetPagination(value) {
+        const menu = document.getElementById('pagination-menu');
+        if (menu == null) return;
+        const btns = menu.querySelectorAll('li');
+        if (value < 1 || value > btns.length) return;
+        btns.forEach(btn => {
+            btn.classList.remove('active', 'inactive');
+            btn.classList.add('hidden');
+        });
+        if (btns.length <= 5) {
+            btns.forEach(btn => {
+                btn.classList.replace('hidden', 'inactive');
+                if (btn.dataset.id == value) btn.classList.replace('inactive', 'active');
+            });
+        } else if (value < 3) {
+            btns.forEach(btn => {
+                if (btn.dataset.id <= 5) btn.classList.replace('hidden', 'inactive');
+                if (btn.dataset.id == value) btn.classList.replace('inactive', 'active');
+            });
+        } else if (value > btns.length - 2) {
+            btns.forEach(btn => {
+                if (btn.dataset.id > btns.length - 5) btn.classList.replace('hidden', 'inactive');
+                if (btn.dataset.id == value) btn.classList.replace('inactive', 'active');
+            });
+        } else {
+            btns.forEach(btn => {
+                if (btn.dataset.id >= value - 2 && btn.dataset.id <= value + 2) btn.classList.replace('hidden', 'inactive');
+                if (btn.dataset.id == value) btn.classList.replace('inactive', 'active');
+            });
+        }
+    }
+    function SetPerPage() {
+        const total = document.getElementById('pagination-total').innerHTML;
+        const perpage = document.getElementById('user-management-perpage').value;
+        const paginationMenu = document.getElementById('pagination-menu');
+        paginationMenu.classList.remove('events-listening');
+        paginationMenu.innerHTML = '';
+        for (let i = 1; i <= Math.ceil(total / perpage); i++) {
+            paginationMenu.innerHTML += `
+                <li data-id="${i}">
+                    <span>${i}</span>
+                </li>
+            `;
+        }
+        SetPagination(1);
+        LoadPageEvents();
+    }
+
+    function SetInputSwitch(radioID) {
+        document.querySelectorAll('.input-switch')?.forEach(inputSwitch => {
+            const slider = inputSwitch.querySelector('.input-switch-slider');
+            inputSwitch.querySelectorAll('.input-switch-option input')?.forEach((switchOption, index) => {
+                if (switchOption.id != radioID) return;
+                inputSwitch.classList.remove('error');
+                switchOption.checked = true;
+                slider.style.left = `${100 / inputSwitch.style.getPropertyValue('--count') * index}%`;
+            });
+        });
+    }
+
+    function LoadPageEvents() {
+        const logoutbtn = document.getElementById('logout');
+        if (logoutbtn != null && logoutbtn.classList.contains('events-listening') === false) {
+            logoutbtn.addEventListener('click', () => {
+                if (confirm("Are you sure you wish to log out?")) window.location = '/logout';
+            });
+            logoutbtn.classList.add('events-listening');
+        }
+
+        const recentStudent = document.getElementById('recent-student');
+        if (recentStudent != null && recentStudent.classList.contains('events-listening') === false) {
+            recentStudent.addEventListener('submit', (e) => {
+                e.preventDefault();
+                fetch('/php/acceptstudent.php', {
+                    method: "POST",
+                    body: new FormData(e.target),
+                }).then(res => {
+                    if (res.status >= 200 && res.status < 300) {
+                       return res.text();
+                    }
+                    throw new Error(res.statusText);
+                }).then(data => {
+                    data = JSON.parse(data);
+                    if (data?.type === "refresh") window.location.reload();
+                    else if (data?.type === "error") {
+                        DisplayModel('popup', [
+                            ['popup-title', "Error"],
+                            ['popup-msg', data.msg]
+                        ], {
+                            class: "error"
+                        });
+                    } else if (data?.type === "success") {
+                        DisplayModel('popup', [
+                            ['popup-title', "Success"],
+                            ['popup-msg', data.msg]
+                        ], {
+                            class: "success",
+                            closeAll: true
+                        });
+                    }
+                }).catch(error => {
+                    if (error === null || error === '') error = "An Unknown Error Occurred";
+                    console.error(error);
+                    DisplayModel('popup', [
+                        ['popup-title', "Error"],
+                        ['popup-msg', error]
+                    ], {
+                        class: "error"
+                    });
+                });
+            });
+            recentStudent.classList.contains('events-listening');
+        }
+        document.querySelectorAll('.input-switch')?.forEach(inputSwitch => {
+            if (inputSwitch.classList.contains('events-listening')) return;
+            const slider = inputSwitch.querySelector('.input-switch-slider');
+            inputSwitch.querySelectorAll('.input-switch-option input')?.forEach((switchOption, index) => {
+                switchOption.addEventListener('change', () => {
+                    if (switchOption?.checked == false) return;
+                    SetInputSwitch(switchOption.id)
+                });
+            });
+            inputSwitch.classList.add('events-listening');
+        });
+        document.querySelectorAll('#student-management .table tr')?.forEach(tableRow => {
+            if (tableRow.classList.contains('events-listening') != false) return;
+            tableRow.querySelector('.icons .table-edit-btn')?.addEventListener('click', () => {
+                ModifyUser(tableRow?.dataset?.userid, "/php/getstudentdata.php");
+            });
+            tableRow.querySelector('.icons .table-delete-btn')?.addEventListener('click', () => {
+                DeleteUser(tableRow?.dataset?.userid, "/php/deletestudent.php");
+            });
+            tableRow.querySelector('.icons .table-promote-btn')?.addEventListener('click', () => {
+                PromoteUser(tableRow?.dataset?.userid, "/php/promotestudent.php");
+            });
+            tableRow.classList.add('events-listening');
+        });
+        document.querySelectorAll('#lecturer-management .table tr')?.forEach(tableRow => {
+            if (tableRow.classList.contains('events-listening') != false) return;
+            tableRow.querySelector('.icons .table-edit-btn')?.addEventListener('click', () => {
+                ModifyUser(tableRow?.dataset?.userid, "/php/getlecturerdata.php");
+            });
+            tableRow.querySelector('.icons .table-delete-btn')?.addEventListener('click', () => {
+                DeleteUser(tableRow?.dataset?.userid, "/php/deletelecturer.php");
+            });
+            tableRow.querySelector('.icons .table-demote-btn')?.addEventListener('click', () => {
+                DemoteUser(tableRow?.dataset?.userid, "/php/demotelecturer.php");
+            });
+            tableRow.classList.add('events-listening');
+        });
+        const editStudentForm = document.querySelector('#student-management + #dialog-edit-user form');
+        if (editStudentForm?.classList.contains('events-listening') === false) {
+            editStudentForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                ModifyUser(null, "/php/editstudent.php");
+            });
+            editStudentForm.classList.add('events-listening');
+        }
+        const editLecturerForm = document.querySelector('#lecturer-management + #dialog-edit-user form');
+        if (editLecturerForm?.classList.contains('events-listening') === false) {
+            editLecturerForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                ModifyUser(null, "/php/editlecturer.php");
+            });
+            editLecturerForm.classList.add('events-listening');
+        }
+        // If there has been an error and a field has a red border
+        //  then remove it if the input is modified.
+        document.querySelectorAll('form .form-input')?.forEach(inputField => {
+            inputField.querySelectorAll('*[name]')?.forEach(input => {
+                if (input.classList.contains('events-listening')) return;
+                input.addEventListener('change', () => {
+                    inputField.classList.remove('error');
+                });
+                input.classList.add('events-listening');
+            });
+        });
+
+
+        // Automatiicaly populate table on load
+        const studentManagement = document.getElementById('student-management');
+        const lecturerManagement = document.getElementById('lecturer-management');
+
+        if (studentManagement != null && studentManagement.classList.contains('loaded') == false) {
+            PopulateTable('student-management', '/php/loadstudenttable.php');
+            studentManagement.classList.add('loaded');
+        }
+        if (lecturerManagement != null && lecturerManagement.classList.contains('loaded') == false) {
+            PopulateTable('lecturer-management', '/php/loadlecturertable.php');
+            lecturerManagement.classList.add('loaded');
+        }
+
+        if (document.getElementById('user-management-perpage')?.classList.contains('events-listening') === false) {
+            document.querySelector('#student-management #user-management-perpage')?.addEventListener('change', () => {
+                SetPerPage();
+                PopulateTable('student-management', '/php/loadstudenttable.php');
+            });
+            document.querySelector('#lecturer-management #user-management-perpage')?.addEventListener('change', () => {
+                SetPerPage();
+                PopulateTable('lecturer-management', '/php/loadlecturertable.php');
+            });
+            document.getElementById('user-management-perpage').classList.add('events-listening');
+        }
+        if (document.getElementById('pagination-menu')?.classList.contains('events-listening') === false) {
+            document.querySelectorAll('#student-management #pagination-menu li')?.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    SetPagination(btn.dataset.id);
+                    PopulateTable('student-management', '/php/loadstudenttable.php');
+                });
+            });
+            document.querySelectorAll('#lecturer-management #pagination-menu li')?.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    SetPagination(btn.dataset.id);
+                    PopulateTable('lecturer-management', '/php/loadlecturertable.php');
+                });
+            });
+            document.getElementById('pagination-menu').classList.add('events-listening');
+        }
+
+        if (document.querySelector('.pagination')?.classList.contains('events-listening') === false) {
+            document.querySelectorAll('#student-management .pagination .arrow')[0]?.addEventListener('click', () => {
+                SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id - 1);
+                PopulateTable('student-management', '/php/loadstudenttable.php');
+            });
+            document.querySelectorAll('#student-management .pagination .arrow')[1]?.addEventListener('click', () => {
+                SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id + 1);
+                PopulateTable('student-management', '/php/loadstudenttable.php');
+            });
+            document.querySelectorAll('#lecturer-management .pagination .arrow')[0]?.addEventListener('click', () => {
+                SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id - 1);
+                PopulateTable('lecturer-management', '/php/loadlecturertable.php');
+            });
+            document.querySelectorAll('#lecturer-management .pagination .arrow')[1]?.addEventListener('click', () => {
+                SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id + 1);
+                PopulateTable('lecturer-management', '/php/loadlecturertable.php');
+            });
+            document.querySelector('.pagination').classList.add('events-listening');
+        }
+    }
+
+    function SimpleForm(userid, page) {
+        const formData = new FormData();
+        formData.append('userID', userid);
+        fetch(page, {
+            method: "POST",
+            body: formData,
+        }).then(res => {
+            if (res.status >= 200 && res.status < 300) {
+               return res.text();
+            }
+            throw new Error(res.statusText);
+        }).then(data => {
+            data = JSON.parse(data);
+            if (data?.type === "refresh") window.location.reload();
+            else if (data?.type === "error") {
+                DisplayModel('popup', [
+                    ['popup-title', "Error"],
+                    ['popup-msg', data.msg]
+                ], {
+                    class: "error"
+                });
+            } else if (data?.type === "success") {
+                DisplayModel('popup', [
+                    ['popup-title', "Success"],
+                    ['popup-msg', data.msg]
+                ], {
+                    class: "success",
+                    closeAll: true
+                });
+            }
+        }).catch(error => {
+            if (error === null || error === '') error = "An Unknown Error Occurred";
+            console.error(error);
+            DisplayModel('popup', [
+                ['popup-title', "Error"],
+                ['popup-msg', error]
+            ], {
+                class: "error"
+            });
+        });
+    }
+    function PromoteUser(userid, page) {
+        if (userid == null || page == null) return;
+        if (!confirm("Are you sure you wish to promote this user?")) return;
+        SimpleForm(userid, page);
+    }
+    function DemoteUser(userid, page) {
+        if (userid == null || page == null) return;
+        if (!confirm("Are you sure you wish to demote this user?")) return;
+        SimpleForm(userid, page);
+    }
+    function DeleteUser(userid, page) {
+        if (userid == null || page == null) return;
+        if (!confirm("Are you sure you wish to delete this user?")) return;
+        SimpleForm(userid, page);
+    }
+    function ModifyUser(userid, page) {
+        if (page == null) return;
+        document.querySelectorAll(`#dialog-edit-user *[name]`).forEach(input => {
+            input.classList.remove('error');
+        });
+        document.querySelector('#dialog-edit-user .error-msg').innerHTML = '';
+        const formData = new FormData(document.querySelector('#dialog-edit-user form'));
+        if (userid != null) formData.append('userID', userid);
+        fetch(page, {
+            method: "POST",
+            body: formData,
+        }).then(res => {
+            if (res.status >= 200 && res.status < 300) {
+               return res.text();
+            }
+            throw new Error(res.statusText);
+        }).then(data => {
+            data = JSON.parse(data);
+            if (data?.type === "refresh") window.location.reload();
+            else if (data?.type === "error") {
+                if (data?.input != null) {
+                    document.querySelector(`#dialog-edit-user *[name="${data.inpuut}"]`).classList.add('error');
+                    document.querySelector('#dialog-edit-user .error-msg').innerHTML = data.msg;
+                } else {
+                    DisplayModel('popup', [
+                        ['popup-title', "Error"],
+                        ['popup-msg', data.msg]
+                    ], {
+                        class: "error"
+                    });
+                }
+            } else if (data?.type === "success") {
+                DisplayModel('popup', [
+                    ['popup-title', "Success"],
+                    ['popup-msg', data.msg]
+                ], {
+                    class: "success",
+                    closeAll: true
+                });
+            } else if (data?.type === "data") {
+                // Object.keys(data.data).forEach(key => {
+                //     const input = document.querySelector(`#dialog-edit-user *[name="${key}"]`);
+                //     if (input?.type === "radio" || input?.type === "checkbox") {
+                //         document.querySelector(`#dialog-edit-user *[name="${key}"][value="${data[key]}"]`)?.checked = true;
+                //     } else {
+                //         input?.value = data[key];
+                //     }
+                // });
+                // Gonna manually input all this bit for now
+                let stateID = "form-state-";
+                if (data?.data?.state == 'inactive') stateID += '1';
+                else if (data?.data?.state == 'pending') stateID += '2';
+                else if (data?.data?.state == 'active') stateID += '3';
+                DisplayModel('dialog-edit-user', [
+                    ['form-userID', data?.data?.userID],
+                    ['form-firstname', data?.data?.firstname],
+                    ['form-lastname', data?.data?.lastname],
+                    ['form-studentID', data?.data?.studentID],
+                    ['form-email', data?.data?.email],
+                    [stateID, true],
+                ], {
+                    closeAll: true
+                });
+            }
+        }).catch(error => {
+            if (error === null || error === '') error = "An Unknown Error Occurred";
+            console.error(error);
+            DisplayModel('popup', [
+                ['popup-title', "Error"],
+                ['popup-msg', error]
+            ], {
+                class: "error"
+            });
+        });
+    }
+
+    function DisplayModel(id, data = [], options) {
+        if (id == null) return;
+        const modal = document.getElementById(id);
+        if (modal.tagName !== "DIALOG") return;
+        modal.className = '';
+        if (options?.closeAll === true) document.querySelectorAll('dialog').forEach(dialog => {
+            dialog.close('close');
+        })
+        // Clear form. (should already be cleared anyway)
+        modal.querySelector('form')?.reset();
+        // The default [] is still an array
+        if (!Array.isArray(data)) return;
+        // Loop through data that is already in each input
+        data.forEach(row => {
+            const input = document.getElementById(row[0]);
+            if (input == null) return;
+            // Radio/Checkbox specific
+            if (input.type === "radio" || input.type === "checkbox") {
+                if (row[1] === true) SetInputSwitch(row[0]);
+            } else if (input.tagName === "INPUT") {
+                // If it doesn't have a value, just put an empty string
+                input.value = row[1] ?? '';
+            } else {
+                input.innerHTML = row[1] ?? '';
+            }
+        });
+
+        if (options?.modal === false) modal.show();
+        else modal.showModal();
+
+        if (options?.class != null) modal.classList.add(options.class)
+    }
 
 })();
