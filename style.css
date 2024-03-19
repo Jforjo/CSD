@@ -404,3 +404,39 @@
         margin: 10px auto;
         font-size: 20px;
     }
+
+    /* Export Data Modal */
+    .exportModal
+    {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        width: 80%;
+        height: auto;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .export-modal-content
+    {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #181818;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 300px;
+        height: 200px;
+    }
+
+    .export-modal-content button
+    {
+        background-color: red;
+    }
+
+    .export-modal-content button:hover
+    {
+        background-color: darkred;
+    }

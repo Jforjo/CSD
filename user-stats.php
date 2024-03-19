@@ -129,6 +129,20 @@
             </table>
         </div>
     </div>
+
+    <button id="exportButton">Export</button>
+
+    <!-- Modal that appears when button is clicked -->
+    <div id="exportModal" class="exportModal">
+        <div class="export-modal-content">
+            <span class="close">&times;</span>
+            <h2>Export Data</h2>
+            <p>Choose the format you would like to export your data in:</p>
+            <button id="exportCSV">CSV</button>
+            <button id="exportPDF">PDF</button>
+        </div>
+    </div>
+
     <script type="text/javascript">
 $(document).ready(function() {
     $('.table').DataTable({
@@ -137,6 +151,23 @@ $(document).ready(function() {
         "lengthChange": false
     });
 });
+</script>
+
+<script>
+    var modal = document.getElementById("exportModal");
+    var btn = document.getElementById("exportButton");
+    var span = document.getElementsByClassName("close")[0];
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
 </script>
 </body>
 </html>
