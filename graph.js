@@ -1,19 +1,15 @@
-var ctx = document.getElementById('chart').getContext('2d');
+function displayChart(testNames, percentages)
+{
+    var ctx = document.getElementById('chart').getContext('2d');
         var chart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['Maths Quiz 1', 'Maths Quiz 2', 'Physics Test', 'Test', 'Test', 'Test', 'Test', 'Test'],
+                labels: testNames,
                 datasets: [{
                     label: 'Percentage',
-                    data: [100, 85, 84, 50, 57, 81, 73, 65],
-                    backgroundColor: 
-                    [
-                        'red'
-                    ],
-                    borderColor: 
-                    [
-                        'red'
-                    ],
+                    data: percentages,
+                    backgroundColor: ['red'],
+                    borderColor: ['red'],
                     borderWidth: 1
                 }]
             },
@@ -50,3 +46,13 @@ var ctx = document.getElementById('chart').getContext('2d');
                 }
             }
         });
+}
+
+    window.onload = function() {
+        fetch('user-stats.php?action=getTestData')
+        .then(response => response.json())
+        .then(data => {
+            var percentages = data.percentages.map(parseFloat);
+            displayChart(data.testNames, percentages);
+        });
+    }
