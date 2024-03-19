@@ -609,7 +609,7 @@
                 DisplayModel('dialog-edit-quiz', [
                     ['form-quizID', data?.data?.quizID],
                     ['form-title', data?.data?.title],
-                    ['form-subject', data?.data?.subject],
+                    ['form-subject', data?.data?.subjectID],
                     ['form-available', data?.data?.available],
                 ], {
                     closeAll: true
@@ -649,6 +649,9 @@
             } else if (input.tagName === "SELECT") {
                 // If it doesn't have a value, just put an empty string
                 input.value = row[1] ?? '';
+                input.querySelectorAll('option')?.forEach(option => {
+                    option.click
+                })
                 // input.querySelector(`option[value='${row[1]}']`).selected = true;
             } else if (input.tagName === "INPUT") {
                 // If it doesn't have a value, just put an empty string

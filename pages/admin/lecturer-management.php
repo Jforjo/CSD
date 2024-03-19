@@ -113,7 +113,7 @@ $lecturerCount = GetLecturerCount();
             </div>
             <div class="form-input">
                 <label for="form-password">Password</label>
-                <input type="password" name="password" id="form-password" required>
+                <input type="password" name="password" id="form-password">
             </div>
             <div class="form-input">
                 <label>State<i aria-hidden="true">*</i></label>
