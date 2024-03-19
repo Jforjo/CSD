@@ -36,7 +36,7 @@ switch ($url) {
             include_once(__DIR__ . '/pages/admin/index.php');
         }
         break;
-    case 'admin/lecturer-management':
+    case 'admin/lecturers':
         if (isset($_POST['jsfetch'])) {
             include_once(__DIR__ . '/pages/admin/lecturer-management.php');
         } else {
@@ -44,7 +44,7 @@ switch ($url) {
             include_once(__DIR__ . '/pages/admin/index.php');
         }
         break;
-    case 'admin/student-management':
+    case 'admin/students':
         if (isset($_POST['jsfetch'])) {
             include_once(__DIR__ . '/pages/admin/student-management.php');
         } else {
@@ -52,7 +52,7 @@ switch ($url) {
             include_once(__DIR__ . '/pages/admin/index.php');
         }
         break;
-    case 'admin/subject-management':
+    case 'admin/subjects':
         if (isset($_POST['jsfetch'])) {
             include_once(__DIR__ . '/pages/admin/subject-management.php');
         } else {
@@ -60,7 +60,7 @@ switch ($url) {
             include_once(__DIR__ . '/pages/admin/index.php');
         }
         break;
-    case 'admin/quiz-management':
+    case 'admin/quizzes':
         if (isset($_POST['jsfetch'])) {
             include_once(__DIR__ . '/pages/admin/quiz-management.php');
         } else {

@@ -52,7 +52,11 @@ $quizCount = count($quizzes);
     <tr data-quizid="<?php echo $quiz['quizID']; ?>">
         <td><span><?php echo $quiz['title']; ?></span></td>
         <td><span><?php echo $quiz['subject']; ?></span></td>
-        <td><span><?php echo $quiz['questions']; ?></span></td>
+        <td>
+            <a href="/admin/questions?quiz=<?php echo $quiz['quizID']; ?>" title="View all questions of quiz: '<?php echo $quiz['title']; ?>'">
+                <?php echo $quiz['questions']; ?>
+            </a>
+        </td>
         <td><span><?php echo $quiz['available']; ?></span></td>
         <td>
             <div class="icons">

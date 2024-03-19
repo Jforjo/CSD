@@ -69,6 +69,24 @@ function CheckQuizIDExists(string $quizID): bool {
     return $data['exists'];
 }
 /**
+ * Checks if the a subject with the ID already exists.
+ * 
+ * @param string $subjectID The subject ID to check exists.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE if the subject ID exists or FALSE if it doesn't. Also, FALSE is returned on failure.
+ */
+function CheckSubjectIDExists(string $subjectID): bool {
+    $sql = "SELECT CheckSubjectIDExists(:subjectID) AS 'exists';";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":subjectID", $subjectID, PDO::PARAM_STR);
+    $stmt->execute();
+    $data = $stmt->fetch();
+    $conn = null;
+    return $data['exists'];
+}
+/**
  * Checks if the a user with the give ID has been assigned a student number.
  * 
  * @param string $userID The user's ID.
@@ -524,6 +542,29 @@ function EditStudentID(string $userID, string $studentID): bool {
 function EditStudent(string $userID, string $firstname, string $lastname, string $studentID, string $email, string $state, string|null $password): bool {
     return EditUserData($userID, $firstname, $lastname, $email, $state, $password)
         && EditStudentID($userID, $studentID);
+}
+/**
+ * Edit the data of the quiz with the given ID.
+ * 
+ * @param string $quizID The quiz's ID.
+ * @param string $title The quiz's new title.
+ * @param string $subjectID The quiz's new subjectID.
+ * @param string $available The quiz's new available timestamp.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE on success or FALSE on failure.
+ */
+function EditQuiz(string $quizID, string $title, string $subjectID, string $available): bool {
+    $sql = "CALL EditQuiz(:quizID, :title, :subjectID, :available);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":quizID", $quizID, PDO::PARAM_STR);
+    $stmt->bindValue(":title", $title, PDO::PARAM_STR);
+    $stmt->bindValue(":subjectID", $subjectID, PDO::PARAM_STR);
+    $stmt->bindValue(":available", $available, PDO::PARAM_STR);
+    $success = $stmt->execute();
+    $conn = null;
+    return $success;
 }
 /**
  * Deletes the user with the given ID.

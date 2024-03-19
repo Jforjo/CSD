@@ -107,7 +107,7 @@ if ($role === 'admin') {
             </li>
             <?php if ($role === "admin") { ?>
             <li <?php if ($routerPage == '/lecturer-management.php') echo 'class="active"'; ?>>
-                <a data-link="admin/lecturer-management">
+                <a data-link="admin/lecturers">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="<?php if ($routerPage == '/lecturer-management.php') echo 'nc-int-icon-state-b'; ?>">
                         <g stroke-linecap="square" transform="translate(0.5 0.5)" fill="none" stroke="currentColor" stroke-linejoin="miter" class="nc-icon-wrapper" stroke-miterlimit="10">
                             <g class="nc-int-icon js-nc-int-icon">
@@ -135,7 +135,7 @@ if ($role === 'admin') {
             </li>
             <?php } ?>
             <li <?php if ($routerPage == '/student-management.php') echo 'class="active"'; ?>>
-                <a data-link="admin/student-management">
+                <a data-link="admin/students">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="<?php if ($routerPage == '/student-management.php') echo 'nc-int-icon-state-b'; ?>">
                         <g stroke-linecap="square" transform="translate(0.5 0.5)" fill="none" stroke="currentColor" stroke-linejoin="miter" class="nc-icon-wrapper" stroke-miterlimit="10">
                             <g class="nc-int-icon js-nc-int-icon">
@@ -157,7 +157,7 @@ if ($role === 'admin') {
                 </a>
             </li>
             <li <?php if ($routerPage == '/quiz-management.php') echo 'class="active"'; ?>>
-                <a data-link="admin/quiz-management">
+                <a data-link="admin/quizzes">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="<?php if ($routerPage == '/quiz-management.php') echo 'nc-int-icon-state-b'; ?>">
                         <g stroke-linecap="square" transform="translate(0.5 0.5)" fill="none" stroke="currentColor" stroke-linejoin="miter" class="nc-icon-wrapper" stroke-miterlimit="10">
                             <g class="nc-int-icon js-nc-int-icon">
