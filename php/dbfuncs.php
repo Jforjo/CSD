@@ -13,7 +13,6 @@ function DestroySession() {
     session_destroy();
     session_write_close();
     setcookie(session_name(),'',0,'/');
-    session_regenerate_id(true);
 }
 /**
  * Checks if the a user with the ID already exists.
