@@ -601,6 +601,23 @@ function DeleteStudent(string $userID): bool {
     return $success && !CheckUserIsStudent($userID);
 }
 /**
+ * Deletes the quiz with the given ID.
+ * 
+ * @param string $quizID The quiz's ID.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE on success or FALSE on failure.
+ */
+function DeleteQuiz(string $quizID): bool {
+    $sql = "CALL DeleteQuiz(:quizID);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":quizID", $quizID, PDO::PARAM_STR);
+    $success = $stmt->execute();
+    $conn = null;
+    return $success && !CheckQuizIDExists($quizID);
+}
+/**
  * Assign a user and student ID.
  * 
  * @param string $userID The user's ID.

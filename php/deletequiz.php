@@ -47,44 +47,14 @@ if (!CheckQuizIDExists($_POST['quizID'])) die(json_encode(array(
     "msg" => "Quiz ID does not exist"
 )));
 
-// Checks if the 'title' value was passed to the file
-if (!isset($_POST['title'])) die(json_encode(array(
+if (!DeleteQuiz($_POST['quizID'])) die(json_encode(array(
     "type" => "error",
-    "msg" => "Invalid POST title"
-)));
-// Checks if the 'subject' value was passed to the file
-if (!isset($_POST['subject'])) die(json_encode(array(
-    "type" => "error",
-    "msg" => "Invalid POST subject"
-)));
-// Checks if the 'available' value was passed to the file
-if (!isset($_POST['available'])) die(json_encode(array(
-    "type" => "error",
-    "msg" => "Invalid POST available"
-)));
-
-// Checks if the passed subject belongs to a valid subject
-if (!CheckSubjectIDExists($_POST['subject'])) die(json_encode(array(
-    "type" => "error",
-    "msg" => "A subject with that ID does not exists"
-)));
-
-// Checks if the 'title' is NULL or empty
-$title = $_POST['title'];
-if (ctype_space($title) || $title == '') die(json_encode(array(
-    "type" => "error",
-    "input" => "title",
-    "msg" => "Title cannot be NULL or empty"
-)));
-
-if (!EditQuiz($_POST['quizID'], $title, $_POST['subject'], $_POST['available'])) die(json_encode(array(
-    "type" => "error",
-    "msg" => "Failed to edit the quiz"
+    "msg" => "Failed to delete the quiz"
 )));
 
 exit(json_encode(array(
     "type" => "success",
-    "msg" => "Successfully edited the quiz"
+    "msg" => "Successfully deleted the quiz"
 )));
 
 ?>
