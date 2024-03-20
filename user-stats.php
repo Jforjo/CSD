@@ -138,7 +138,9 @@
             <span class="close">&times;</span>
             <h2>Export Data</h2>
             <p>Choose the format you would like to export your data in:</p>
-            <button id="exportCSV">CSV</button>
+            <form action="php/exportCSV.php" method="post">
+                <button type="submit" id="exportCSV">CSV</button>
+            </form>
             <button id="exportPDF">PDF</button>
         </div>
     </div>
