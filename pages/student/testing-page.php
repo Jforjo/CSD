@@ -52,6 +52,14 @@
 
     $subjectName = $quizData['subject'];
     $quizName = $quizData['title'];
+
+    //Get Quiz Set
+    $limit = 50;
+    $stmt = $conn->prepare("CALL GetQuizSet(:quizID, :limit)");
+    $stmt->bindParam(":quizID", $quizID, PDO::PARAM_STR);
+    $stmt->bindParam(":limit", $quizID, PDO::PARAM_INT);
+    $stmt->execute();
+    $allQuestions = $stmt->fetchAll();
 }
    ?>
     <div class="test-info-section">
@@ -61,8 +69,9 @@
     </div>
     </div>
     <div class="main-content">
+        <?php foreach ($allQuestions as $question): ?>
     <div class="question">
-        <p>Placeholder question text area</p>
+        <p><?php echo htmlspecialchars($question['question'], ENT_QUOTES, 'UTF-8'); ?></p>
     </div>
 
     <div class="question-number">
@@ -74,11 +83,12 @@
     </div>
 
     <div class="answers">
-        <div class="answer">Answer 1</div>
-        <div class="answer">Answer 2</div>
-        <div class="answer">Answer 3</div>
-        <div class="answer">Answer 4</div>
+    <div class="answer"><?php echo htmlspecialchars($question['answerOne'], ENT_QUOTES, 'UTF-8'); ?></div>
+            <div class="answer"><?php echo htmlspecialchars($question['answerTwo'], ENT_QUOTES, 'UTF-8'); ?></div>
+            <div class="answer"><?php echo htmlspecialchars($question['answerThree'], ENT_QUOTES, 'UTF-8'); ?></div>
+            <div class="answer"><?php echo htmlspecialchars($question['answerFour'], ENT_QUOTES, 'UTF-8'); ?></div>
     </div>
+    <?php endforeach; ?>
     
 </body>
 </html>
