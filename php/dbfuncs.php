@@ -405,6 +405,35 @@ function GetRecentPendingStudentData(): mixed {
     return $data;
 }
 /**
+ * Create q quiz based on the given parameters.
+ * 
+ * @param string $title The title of the quiz.
+ * @param string $subjectID The ID of the subject.
+ * @param string $available The timestamp of when the quiz will become available.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE on success or FALSE on failure.
+ */
+function CreateQuiz($subjectID, $title, $available): bool {
+    $sql = "CALL CreateQuiz(:quizID, :subjectID, :title, :available);";
+    do {
+        $quizID = bin2hex(random_bytes(16));
+    } while (CheckQuizIDExists($quizID));
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":quizID", $quizID, PDO::PARAM_STR);
+    $stmt->bindValue(":subjectID", $subjectID, PDO::PARAM_STR);
+    $stmt->bindValue(":title", $title, PDO::PARAM_STR);
+    if ($available == null || $available == '') {
+        $stmt->bindValue(":available", null, PDO::PARAM_NULL);
+    } else {
+        $stmt->bindValue(":available", $available, PDO::PARAM_STR);
+    }
+    $success = $stmt->execute();
+    $conn = null;
+    return $success;
+}
+/**
  * Edit the data of the user with the given ID.
  * 
  * @param string $userID The user's ID.

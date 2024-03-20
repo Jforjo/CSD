@@ -329,7 +329,10 @@
         if (editQuizForm?.classList.contains('events-listening') === false) {
             editQuizForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                ModifyQuiz(null, "/php/editquiz.php");
+                if (editQuizForm.querySelector('input#form-quizID').value != '')
+                    ModifyQuiz(null, "/php/editquiz.php");
+                else
+                    ModifyQuiz(null, "/php/createquiz.php");
             });
             editQuizForm.classList.add('events-listening');
         }
@@ -344,6 +347,14 @@
                 input.classList.add('events-listening');
             });
         });
+
+        const createQuizBtn = document.querySelector('#quiz-management .table-btns .create');
+        if (createQuizBtn?.classList.contains('events-listening') === false) {
+            createQuizBtn.addEventListener('click', () => {
+                CreateQuiz();
+            });
+            createQuizBtn.classList.add('events-listening');
+        }
 
 
         // Automatiicaly populate table on load
@@ -442,6 +453,7 @@
             }
             throw new Error(res.statusText);
         }).then(data => {
+            console.log(data);
             data = JSON.parse(data);
             if (data?.type === "refresh") window.location.reload();
             else if (data?.type === "error") {
@@ -512,7 +524,7 @@
             if (data?.type === "refresh") window.location.reload();
             else if (data?.type === "error") {
                 if (data?.input != null) {
-                    document.querySelector(`#dialog-edit-user *[name="${data.inpuut}"]`).classList.add('error');
+                    document.querySelector(`#dialog-edit-user *[name="${data.input}"]`).classList.add('error');
                     document.querySelector('#dialog-edit-user .error-msg').innerHTML = data.msg;
                 } else {
                     DisplayModel('popup', [
@@ -587,7 +599,7 @@
             if (data?.type === "refresh") window.location.reload();
             else if (data?.type === "error") {
                 if (data?.input != null) {
-                    document.querySelector(`#dialog-edit-quiz *[name="${data.inpuut}"]`).classList.add('error');
+                    document.querySelector(`#dialog-edit-quiz *[name="${data.input}"]`).classList.add('error');
                     document.querySelector('#dialog-edit-quiz .error-msg').innerHTML = data.msg;
                 } else {
                     DisplayModel('popup', [
@@ -624,6 +636,12 @@
             ], {
                 class: "error"
             });
+        });
+    }
+
+    function CreateQuiz() {
+        DisplayModel('dialog-edit-quiz', [], {
+            closeAll: true
         });
     }
 
