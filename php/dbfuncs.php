@@ -69,6 +69,24 @@ function CheckQuizIDExists(string $quizID): bool {
     return $data['exists'];
 }
 /**
+ * Checks if the a question with the ID already exists.
+ * 
+ * @param string $questionID The question ID to check exists.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE if the question ID exists or FALSE if it doesn't. Also, FALSE is returned on failure.
+ */
+function CheckQuestionIDExists(string $questionID): bool {
+    $sql = "SELECT CheckQuestionIDExists(:questionID) AS 'exists';";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":questionID", $questionID, PDO::PARAM_STR);
+    $stmt->execute();
+    $data = $stmt->fetch();
+    $conn = null;
+    return $data['exists'];
+}
+/**
  * Checks if the a subject with the ID already exists.
  * 
  * @param string $subjectID The subject ID to check exists.
@@ -395,6 +413,24 @@ function GetQuizData(string $quizID): mixed {
     $conn = newConn();
     $stmt = $conn->prepare($sql);
     $stmt->bindValue(":quizID", $quizID, PDO::PARAM_STR);
+    $stmt->execute();
+    $data = $stmt->fetch();
+    $conn = null;
+    return $data;
+}
+/**
+ * Fetches all data of a question with the given ID.
+ * 
+ * @param string $questionData The question's ID.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return mixed Array of mixed data of the question or FALSE on failure.
+ */
+function GetQuestionData(string $questionData): mixed {
+    $sql = "CALL GetQuestionData(:questionData);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":questionData", $questionData, PDO::PARAM_STR);
     $stmt->execute();
     $data = $stmt->fetch();
     $conn = null;

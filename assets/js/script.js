@@ -746,7 +746,7 @@
                 DisplayModel('dialog-edit-question', [
                     ['form-questionID', data?.data?.questionID],
                     ['form-question', data?.data?.question],
-                    ['form-correctAnswer', data?.data?.correctAnswer],
+                    [correct, true],
                     ['form-answerOne', data?.data?.answerOne],
                     ['form-answerTwo', data?.data?.answerTwo],
                     ['form-answerThree', data?.data?.answerThree],
@@ -804,11 +804,13 @@
                 // If it doesn't have a value, just put an empty string
                 input.value = row[1] ?? '';
                 input.querySelectorAll('option')?.forEach(option => {
-                    option.click
+                    if (option.value == row[1]) option.selected = true;
                 })
                 // input.querySelector(`option[value='${row[1]}']`).selected = true;
             } else if (input.tagName === "INPUT") {
                 // If it doesn't have a value, just put an empty string
+                input.value = row[1] ?? '';
+            } else if (input.tagName === "TEXTAREA") {
                 input.value = row[1] ?? '';
             } else {
                 input.innerHTML = row[1] ?? '';

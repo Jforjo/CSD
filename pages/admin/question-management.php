@@ -102,7 +102,7 @@ $questionCount = GetQuestionCount($quizID);
             <input type="hidden" name="questionID" id="form-questionID">
             <div class="form-input">
                 <label for="form-question">Question<i aria-hidden="true">*</i></label>
-                <input type="text" name="question" id="form-question" required>
+                <textarea type="text" name="question" id="form-question" required></textarea>
             </div>
             <div class="form-input">
                 <label>Correct Annswer<i aria-hidden="true">*</i></label>
@@ -127,6 +127,22 @@ $questionCount = GetQuestionCount($quizID);
                         <span class="input-switch-slider"></span>
                     </div>
                 </div>
+            </div>
+            <div class="form-input">
+                <label for="form-answerOne">Answer One<i aria-hidden="true">*</i></label>
+                <textarea name="answerOne" id="form-answerOne" required></textarea>
+            </div>
+            <div class="form-input">
+                <label for="form-answerTwo">Answer Two<i aria-hidden="true">*</i></label>
+                <textarea name="answerTwo" id="form-answerTwo" required></textarea>
+            </div>
+            <div class="form-input">
+                <label for="form-answerThree">Answer Three</label>
+                <textarea name="answerThree" id="form-answerThree"></textarea>
+            </div>
+            <div class="form-input">
+                <label for="form-answerFour">Answer Four</label>
+                <textarea name="answerFour" id="form-answerFour"></textarea>
             </div>
         </fieldset>
         <hr>

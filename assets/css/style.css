@@ -1039,6 +1039,7 @@ dialog > form fieldset .form-input label i {
     color: red;
 }
 dialog > form fieldset .form-input select,
+dialog > form fieldset .form-input textarea,
 dialog > form fieldset .form-input input {
     width: 100%;
     font-size: 1rem;
@@ -1052,6 +1053,7 @@ dialog > form fieldset .form-input select option {
     color: rgb(var(--background));
 }
 dialog > form fieldset .form-input.error > select,
+dialog > form fieldset .form-input.error > textarea,
 dialog > form fieldset .form-input.error > input {
     border: 1px solid red;
 }
