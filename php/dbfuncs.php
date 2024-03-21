@@ -641,6 +641,35 @@ function EditQuiz(string $quizID, string $title, string $subjectID, string $avai
     return $success;
 }
 /**
+ * Edit the data of the question with the given ID.
+ * 
+ * @param string $questionID The question's ID.
+ * @param string $question The question's new question.
+ * @param string $answerOne The question's new answer one.
+ * @param string $answerTwo The question's new answer two.
+ * @param string|null $answerThree [optional] The question's new answer three.
+ * @param string|null $answerFour [optional] The question's new answer four.
+ * @param string $correctAnswer The question's correct answer. (1, 2, 3 or 4)
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE on success or FALSE on failure.
+ */
+function EditQuestion(string $questionID, string $question, string $answerOne, string $answerTwo, string|null $answerThree, string|null $answerFour, int $correctAnswer): bool {
+    $sql = "CALL EditQuestion(:questionID, :question, :answerOne, :answerTwo, :answerThree, :answerFour, :correctAnswer);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":questionID", $questionID, PDO::PARAM_STR);
+    $stmt->bindValue(":question", $question, PDO::PARAM_STR);
+    $stmt->bindValue(":answerOne", $answerOne, PDO::PARAM_STR);
+    $stmt->bindValue(":answerTwo", $answerTwo, PDO::PARAM_STR);
+    $stmt->bindValue(":answerThree", $answerThree, PDO::PARAM_STR);
+    $stmt->bindValue(":answerFour", $answerFour, PDO::PARAM_STR);
+    $stmt->bindValue(":correctAnswer", $correctAnswer, PDO::PARAM_INT);
+    $success = $stmt->execute();
+    $conn = null;
+    return $success;
+}
+/**
  * Deletes the user with the given ID.
  * 
  * @param string $userID The user's ID.
