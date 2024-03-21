@@ -77,6 +77,7 @@
         <?php foreach ($allQuestions as $question): ?>
         <!-- Increment the question number -->
         <?php $questionNumber++; ?>
+        <?php //$correctAnswer = $question['correctAnswer'];?>
         <div class="question-container" id="question-<?php echo $questionNumber; ?>" style="display: none;">
     <div class="question">
         <p><?php echo htmlspecialchars($question['question'], ENT_QUOTES, 'UTF-8'); ?></p>
@@ -99,31 +100,59 @@
     </div>
     
     <script>
-        let currentQuestion = 1;
-        const totalQuestions = <?php echo $totalQuestions; ?>;
+    let currentQuestion = 1;
+    const totalQuestions = <?php echo $totalQuestions; ?>;
+    let score = 0;
 
-        // Show the first question
-        document.getElementById('question-1').style.display = 'block';
+    // Show the first question
+    document.getElementById('question-1').style.display = 'block';
 
-        // Add click event listeners to the answers and next question buttons
-        document.querySelectorAll('.answer').forEach(answer => {
-            answer.addEventListener('click', () => {
-                document.querySelector(`#question-${currentQuestion} .next-question`).style.display = 'block';
-            });
+    // Add click event listeners to the answers and next question buttons
+    document.querySelectorAll('.answer').forEach((answer, index) => {
+        answer.addEventListener('click', () => {
+            // Set the user's choice to the index of the clicked answer plus 1
+            const userChoice = index + 1;
+
+            // Get the correct answer from the question's data attribute
+            const correctAnswer = parseInt(answer.parentNode.dataset.correctAnswer, 10);
+
+            // Compare the user's choice with the correct answer
+            if (userChoice === correctAnswer) {
+                score++;
+            }
+
+            // Log the user's choice and the correct answer
+            console.log('User choice:', userChoice);
+            console.log('Correct answer:', correctAnswer);
+
+            document.querySelector(`#question-${currentQuestion} .next-question`).style.display = 'block';
         });
+    });
 
-        document.querySelectorAll('.next-question').forEach(button => {
-            button.addEventListener('click', () => {
-                // Hide the current question
-                document.getElementById(`question-${currentQuestion}`).style.display = 'none';
+    // Set progress bar to 0% on question 1
+    document.querySelector('#question-1 .progress-bar i').style.width = '0%';
 
-                // Show the next question if it exists
-                currentQuestion++;
-                if (currentQuestion <= totalQuestions) {
-                    document.getElementById(`question-${currentQuestion}`).style.display = 'block';
-                }
-            });
+    document.querySelectorAll('.next-question').forEach(button => {
+        button.addEventListener('click', () => {
+            // Hide the current question
+            document.getElementById(`question-${currentQuestion}`).style.display = 'none';
+
+            // Show the next question
+            currentQuestion++;
+            if (currentQuestion <= totalQuestions) {
+                document.getElementById(`question-${currentQuestion}`).style.display = 'block';
+            }
+
+            // Calculate the progress percentage
+            const progressPercentage = ((currentQuestion - 1) / totalQuestions) * 100;
+
+            // Set the width of the progress bar div to the progress percentage
+            document.querySelector(`#question-${currentQuestion} .progress-bar i`).style.width = `${progressPercentage}%`;
         });
-    </script>
+    });
+</script>
+<script>
+    
+</script>
 </body>
 </html>
