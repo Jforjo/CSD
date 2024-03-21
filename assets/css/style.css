@@ -672,6 +672,9 @@ table td > div.icons svg:hover {
     height: 100%;
     color: rgb(var(--accent));
 }
+table td.correct {
+    background-color: rgba(0,200,0,0.3);
+}
 section {
     min-height: calc(100% - 32px - 32px);
 }

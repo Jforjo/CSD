@@ -52,8 +52,8 @@ $questionCount = count($questions);
     <h3 class="n-a">N/A</h3>
 <?php } else { ?>
     <?php foreach($questions as $question) { ?>
-    <tr data-quizid="<?php echo $question['quizID']; ?>">
-        <td colspan="12"><span><?php echo $question['question']; ?></span></td>
+    <tr data-questionid="<?php echo $question['questionID']; ?>">
+        <td colspan="12" align="center"><span><?php echo $question['question']; ?></span></td>
         <td rowspan="2">
             <div class="icons">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="table-edit-btn" title="Edit" aria-label="Edit" aria-haspopup="dialog">
@@ -74,17 +74,25 @@ $questionCount = count($questions);
         </td>
     </tr>
     <tr>
-        <?php if ($question['answer1'] != null) { ?>
-            <td colspan="100%"><span><?php echo $question['answer1']; ?></span></td>
+        <?php
+        $totalAnswers = 0;
+        if ($question['answerOne'] != null) $totalAnswers++;
+        if ($question['answerTwo'] != null) $totalAnswers++;
+        if ($question['answerThree'] != null) $totalAnswers++;
+        if ($question['answerFour'] != null) $totalAnswers++;
+        ?>
+
+        <?php if ($question['answerOne'] != null) { ?>
+            <td colspan="<?php echo 12 / $totalAnswers; ?>" align="center" class="<?php if ($question['correctAnswer'] == "1") echo "correct"; ?>"><span><?php echo $question['answerOne']; ?></span></td>
         <?php } ?>
-        <?php if ($question['answer2'] != null) { ?>
-            <td colspan="100%"><span><?php echo $question['answer2']; ?></span></td>
+        <?php if ($question['answerTwo'] != null) { ?>
+            <td colspan="<?php echo 12 / $totalAnswers; ?>" align="center" class="<?php if ($question['correctAnswer'] == "2") echo "correct"; ?>"><span><?php echo $question['answerTwo']; ?></span></td>
         <?php } ?>
-        <?php if ($question['answer3'] != null) { ?>
-            <td colspan="100%"><span><?php echo $question['answer3']; ?></span></td>
+        <?php if ($question['answerThree'] != null) { ?>
+            <td colspan="<?php echo 12 / $totalAnswers; ?>" align="center" class="<?php if ($question['correctAnswer'] == "3") echo "correct"; ?>"><span><?php echo $question['answerThree']; ?></span></td>
         <?php } ?>
-        <?php if ($question['answer4'] != null) { ?>
-            <td colspan="100%"><span><?php echo $question['answer4']; ?></span></td>
+        <?php if ($question['answerFour'] != null) { ?>
+            <td colspan="<?php echo 12 / $totalAnswers; ?>" align="center" class="<?php if ($question['correctAnswer'] == "4") echo "correct"; ?>"><span><?php echo $question['answerFour']; ?></span></td>
         <?php } ?>
     </tr>
     <?php } ?>

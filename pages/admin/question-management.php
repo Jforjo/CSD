@@ -109,19 +109,19 @@ $questionCount = GetQuestionCount($quizID);
                 <div class="input-switch" style="--count:4;">
                     <div>
                         <div class="input-switch-option">
-                            <input type="radio" name="correct" id="form-correct-1" value="1" required>
+                            <input type="radio" name="correctAnswer" id="form-correct-1" value="1" required>
                             <label for="form-correct-1">1</label>
                         </div>
                         <div class="input-switch-option">
-                            <input type="radio" name="correct" id="form-correct-2" value="2" required>
+                            <input type="radio" name="correctAnswer" id="form-correct-2" value="2" required>
                             <label for="form-correct-2">2</label>
                         </div>
                         <div class="input-switch-option">
-                            <input type="radio" name="correct" id="form-correct-3" value="3" required>
+                            <input type="radio" name="correctAnswer" id="form-correct-3" value="3" required>
                             <label for="form-correct-3">3</label>
                         </div>
                         <div class="input-switch-option">
-                            <input type="radio" name="correct" id="form-correct-4" value="4" required>
+                            <input type="radio" name="correctAnswer" id="form-correct-4" value="4" required>
                             <label for="form-correct-4">4</label>
                         </div>
                         <span class="input-switch-slider"></span>

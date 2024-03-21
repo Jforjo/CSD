@@ -309,6 +309,16 @@
             });
             tableRow.classList.add('events-listening');
         });
+        document.querySelectorAll('#question-management .table tr')?.forEach(tableRow => {
+            if (tableRow.classList.contains('events-listening') != false) return;
+            tableRow.querySelector('.icons .table-edit-btn')?.addEventListener('click', () => {
+                ModifyQuestion(tableRow?.dataset?.questionid, "/php/getquestiondata.php");
+            });
+            tableRow.querySelector('.icons .table-delete-btn')?.addEventListener('click', () => {
+                DeleteQuestion(tableRow?.dataset?.questionid, "/php/deletequestion.php");
+            });
+            tableRow.classList.add('events-listening');
+        });
         const editStudentForm = document.querySelector('#student-management + #dialog-edit-user form');
         if (editStudentForm?.classList.contains('events-listening') === false) {
             editStudentForm.addEventListener('submit', (e) => {
@@ -336,6 +346,17 @@
             });
             editQuizForm.classList.add('events-listening');
         }
+        const editQuestionForm = document.querySelector('#question-management + #dialog-edit-question form');
+        if (editQuestionForm?.classList.contains('events-listening') === false) {
+            editQuestionForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (editQuestionForm.querySelector('input#form-questionID').value != '')
+                    ModifyQuestion(null, "/php/editquestion.php");
+                else
+                    ModifyQuestion(null, "/php/createquestion.php");
+            });
+            editQuestionForm.classList.add('events-listening');
+        }
         // If there has been an error and a field has a red border
         //  then remove it if the input is modified.
         document.querySelectorAll('form .form-input')?.forEach(inputField => {
@@ -355,12 +376,20 @@
             });
             createQuizBtn.classList.add('events-listening');
         }
+        const createQuestionBtn = document.querySelector('#question-management .table-btns .create');
+        if (createQuestionBtn?.classList.contains('events-listening') === false) {
+            createQuestionBtn.addEventListener('click', () => {
+                CreateQuestion();
+            });
+            createQuestionBtn.classList.add('events-listening');
+        }
 
 
         // Automatiicaly populate table on load
         const studentManagement = document.getElementById('student-management');
         const lecturerManagement = document.getElementById('lecturer-management');
         const quizManagement = document.getElementById('quiz-management');
+        const questionManagement = document.getElementById('question-management');
 
         if (studentManagement != null && studentManagement.classList.contains('loaded') == false) {
             PopulateTable('student-management', '/php/loadstudenttable.php');
@@ -371,6 +400,9 @@
         } else if (quizManagement != null && quizManagement.classList.contains('loaded') == false) {
             PopulateTable('quiz-management', '/php/loadquiztable.php');
             quizManagement.classList.add('loaded');
+        } else if (questionManagement != null && questionManagement.classList.contains('loaded') == false) {
+            PopulateTable('question-management', '/php/loadquestiontable.php');
+            questionManagement.classList.add('loaded');
         }
 
         if (document.getElementById('user-management-perpage')?.classList.contains('events-listening') === false) {
@@ -385,6 +417,10 @@
             document.querySelector('#quiz-management #user-management-perpage')?.addEventListener('change', () => {
                 SetPerPage();
                 PopulateTable('quiz-management', '/php/loadquiztable.php');
+            });
+            document.querySelector('#question-management #user-management-perpage')?.addEventListener('change', () => {
+                SetPerPage();
+                PopulateTable('question-management', '/php/loadquestiontable.php');
             });
             document.getElementById('user-management-perpage').classList.add('events-listening');
         }
@@ -407,6 +443,12 @@
                     PopulateTable('quiz-management', '/php/loadquiztable.php');
                 });
             });
+            document.querySelectorAll('#question-management #pagination-menu li')?.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    SetPagination(btn.dataset.id);
+                    PopulateTable('question-management', '/php/loadquestiontable.php');
+                });
+            });
             document.getElementById('pagination-menu').classList.add('events-listening');
         }
 
@@ -419,6 +461,7 @@
                 SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id + 1);
                 PopulateTable('student-management', '/php/loadstudenttable.php');
             });
+
             document.querySelectorAll('#lecturer-management .pagination .arrow')[0]?.addEventListener('click', () => {
                 SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id - 1);
                 PopulateTable('lecturer-management', '/php/loadlecturertable.php');
@@ -427,6 +470,7 @@
                 SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id + 1);
                 PopulateTable('lecturer-management', '/php/loadlecturertable.php');
             });
+
             document.querySelectorAll('#quiz-management .pagination .arrow')[0]?.addEventListener('click', () => {
                 SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id - 1);
                 PopulateTable('quiz-management', '/php/loadquiztable.php');
@@ -435,6 +479,16 @@
                 SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id + 1);
                 PopulateTable('quiz-management', '/php/loadquiztable.php');
             });
+            
+            document.querySelectorAll('#question-management .pagination .arrow')[0]?.addEventListener('click', () => {
+                SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id - 1);
+                PopulateTable('question-management', '/php/loadquestiontable.php');
+            });
+            document.querySelectorAll('#question-management .pagination .arrow')[1]?.addEventListener('click', () => {
+                SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id + 1);
+                PopulateTable('question-management', '/php/loadquestiontable.php');
+            });
+
             document.querySelector('.pagination').classList.add('events-listening');
         }
     }
@@ -501,6 +555,11 @@
         if (quizid == null || page == null) return;
         if (!confirm("Are you sure you wish to delete this quiz?")) return;
         SimpleForm([["quizID", quizid]], page);
+    }
+    function DeleteQuestion(questionid, page) {
+        if (questionid == null || page == null) return;
+        if (!confirm("Are you sure you wish to delete this question?")) return;
+        SimpleForm([["questionID", questionid]], page);
     }
     function ModifyUser(userid, page) {
         if (page == null) return;
@@ -639,12 +698,87 @@
             });
         });
     }
+    function ModifyQuestion(questionid, page) {
+        if (page == null) return;
+        document.querySelectorAll(`#dialog-edit-question *[name]`).forEach(input => {
+            input.classList.remove('error');
+        });
+        document.querySelector('#dialog-edit-question .error-msg').innerHTML = '';
+        const formData = new FormData(document.querySelector('#dialog-edit-question form'));
+        if (questionid != null) formData.append('questionID', questionid);
+        fetch(page, {
+            method: "POST",
+            body: formData,
+        }).then(res => {
+            if (res.status >= 200 && res.status < 300) {
+               return res.text();
+            }
+            throw new Error(res.statusText);
+        }).then(data => {
+            data = JSON.parse(data);
+            if (data?.type === "refresh") window.location.reload();
+            else if (data?.type === "error") {
+                if (data?.input != null) {
+                    document.querySelector(`#dialog-edit-question *[name="${data.input}"]`).classList.add('error');
+                    document.querySelector('#dialog-edit-question .error-msg').innerHTML = data.msg;
+                } else {
+                    DisplayModel('popup', [
+                        ['popup-title', "Error"],
+                        ['popup-msg', data.msg]
+                    ], {
+                        class: "error"
+                    });
+                }
+            } else if (data?.type === "success") {
+                DisplayModel('popup', [
+                    ['popup-title', "Success"],
+                    ['popup-msg', data.msg]
+                ], {
+                    class: "success",
+                    closeAll: true
+                });
+            } else if (data?.type === "data") {
+                let correct = "form-correct-";
+                if (data?.data?.correctAnswer == '1') correct += '1';
+                else if (data?.data?.correctAnswer == '2') correct += '2';
+                else if (data?.data?.correctAnswer == '3') correct += '3';
+                else if (data?.data?.correctAnswer == '4') correct += '4';
+                DisplayModel('dialog-edit-question', [
+                    ['form-questionID', data?.data?.questionID],
+                    ['form-question', data?.data?.question],
+                    ['form-correctAnswer', data?.data?.correctAnswer],
+                    ['form-answerOne', data?.data?.answerOne],
+                    ['form-answerTwo', data?.data?.answerTwo],
+                    ['form-answerThree', data?.data?.answerThree],
+                    ['form-answerFour', data?.data?.answerFour],
+                ], {
+                    closeAll: true
+                });
+                document.querySelector('#dialog-edit-question button[type="submit"]').innerHTML = "Edit";
+            }
+        }).catch(error => {
+            if (error === null || error === '') error = "An Unknown Error Occurred";
+            console.error(error);
+            DisplayModel('popup', [
+                ['popup-title', "Error"],
+                ['popup-msg', error]
+            ], {
+                class: "error"
+            });
+        });
+    }
 
     function CreateQuiz() {
         DisplayModel('dialog-edit-quiz', [], {
             closeAll: true
         });
         document.querySelector('#dialog-edit-quiz button[type="submit"]').innerHTML = "Create";
+    }
+    function CreateQuestion() {
+        DisplayModel('dialog-edit-question', [], {
+            closeAll: true
+        });
+        document.querySelector('#dialog-edit-question button[type="submit"]').innerHTML = "Create";
     }
 
     function DisplayModel(id, data = [], options) {
