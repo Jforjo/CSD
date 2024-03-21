@@ -88,11 +88,20 @@
     <div class="progress-bar">
         <i></i>
     </div>
+    <!-- Displays the answer boxes for the question, if an answer box is empty, then it won't be displayed -->
     <div class="answers">
+    <?php if (!empty($question['answerOne'])): ?>
         <div class="answer"><?php echo htmlspecialchars($question['answerOne'], ENT_QUOTES, 'UTF-8'); ?></div>
+    <?php endif; ?>
+    <?php if (!empty($question['answerTwo'])): ?>
         <div class="answer"><?php echo htmlspecialchars($question['answerTwo'], ENT_QUOTES, 'UTF-8'); ?></div>
+    <?php endif; ?>
+    <?php if (!empty($question['answerThree'])): ?>
         <div class="answer"><?php echo htmlspecialchars($question['answerThree'], ENT_QUOTES, 'UTF-8'); ?></div>
+    <?php endif; ?>
+    <?php if (!empty($question['answerFour'])): ?>
         <div class="answer"><?php echo htmlspecialchars($question['answerFour'], ENT_QUOTES, 'UTF-8'); ?></div>
+    <?php endif; ?>
     </div>
     <button class="next-question" style="display: none;">Next Question</button>
     </div>
@@ -142,6 +151,9 @@
             if (currentQuestion <= totalQuestions) {
                 document.getElementById(`question-${currentQuestion}`).style.display = 'block';
             }
+            else{
+                document.body.innerHTML = '<h1>Quiz complete</h1>'; //After the user has completed all the questions
+            }
 
             // Calculate the progress percentage
             const progressPercentage = ((currentQuestion - 1) / totalQuestions) * 100;
@@ -150,9 +162,6 @@
             document.querySelector(`#question-${currentQuestion} .progress-bar i`).style.width = `${progressPercentage}%`;
         });
     });
-</script>
-<script>
-    
 </script>
 </body>
 </html>

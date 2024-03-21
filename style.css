@@ -288,6 +288,24 @@
         background-color: darkred;
     }
 
+    .next-question
+    {
+        background-color: darkred;
+        border: 1px solid darkred;
+        border-radius: 5px;
+        padding: 20px;
+        font-size: 20px;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+    }
+
+    .next-question:hover
+    {
+        background-color: #5e0000;   
+        border: 1px solid #5e0000; 
+    }
+
     @media screen and (max-width: 1600px)
     {
 
