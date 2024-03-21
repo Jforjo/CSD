@@ -117,9 +117,11 @@
     document.getElementById('question-1').style.display = 'block';
 
     // Add click event listeners to the answers and next question buttons
-    document.querySelectorAll('.answer').forEach((answer, index) => {
+    document.querySelectorAll('.question-container').forEach((questionContainer) => {
+    const answers = questionContainer.querySelectorAll('.answer');
+    answers.forEach((answer, index) => {
         answer.addEventListener('click', () => {
-            // Set the user's choice to the index of the clicked answer plus 1
+            // Store the number of the clicked answer
             const userChoice = index + 1;
 
             // Get the correct answer from the question's data attribute
@@ -127,16 +129,21 @@
 
             // Compare the user's choice with the correct answer
             if (userChoice === correctAnswer) {
-                score++;
+                score+=30;
+            }
+            else{
+                score-=10;
             }
 
             // Log the user's choice and the correct answer
             console.log('User choice:', userChoice);
             console.log('Correct answer:', correctAnswer);
 
+            // Display the "Next Question" button
             document.querySelector(`#question-${currentQuestion} .next-question`).style.display = 'block';
         });
     });
+});
 
     // Set progress bar to 0% on question 1
     document.querySelector('#question-1 .progress-bar i').style.width = '0%';
