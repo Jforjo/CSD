@@ -401,7 +401,7 @@
             PopulateTable('quiz-management', '/php/loadquiztable.php');
             quizManagement.classList.add('loaded');
         } else if (questionManagement != null && questionManagement.classList.contains('loaded') == false) {
-            PopulateTable('question-management', '/php/loadquestiontable.php');
+            PopulateTable('question-management', `/php/loadquestiontable.php${location.search}`);
             questionManagement.classList.add('loaded');
         }
 
