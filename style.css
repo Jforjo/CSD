@@ -41,6 +41,11 @@
         text-decoration: underline;
     }
 
+    .logout-button
+    {
+        margin-left: 40px;
+    }
+
     footer
     {
         text-align: center;
@@ -91,6 +96,15 @@
         text-decoration: none;
     }
 
+    .no-test-message
+    {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        font-size: 28px;
+    }
+
     .test-box
     {
         display: flex;
@@ -123,7 +137,7 @@
         }
     }
 
-    .test-box a
+    .test-box button
     {
         display: flex;
         flex-wrap: wrap;
@@ -339,6 +353,20 @@
         margin-top: 10px;
         display: flex;
         justify-content: space-between;
+        padding: 10px;
+    }
+
+    .total-points, .average-score
+    {
+        background-color: darkred; /* Box color for dark theme */
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        flex: 1;
+        margin: 0 10px;
+    }
+
+    .total-points p, .average-score p {
+        margin: 0;
     }
 
     .past-tests
