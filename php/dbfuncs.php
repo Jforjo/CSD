@@ -450,7 +450,7 @@ function GetRecentPendingStudentData(): mixed {
     return $data;
 }
 /**
- * Create q quiz based on the given parameters.
+ * Create a quiz based on the given parameters.
  * 
  * @param string $title The title of the quiz.
  * @param string $subjectID The ID of the subject.
@@ -459,7 +459,7 @@ function GetRecentPendingStudentData(): mixed {
  * @author Jforjo <https://github.com/Jforjo>
  * @return bool TRUE on success or FALSE on failure.
  */
-function CreateQuiz($subjectID, $title, $available): bool {
+function CreateQuiz(string $subjectID, string $title, string $available): bool {
     $sql = "CALL CreateQuiz(:quizID, :subjectID, :title, :available);";
     do {
         $quizID = bin2hex(random_bytes(16));
@@ -474,6 +474,41 @@ function CreateQuiz($subjectID, $title, $available): bool {
     } else {
         $stmt->bindValue(":available", $available, PDO::PARAM_STR);
     }
+    $success = $stmt->execute();
+    $conn = null;
+    return $success;
+}
+/**
+ * Create a question based on the given parameters.
+ * 
+ * @param string $question The question's question.
+ * @param string $answerOne The question's answer one.
+ * @param string $answerTwo The question's answer two.
+ * @param string|null $answerThree [optional] The question's answer three.
+ * @param string|null $answerFour [optional] The question's answer four.
+ * @param string $correctAnswer The question's correct answer. (1, 2, 3 or 4)
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE on success or FALSE on failure.
+ */
+function CreateQuestion(string $question, string $answerOne, string $answerTwo, string|null $answerThree, string|null $answerFour, int $correctAnswer): bool {
+    $sql = "CALL CreateQuestion(:questionID, :question, :answerOne, :answerTwo, :answerThree, :answerFour, :correctAnswer);";
+    do {
+        $questionID = bin2hex(random_bytes(16));
+    } while (CheckQuestionIDExists($questionID));
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":questionID", $questionID, PDO::PARAM_STR);
+    $stmt->bindValue(":question", $question, PDO::PARAM_STR);
+    $stmt->bindValue(":answerOne", $answerOne, PDO::PARAM_STR);
+    $stmt->bindValue(":answerTwo", $answerTwo, PDO::PARAM_STR);
+
+    if ($answerFour == null || $answerFour == '') $stmt->bindValue(":answerFour", null, PDO::PARAM_NULL);
+    else $stmt->bindValue(":answerFour", $answerFour, PDO::PARAM_STR);
+    if ($answerThree == null || $answerThree == '') $stmt->bindValue(":answerThree", null, PDO::PARAM_NULL);
+    else $stmt->bindValue(":answerThree", $answerThree, PDO::PARAM_STR);
+
+    $stmt->bindValue(":correctAnswer", $correctAnswer, PDO::PARAM_INT);
     $success = $stmt->execute();
     $conn = null;
     return $success;
@@ -649,7 +684,7 @@ function EditQuiz(string $quizID, string $title, string $subjectID, string $avai
  * @param string $answerTwo The question's new answer two.
  * @param string|null $answerThree [optional] The question's new answer three.
  * @param string|null $answerFour [optional] The question's new answer four.
- * @param string $correctAnswer The question's correct answer. (1, 2, 3 or 4)
+ * @param string $correctAnswer The question's new correct answer. (1, 2, 3 or 4)
  * 
  * @author Jforjo <https://github.com/Jforjo>
  * @return bool TRUE on success or FALSE on failure.
