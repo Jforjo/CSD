@@ -40,8 +40,13 @@ if (!isset($_POST['limit']) || $_POST['limit'] < 5) $limit = 5;
 $offset = $_POST['offset'];
 if (!isset($_POST['offset']) || $_POST['offset'] < 0) $offset = 0;
 
-if (isset($_GET['quiz'])) $quizID = $_GET['quiz'];
-else $quizID = "";
+if (isset($_GET['quiz'])) {
+    $quizID = $_GET['quiz'];
+    $quizlink = "table-deletelinkquiz-btn";
+} else {
+    $quizID = "";
+    $quizlink = "table-linkquiz-btn";
+}
 
 $questions = GetLimitedQuestionsData($limit, $offset, $quizID);
 
@@ -70,7 +75,7 @@ $questionCount = count($questions);
                         <path d="M4,9V28c-.024,2.185,1.728,3.976,3.914,4,.029,0,.058,0,.086,0H24c2.185,.024,3.976-1.728,4-3.914,0-.029,0-.058,0-.086V9H4Zm7,16c0,.552-.447,1-1,1s-1-.448-1-1v-9c0-.552,.447-1,1-1s1,.448,1,1v9Zm6,0c0,.552-.447,1-1,1s-1-.448-1-1v-9c0-.552,.447-1,1-1s1,.448,1,1v9Zm6,0c0,.552-.447,1-1,1s-1-.448-1-1v-9c0-.552,.447-1,1-1s1,.448,1,1v9Z"></path>
                     </g>
                 </svg>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="table-linkquiz-btn" title="Link to a quiz" aria-label="Link to a quiz">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="<?php echo $quizlink; ?>" title="Link to a quiz" aria-label="Link to a quiz">
                     <g fill="currentColor" class="nc-icon-wrapper">
                         <rect x="1" y="1" width="12" height="12" rx="1" ry="1" fill="currentColor"></rect>
                         <rect x="19" y="19" width="12" height="12" rx="1" ry="1" fill="currentColor"></rect>

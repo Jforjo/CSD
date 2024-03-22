@@ -325,6 +325,14 @@
                     closeAll: true
                 });
             });
+            tableRow.querySelector('.icons .table-deletelinkquiz-btn')?.addEventListener('click', () => {
+                if (!confirm("Are you sure you wish to delete this link?")) return;
+                let urlparams = new URLSearchParams(location.search);
+                SimpleForm([
+                    ["quizID", urlparams.get('quiz')],
+                    ["questionID", tableRow?.dataset?.questionid]
+                ], "/php/deletequizquestionlink.php");
+            });
             tableRow.classList.add('events-listening');
         });
         const editStudentForm = document.querySelector('#student-management + #dialog-edit-user form');

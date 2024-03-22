@@ -875,14 +875,33 @@ function CreateQuizQuestionLink(string $quizID, string $questionID): bool {
  * @author Jforjo <https://github.com/Jforjo>
  * @return bool TRUE on success or FALSE on failure.
  */
-function DeleteQuizQuestionLink(string $quizQuestionLinkID): bool {
-    $sql = "CALL DeleteQuizQuestionLink(:quizQuestionLinkID);";
+function DeleteQuizQuestionLinkID(string $quizQuestionLinkID): bool {
+    $sql = "CALL DeleteQuizQuestionLinkID(:quizQuestionLinkID);";
     $conn = newConn();
     $stmt = $conn->prepare($sql);
     $stmt->bindValue(":quizQuestionLinkID", $quizQuestionLinkID, PDO::PARAM_STR);
     $success = $stmt->execute();
     $conn = null;
     return $success && !CheckQuizQuestionLinkIDExists($quizQuestionLinkID);
+}
+/**
+ * Deletes the quiz-question link between the quiz with the given ID and the question with the given ID.
+ * 
+ * @param string $quizID The quiz's ID.
+ * @param string $questionID The question's ID.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE on success or FALSE on failure.
+ */
+function DeleteQuizQuestionLink(string $quizID, string $questionID): bool {
+    $sql = "CALL DeleteQuizQuestionLink(:quizID, :questionID);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":quizID", $quizID, PDO::PARAM_STR);
+    $stmt->bindValue(":questionID", $questionID, PDO::PARAM_STR);
+    $success = $stmt->execute();
+    $conn = null;
+    return $success && !CheckQuizQuestionLinkExists($quizID, $questionID);
 }
 
 
