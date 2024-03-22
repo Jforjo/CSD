@@ -477,7 +477,7 @@
                 SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id + 1);
                 PopulateTable('student-management', '/php/loadstudenttable.php');
             });
-
+            
             document.querySelectorAll('#lecturer-management .pagination .arrow')[0]?.addEventListener('click', () => {
                 SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id - 1);
                 PopulateTable('lecturer-management', '/php/loadlecturertable.php');
@@ -486,7 +486,7 @@
                 SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id + 1);
                 PopulateTable('lecturer-management', '/php/loadlecturertable.php');
             });
-
+            
             document.querySelectorAll('#quiz-management .pagination .arrow')[0]?.addEventListener('click', () => {
                 SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id - 1);
                 PopulateTable('quiz-management', '/php/loadquiztable.php');
