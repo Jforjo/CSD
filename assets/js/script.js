@@ -317,6 +317,14 @@
             tableRow.querySelector('.icons .table-delete-btn')?.addEventListener('click', () => {
                 DeleteQuestion(tableRow?.dataset?.questionid, "/php/deletequestion.php");
             });
+            tableRow.querySelector('.icons .table-linkquiz-btn')?.addEventListener('click', () => {
+                DisplayModel('dialog-link-question', [
+                    ['form-linkQuestion', tableRow.querySelector('td').innerText],
+                    ['form-linkQuestionID', tableRow?.dataset?.questionid]
+                ], {
+                    closeAll: true
+                });
+            });
             tableRow.classList.add('events-listening');
         });
         const editStudentForm = document.querySelector('#student-management + #dialog-edit-user form');
@@ -490,6 +498,19 @@
             });
 
             document.querySelector('.pagination').classList.add('events-listening');
+        }
+
+
+        const linkQuestion = document.getElementById('dialog-link-question');
+        if (linkQuestion?.classList.contains('events-listening') === false) {
+            linkQuestion.querySelector('form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                SimpleForm([
+                    ['questionID', document.getElementById('form-linkQuestionID').value],
+                    ['quizID', document.getElementById('form-linkQuiz').value]
+                ], "/php/createquizquestionlink.php");
+            });
+            linkQuestion.classList.add('events-listening');
         }
     }
 

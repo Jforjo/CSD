@@ -154,3 +154,40 @@ $questionCount = GetQuestionCount($quizID);
         </footer>
     </form>
 </dialog>
+
+<?php
+$quizzes = GetAllQuizTitles();
+$quizCount = count($quizzes);
+?>
+<dialog id="dialog-link-question" aria-modal="true">
+    <form method="dialog">
+        <fieldset>
+            <span class="error-msg"></span>
+            <input type="hidden" name="questionID" id="form-linkQuestionID">
+            <div class="form-input">
+                <label for="form-linkQuestion">Question</label>
+                <input type="text" type="text" name="question" id="form-linkQuestion" required disabled>
+            </div>
+            <div class="form-input">
+                <label for="form-linkQuiz">Quiz<i aria-hidden="true">*</i></label>
+                <select name="quizID" id="form-linkQuiz" <?php if ($quizCount == 0) echo "disabled"; ?>>
+                    <?php if ($quizCount == 0) { ?>
+                        <option selected>None Available</option>
+                    <?php } else { ?>
+                        <option disabled selected>Select an option</option>
+                        <?php foreach ($quizzes as $quiz) { ?>
+                            <option value="<?php echo $quiz['quizID']; ?>"><?php echo $quiz['title']; ?></option>
+                        <?php } ?>
+                    <?php } ?>
+                </select>
+            </div>
+        </fieldset>
+        <hr>
+        <footer>
+            <menu>
+                <button autofocus type="reset" onclick="this.closest('dialog').close('cancel');">Cancel</button>
+                <button type="submit">Link</button>
+            </menu>
+        </footer>
+    </form>
+</dialog>

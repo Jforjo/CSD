@@ -70,6 +70,14 @@ $questionCount = count($questions);
                         <path d="M4,9V28c-.024,2.185,1.728,3.976,3.914,4,.029,0,.058,0,.086,0H24c2.185,.024,3.976-1.728,4-3.914,0-.029,0-.058,0-.086V9H4Zm7,16c0,.552-.447,1-1,1s-1-.448-1-1v-9c0-.552,.447-1,1-1s1,.448,1,1v9Zm6,0c0,.552-.447,1-1,1s-1-.448-1-1v-9c0-.552,.447-1,1-1s1,.448,1,1v9Zm6,0c0,.552-.447,1-1,1s-1-.448-1-1v-9c0-.552,.447-1,1-1s1,.448,1,1v9Z"></path>
                     </g>
                 </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="table-linkquiz-btn" title="Link to a quiz" aria-label="Link to a quiz">
+                    <g fill="currentColor" class="nc-icon-wrapper">
+                        <rect x="1" y="1" width="12" height="12" rx="1" ry="1" fill="currentColor"></rect>
+                        <rect x="19" y="19" width="12" height="12" rx="1" ry="1" fill="currentColor"></rect>
+                        <rect x="1" y="19" width="12" height="12" rx="1" ry="1" fill="currentColor"></rect>
+                        <path data-color="color-2" d="M22.293,11.707c.188,.188,.442,.293,.707,.293,.011,0,.022,0,.033,0,.276-.009,.537-.133,.72-.341L30.753,3.659c.363-.416,.321-1.047-.095-1.411-.415-.364-1.046-.322-1.411,.094l-6.296,7.196-2.244-2.244c-.391-.391-1.023-.391-1.414,0s-.391,1.023,0,1.414l3,3Z" fill="currentColor"></path>
+                    </g>
+                </svg>
             </div>
         </td>
     </tr>
