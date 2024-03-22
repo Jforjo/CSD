@@ -123,6 +123,26 @@ function CheckUserIsStudent(string $userID): bool {
     return $data['exists'];
 }
 /**
+ * Checks if the a user with the give ID has been assigned a specific student number.
+ * 
+ * @param string $userID The user's ID.
+ * @param string $userID The student ID.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE if the user has been assigned that specific student number or FALSE if it doesn't. Also, FALSE is returned on failure.
+ */
+function CheckUserOwnsStudentID(string $userID, string $studentID): bool {
+    $sql = "SELECT CheckUserOwnsStudentID(:userID, :studentID) AS 'exists';";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":userID", $userID, PDO::PARAM_STR);
+    $stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
+    $stmt->execute();
+    $data = $stmt->fetch();
+    $conn = null;
+    return $data['exists'];
+}
+/**
  * Fetches the user's role.
  * 
  * @param string $userID The user's ID.
@@ -467,12 +487,12 @@ function GetRecentPendingStudentData(): mixed {
  * 
  * @param string $title The title of the quiz.
  * @param string $subjectID The ID of the subject.
- * @param string $available The timestamp of when the quiz will become available.
+ * @param string|null $available [optional] The timestamp of when the quiz will become available.
  * 
  * @author Jforjo <https://github.com/Jforjo>
  * @return bool TRUE on success or FALSE on failure.
  */
-function CreateQuiz(string $subjectID, string $title, string $available): bool {
+function CreateQuiz(string $subjectID, string $title, string|null $available): bool {
     $sql = "CALL CreateQuiz(:quizID, :subjectID, :title, :available);";
     do {
         $quizID = bin2hex(random_bytes(16));

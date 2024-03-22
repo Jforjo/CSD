@@ -80,10 +80,10 @@ if (!isset($_POST['state'])) die(json_encode(array(
     "msg" => "Invalid POST state"
 )));
 
-// Checks if the passed studentID belongs to a valid student
-if (!CheckStudentIDExists($_POST['studentID'])) die(json_encode(array(
+// Checks if the passed studentID belongs to another student
+if (CheckStudentIDExists($_POST['studentID']) && !CheckUserOwnsStudentID($_POST['userID'], $_POST['studentID'])) die(json_encode(array(
     "type" => "error",
-    "msg" => "A student with that ID does not exists"
+    "msg" => "Another student with that ID already exists"
 )));
 
 // Checks if the 'firstname' is NULL or empty

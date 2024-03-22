@@ -26,7 +26,7 @@ if (GetUserState($_SESSION['userID']) !== "active") {
 }
 // Checks if they have the correct permissions
 $role = GetUserRole($_SESSION['userID']);
-if (!($role == "lecturer" || $role == "admin")) {
+if (!($role == "lecturer" || $role == "admin" || $role == "student")) {
     // They shouldn't have been able to access this file without
     //  these permissions, so log them out just incase.
     DestroySession();
@@ -34,7 +34,6 @@ if (!($role == "lecturer" || $role == "admin")) {
         "type" => "refresh"
     )));
 }
-unset($role);
 
 // Checks if the 'title' value was passed to the file
 if (!isset($_POST['title'])) die(json_encode(array(
@@ -46,11 +45,16 @@ if (!isset($_POST['subject'])) die(json_encode(array(
     "type" => "error",
     "msg" => "Invalid POST subject"
 )));
-// Checks if the 'available' value was passed to the file
-if (!isset($_POST['available'])) die(json_encode(array(
-    "type" => "error",
-    "msg" => "Invalid POST available"
-)));
+if ($role == "student") {
+    $available = null;
+} else {
+    // Checks if the 'available' value was passed to the file
+    if (!isset($_POST['available'])) die(json_encode(array(
+        "type" => "error",
+        "msg" => "Invalid POST available"
+    )));
+    $available = $_POST['available'];
+}
 
 // Checks if the passed subject belongs to a valid subject
 if (!CheckSubjectIDExists($_POST['subject'])) die(json_encode(array(
@@ -66,7 +70,7 @@ if (ctype_space($title) || $title == '') die(json_encode(array(
     "msg" => "Title cannot be NULL or empty"
 )));
 
-if (!CreateQuiz($_POST['subject'], $title, $_POST['available'])) die(json_encode(array(
+if (!CreateQuiz($_POST['subject'], $title, $available)) die(json_encode(array(
     "type" => "error",
     "msg" => "Failed to create the quiz"
 )));
