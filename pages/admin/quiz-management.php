@@ -60,7 +60,7 @@ $quizCount = GetQuizCount();
                     <th>Manage</th>
                 </tr>
             </thead>
-            <tbody style="--shown-rows:<?php echo min($quizCount, 5); ?>" class="autoload">
+            <tbody class="autoload">
                 <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
             </tbody>
         </table>

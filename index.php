@@ -68,6 +68,14 @@ switch ($url) {
             include_once(__DIR__ . '/pages/admin/index.php');
         }
         break;
+    case 'admin/questions':
+        if (isset($_POST['jsfetch'])) {
+            include_once(__DIR__ . '/pages/admin/question-management.php');
+        } else {
+            $routerPage = '/question-management.php';
+            include_once(__DIR__ . '/pages/admin/index.php');
+        }
+        break;
 
     default:
         include_once(__DIR__ . '/pages/404.php');

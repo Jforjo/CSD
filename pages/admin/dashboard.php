@@ -64,17 +64,21 @@ $inactiveStudentCount = GetInactiveStudentCount();
         <h2>Recent student</h2>
         <?php if($pendingUserCount > 0) { ?>
             <?php $student = GetRecentPendingStudentData(); ?>
-            <form id="recent-student">
-                <fieldset>
-                    <legend><?php echo ucfirst($student['firstname']) . ' ' . ucfirst($student['lastname']); ?></legend>
-                    <input type="hidden" name="userID" value="<?php echo $student['userID']; ?>">
-                    <input type="text" name="studentID" maxlength="16" placeholder="Student number" required>
-                    <div class="user-row-btns">
-                        <button type="submit" name="action" value="accept" class="primary">Accept</button>
-                        <button type="submit" name="action" value="decline" class="to-error">Decline</button>
-                    </div>
-                </fieldset>
-            </form>
+            <?php if ($student != false) { ?>
+                <form id="recent-student">
+                    <fieldset>
+                        <legend><?php echo ucfirst($student['firstname']) . ' ' . ucfirst($student['lastname']); ?></legend>
+                        <input type="hidden" name="userID" value="<?php echo $student['userID']; ?>">
+                        <input type="text" name="studentID" maxlength="16" placeholder="Student number" required>
+                        <div class="user-row-btns">
+                            <button type="submit" name="action" value="accept" class="primary">Accept</button>
+                            <button type="submit" name="action" value="decline" class="to-error">Decline</button>
+                        </div>
+                    </fieldset>
+                </form>
+            <?php } else { ?>
+                <h3>N/A</h3>
+            <?php }?>
         <?php } else { ?>
             <h3>N/A</h3>
         <?php }?>

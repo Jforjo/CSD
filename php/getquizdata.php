@@ -41,7 +41,7 @@ if (!isset($_POST['quizID'])) die(json_encode(array(
     "type" => "error",
     "msg" => "Invalid POST Quiz ID"
 )));
-// Checks if the passed quizID belongs to a valid user
+// Checks if the passed quizID belongs to a valid quiz
 if (!CheckQuizIDExists($_POST['quizID'])) die(json_encode(array(
     "type" => "error",
     "msg" => "Quiz ID does not exist"

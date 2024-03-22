@@ -69,6 +69,24 @@ function CheckQuizIDExists(string $quizID): bool {
     return $data['exists'];
 }
 /**
+ * Checks if the a question with the ID already exists.
+ * 
+ * @param string $questionID The question ID to check exists.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE if the question ID exists or FALSE if it doesn't. Also, FALSE is returned on failure.
+ */
+function CheckQuestionIDExists(string $questionID): bool {
+    $sql = "SELECT CheckQuestionIDExists(:questionID) AS 'exists';";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":questionID", $questionID, PDO::PARAM_STR);
+    $stmt->execute();
+    $data = $stmt->fetch();
+    $conn = null;
+    return $data['exists'];
+}
+/**
  * Checks if the a subject with the ID already exists.
  * 
  * @param string $subjectID The subject ID to check exists.
@@ -221,13 +239,19 @@ function GetQuizCount(): mixed {
 /**
  * Fetches the amount of questions.
  * 
+ * @param string|null $quizID [optional] The ID of the quiz.
+ * 
  * @author Jforjo <https://github.com/Jforjo>
  * @return mixed The amount of questions as an int or FALSE on failure.
  */
-function GetQuestionCount(): mixed {
-    $sql = "CALL GetQuestionCount();";
+function GetQuestionCount(string|null $quizID): mixed {
+    $sql = "CALL GetQuestionCount(:quizID);";
     $conn = newConn();
-    $data = $conn->query($sql)->fetch();
+    $stmt = $conn->prepare($sql);
+    if ($quizID == null) $quizID = "";
+    $stmt->bindValue(":quizID", $quizID, PDO::PARAM_STR);
+    $stmt->execute();
+    $data = $stmt->fetch();
     $conn = null;
     return $data['count'];
 }
@@ -296,16 +320,19 @@ function GetLimitedQuizzesData(int|null $limit = 5, int|null $offset = 0): mixed
  * 
  * @param int $limit [optional] The max amount of rows to return.
  * @param int $offset [optional] The row offset.
+ * @param string $quizID [optional] The ID of the quiz that contain the questions.
  * 
  * @author Jforjo <https://github.com/Jforjo>
  * @return mixed Array of mixed data of questions or FALSE on failure.
  */
-function GetLimitedQuestionsData(int|null $limit = 5, int|null $offset = 0): mixed {
-    $sql = "CALL GetLimitedQuestionsData(:limit, :offset);";
+function GetLimitedQuestionsData(int|null $limit = 5, int|null $offset = 0, string|null $quizID): mixed {
+    $sql = "CALL GetLimitedQuestionsData(:limit, :offset, :quizID);";
     $conn = newConn();
     $stmt = $conn->prepare($sql);
     $stmt->bindValue(":limit", $limit, PDO::PARAM_INT);
     $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
+    if ($quizID == null) $quizID = "";
+    $stmt->bindValue(":quizID", $quizID, PDO::PARAM_STR);
     $stmt->execute();
     $data = $stmt->fetchAll();
     $conn = null;
@@ -332,6 +359,19 @@ function GetAllStudentsData(): mixed {
  */
 function GetAllSubjects(): mixed {
     $sql = "CALL GetAllSubjects();";
+    $conn = newConn();
+    $data = $conn->query($sql)->fetchAll();
+    $conn = null;
+    return $data;
+}
+/**
+ * Fetches all IDs and titles of quizzes.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return mixed Array of arrays of mixed data of quiz titles or FALSE on failure.
+ */
+function GetAllQuizTitles(): mixed {
+    $sql = "CALL GetAllQuizTitles();";
     $conn = newConn();
     $data = $conn->query($sql)->fetchAll();
     $conn = null;
@@ -392,6 +432,24 @@ function GetQuizData(string $quizID): mixed {
     return $data;
 }
 /**
+ * Fetches all data of a question with the given ID.
+ * 
+ * @param string $questionData The question's ID.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return mixed Array of mixed data of the question or FALSE on failure.
+ */
+function GetQuestionData(string $questionData): mixed {
+    $sql = "CALL GetQuestionData(:questionData);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":questionData", $questionData, PDO::PARAM_STR);
+    $stmt->execute();
+    $data = $stmt->fetch();
+    $conn = null;
+    return $data;
+}
+/**
  * Fetches data of the most recently created student.
  * 
  * @author Jforjo <https://github.com/Jforjo>
@@ -405,7 +463,7 @@ function GetRecentPendingStudentData(): mixed {
     return $data;
 }
 /**
- * Create q quiz based on the given parameters.
+ * Create a quiz based on the given parameters.
  * 
  * @param string $title The title of the quiz.
  * @param string $subjectID The ID of the subject.
@@ -414,7 +472,7 @@ function GetRecentPendingStudentData(): mixed {
  * @author Jforjo <https://github.com/Jforjo>
  * @return bool TRUE on success or FALSE on failure.
  */
-function CreateQuiz($subjectID, $title, $available): bool {
+function CreateQuiz(string $subjectID, string $title, string $available): bool {
     $sql = "CALL CreateQuiz(:quizID, :subjectID, :title, :available);";
     do {
         $quizID = bin2hex(random_bytes(16));
@@ -429,6 +487,41 @@ function CreateQuiz($subjectID, $title, $available): bool {
     } else {
         $stmt->bindValue(":available", $available, PDO::PARAM_STR);
     }
+    $success = $stmt->execute();
+    $conn = null;
+    return $success;
+}
+/**
+ * Create a question based on the given parameters.
+ * 
+ * @param string $question The question's question.
+ * @param string $answerOne The question's answer one.
+ * @param string $answerTwo The question's answer two.
+ * @param string|null $answerThree [optional] The question's answer three.
+ * @param string|null $answerFour [optional] The question's answer four.
+ * @param string $correctAnswer The question's correct answer. (1, 2, 3 or 4)
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE on success or FALSE on failure.
+ */
+function CreateQuestion(string $question, string $answerOne, string $answerTwo, string|null $answerThree, string|null $answerFour, int $correctAnswer): bool {
+    $sql = "CALL CreateQuestion(:questionID, :question, :answerOne, :answerTwo, :answerThree, :answerFour, :correctAnswer);";
+    do {
+        $questionID = bin2hex(random_bytes(16));
+    } while (CheckQuestionIDExists($questionID));
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":questionID", $questionID, PDO::PARAM_STR);
+    $stmt->bindValue(":question", $question, PDO::PARAM_STR);
+    $stmt->bindValue(":answerOne", $answerOne, PDO::PARAM_STR);
+    $stmt->bindValue(":answerTwo", $answerTwo, PDO::PARAM_STR);
+
+    if ($answerFour == null || $answerFour == '') $stmt->bindValue(":answerFour", null, PDO::PARAM_NULL);
+    else $stmt->bindValue(":answerFour", $answerFour, PDO::PARAM_STR);
+    if ($answerThree == null || $answerThree == '') $stmt->bindValue(":answerThree", null, PDO::PARAM_NULL);
+    else $stmt->bindValue(":answerThree", $answerThree, PDO::PARAM_STR);
+
+    $stmt->bindValue(":correctAnswer", $correctAnswer, PDO::PARAM_INT);
     $success = $stmt->execute();
     $conn = null;
     return $success;
@@ -596,6 +689,35 @@ function EditQuiz(string $quizID, string $title, string $subjectID, string $avai
     return $success;
 }
 /**
+ * Edit the data of the question with the given ID.
+ * 
+ * @param string $questionID The question's ID.
+ * @param string $question The question's new question.
+ * @param string $answerOne The question's new answer one.
+ * @param string $answerTwo The question's new answer two.
+ * @param string|null $answerThree [optional] The question's new answer three.
+ * @param string|null $answerFour [optional] The question's new answer four.
+ * @param string $correctAnswer The question's new correct answer. (1, 2, 3 or 4)
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE on success or FALSE on failure.
+ */
+function EditQuestion(string $questionID, string $question, string $answerOne, string $answerTwo, string|null $answerThree, string|null $answerFour, int $correctAnswer): bool {
+    $sql = "CALL EditQuestion(:questionID, :question, :answerOne, :answerTwo, :answerThree, :answerFour, :correctAnswer);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":questionID", $questionID, PDO::PARAM_STR);
+    $stmt->bindValue(":question", $question, PDO::PARAM_STR);
+    $stmt->bindValue(":answerOne", $answerOne, PDO::PARAM_STR);
+    $stmt->bindValue(":answerTwo", $answerTwo, PDO::PARAM_STR);
+    $stmt->bindValue(":answerThree", $answerThree, PDO::PARAM_STR);
+    $stmt->bindValue(":answerFour", $answerFour, PDO::PARAM_STR);
+    $stmt->bindValue(":correctAnswer", $correctAnswer, PDO::PARAM_INT);
+    $success = $stmt->execute();
+    $conn = null;
+    return $success;
+}
+/**
  * Deletes the user with the given ID.
  * 
  * @param string $userID The user's ID.
@@ -647,6 +769,23 @@ function DeleteQuiz(string $quizID): bool {
     return $success && !CheckQuizIDExists($quizID);
 }
 /**
+ * Deletes the question with the given ID.
+ * 
+ * @param string $questionID The question's ID.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE on success or FALSE on failure.
+ */
+function DeleteQuestion(string $questionID): bool {
+    $sql = "CALL DeleteQuestion(:questionID);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":questionID", $questionID, PDO::PARAM_STR);
+    $success = $stmt->execute();
+    $conn = null;
+    return $success && !CheckQuestionIDExists($questionID);
+}
+/**
  * Assign a user and student ID.
  * 
  * @param string $userID The user's ID.
@@ -665,5 +804,105 @@ function CreateStudent(string $userID, string $studentID): bool {
     $conn = null;
     return $success && CheckUserIsStudent($userID);
 }
+
+
+/**
+ * Checks if the a quiz-question link with the ID already exists.
+ * 
+ * @param string $quizQuestionLinkID The quiz-question link ID to check exists.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE if the quiz-question link ID exists or FALSE if it doesn't. Also, FALSE is returned on failure.
+ */
+function CheckQuizQuestionLinkIDExists(string $quizQuestionLinkID): bool {
+    $sql = "SELECT CheckQuizQuestionLinkIDExists(:quizQuestionLinkID) AS 'exists';";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":quizQuestionLinkID", $quizQuestionLinkID, PDO::PARAM_STR);
+    $stmt->execute();
+    $data = $stmt->fetch();
+    $conn = null;
+    return $data['exists'];
+}
+/**
+ * Checks if the a quiz-question link with the given quiz and question IDs already exists.
+ * 
+ * @param string $quizID The quiz ID to check has a link.
+ * @param string $questionID The question ID to check has a link.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE if the quiz and question are linked or FALSE if they are not. Also, FALSE is returned on failure.
+ */
+function CheckQuizQuestionLinkExists(string $quizID, string $questionID): bool {
+    $sql = "SELECT CheckQuizQuestionLinkExists(:quizID, :questionID) AS 'exists';";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":quizID", $quizID, PDO::PARAM_STR);
+    $stmt->bindValue(":questionID", $questionID, PDO::PARAM_STR);
+    $stmt->execute();
+    $data = $stmt->fetch();
+    $conn = null;
+    return $data['exists'];
+}
+/**
+ * Create a link between a quiz and a question.
+ * 
+ * @param string $quizID The ID of the quiz.
+ * @param string $questionID The ID of the question.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE on success or FALSE on failure.
+ */
+function CreateQuizQuestionLink(string $quizID, string $questionID): bool {
+    $sql = "CALL CreateQuizQuestionLink(:quizQuestionLinkID, :quizID, :questionID);";
+    do {
+        $quizQuestionLinkID = bin2hex(random_bytes(16));
+    } while (CheckQuizIDExists($quizQuestionLinkID));
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":quizQuestionLinkID", $quizQuestionLinkID, PDO::PARAM_STR);
+    $stmt->bindValue(":quizID", $quizID, PDO::PARAM_STR);
+    $stmt->bindValue(":questionID", $questionID, PDO::PARAM_STR);
+    $success = $stmt->execute();
+    $conn = null;
+    return $success;
+}
+/**
+ * Deletes the quiz-question link with the given ID.
+ * 
+ * @param string $quizQuestionLinkID The quiz-question link's ID.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE on success or FALSE on failure.
+ */
+function DeleteQuizQuestionLinkID(string $quizQuestionLinkID): bool {
+    $sql = "CALL DeleteQuizQuestionLinkID(:quizQuestionLinkID);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":quizQuestionLinkID", $quizQuestionLinkID, PDO::PARAM_STR);
+    $success = $stmt->execute();
+    $conn = null;
+    return $success && !CheckQuizQuestionLinkIDExists($quizQuestionLinkID);
+}
+/**
+ * Deletes the quiz-question link between the quiz with the given ID and the question with the given ID.
+ * 
+ * @param string $quizID The quiz's ID.
+ * @param string $questionID The question's ID.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE on success or FALSE on failure.
+ */
+function DeleteQuizQuestionLink(string $quizID, string $questionID): bool {
+    $sql = "CALL DeleteQuizQuestionLink(:quizID, :questionID);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":quizID", $quizID, PDO::PARAM_STR);
+    $stmt->bindValue(":questionID", $questionID, PDO::PARAM_STR);
+    $success = $stmt->execute();
+    $conn = null;
+    return $success && !CheckQuizQuestionLinkExists($quizID, $questionID);
+}
+
 
 ?>

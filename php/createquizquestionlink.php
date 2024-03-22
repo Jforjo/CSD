@@ -36,7 +36,18 @@ if (!($role == "lecturer" || $role == "admin")) {
 }
 unset($role);
 
-// Checks if the quiz's ID has been passed to this file
+// Checks if the question's ID to retireve data has been passed to this file
+if (!isset($_POST['questionID'])) die(json_encode(array(
+    "type" => "error",
+    "msg" => "Invalid POST Question ID"
+)));
+// Checks if the passed questionID belongs to a valid question
+if (!CheckQuestionIDExists($_POST['questionID'])) die(json_encode(array(
+    "type" => "error",
+    "msg" => "Question ID does not exist"
+)));
+
+// Checks if the quiz's ID to retireve data has been passed to this file
 if (!isset($_POST['quizID'])) die(json_encode(array(
     "type" => "error",
     "msg" => "Invalid POST Quiz ID"
@@ -47,14 +58,20 @@ if (!CheckQuizIDExists($_POST['quizID'])) die(json_encode(array(
     "msg" => "Quiz ID does not exist"
 )));
 
-if (!DeleteQuiz($_POST['quizID'])) die(json_encode(array(
+// Checks if the quiz and question are already linked
+if (CheckQuizQuestionLinkExists($_POST['quizID'], $_POST['questionID'])) die(json_encode(array(
     "type" => "error",
-    "msg" => "Failed to delete the quiz"
+    "msg" => "Link already exists"
+)));
+
+if (!CreateQuizQuestionLink($_POST['quizID'], $_POST['questionID'])) die(json_encode(array(
+    "type" => "error",
+    "msg" => "Failed to link the quiz and question"
 )));
 
 exit(json_encode(array(
     "type" => "success",
-    "msg" => "Successfully deleted the quiz"
+    "msg" => "Successfully linked the quiz and question"
 )));
 
 ?>

@@ -42,10 +42,15 @@ if ($role === 'admin') {
         "header-title" => "Quiz Management",
         "pos" => "3"
     );
+    else if ($routerPage === '/question-management.php') $pageData = array(
+        "title" => "Admin | Question Management",
+        "header-title" => "Question Management",
+        "pos" => "4"
+    );
     else if ($routerPage === '/subject-management.php') $pageData = array(
         "title" => "Admin | Subject Management",
         "header-title" => "Subject Management",
-        "pos" => "4"
+        "pos" => "5"
     );
 } else {
     if ($routerPage === '/student-management.php') $pageData = array(
@@ -57,6 +62,11 @@ if ($role === 'admin') {
         "title" => "Admin | Quiz Management",
         "header-title" => "Quiz Management",
         "pos" => "2"
+    );
+    else if ($routerPage === '/question-management.php') $pageData = array(
+        "title" => "Admin | Question Management",
+        "header-title" => "Question Management",
+        "pos" => "3"
     );
 }
 ?>
@@ -179,6 +189,28 @@ if ($role === 'admin') {
                     </svg>
                     <span>
                         Quizzes
+                    </span>
+                </a>
+            </li>
+            <li <?php if ($routerPage == '/question-management.php') echo 'class="active"'; ?>>
+                <a data-link="admin/questions">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="<?php if ($routerPage == '/question-management.php') echo 'nc-int-icon-state-b'; ?>">
+                        <g stroke-linecap="square" stroke-miterlimit="10" fill="currentColor" stroke-linejoin="miter" class="nc-icon-wrapper">
+                            <g class="nc-int-icon js-nc-int-icon">
+                                <g class="nc-int-icon-a">
+                                    <rect x="5" y="5" width="54" height="54" fill="none" stroke="currentColor"></rect>
+                                    <circle data-color="color-2" cx="32" cy="47" r="1" fill="none" stroke="currentColor"></circle>
+                                    <path data-color="color-2" d="M25,16.551c5.481-2.425,12.575-2.136,15,1.787s.748,8.483-3.4,12S32,36.232,32,39" fill="none" stroke="currentColor"></path>
+                                </g>
+                                <g class="nc-int-icon-b">
+                                    <path d="M54,4H10c-3.314,0-6,2.686-6,6V54c0,3.314,2.686,6,6,6H54c3.314,0,6-2.686,6-6V10c0-3.314-2.686-6-6-6ZM30,51c-1.657,0-3-1.343-3-3s1.343-3,3-3,3,1.343,3,3-1.343,3-3,3Zm12.039-28.968c.066,2.126-.62,4.206-1.939,5.875-1.262,1.449-2.642,2.791-4.126,4.013-1.304,1.014-2.438,2.229-3.359,3.6-.531,1.125-.818,2.345-.847,3.581-.012,.534-.459,.953-.993,.953h-1.262c-.559,0-1-.459-1.003-1.018-.01-1.73,.312-3.449,.95-5.063,.839-1.553,1.986-2.919,3.371-4.013,3.878-3.279,5.208-4.722,5.208-7.875,0-3.718-2.627-5.359-6.39-5.359-2.515,.016-4.991,.589-7.251,1.672-.522,.25-1.145,.042-1.376-.488l-.677-1.55c-.213-.488-.012-1.07,.468-1.299,2.835-1.354,5.939-2.06,9.088-2.061,3.2,0,5.691,.788,7.472,2.365,1.836,1.715,2.814,4.159,2.667,6.667Z" fill="currentColor"></path>
+                                </g>
+                            </g>
+                            <style fill="currentColor">.nc-int-icon{position:relative;}.nc-int-icon-b{position: absolute;top: calc(50% - 0.5em);left: calc(50% - 0.5em);opacity: 0;}.nc-int-icon-state-b .nc-int-icon-a{opacity: 0;}.nc-int-icon-state-b .nc-int-icon-b{opacity: 1;}</style>
+                        </g>
+                    </svg>
+                    <span>
+                        Questions
                     </span>
                 </a>
             </li>

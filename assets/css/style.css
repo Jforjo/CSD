@@ -672,6 +672,9 @@ table td > div.icons svg:hover {
     height: 100%;
     color: rgb(var(--accent));
 }
+table td.correct {
+    background-color: rgba(0,200,0,0.3);
+}
 section {
     min-height: calc(100% - 32px - 32px);
 }
@@ -1036,6 +1039,7 @@ dialog > form fieldset .form-input label i {
     color: red;
 }
 dialog > form fieldset .form-input select,
+dialog > form fieldset .form-input textarea,
 dialog > form fieldset .form-input input {
     width: 100%;
     font-size: 1rem;
@@ -1049,6 +1053,7 @@ dialog > form fieldset .form-input select option {
     color: rgb(var(--background));
 }
 dialog > form fieldset .form-input.error > select,
+dialog > form fieldset .form-input.error > textarea,
 dialog > form fieldset .form-input.error > input {
     border: 1px solid red;
 }

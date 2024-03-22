@@ -36,25 +36,25 @@ if (!($role == "lecturer" || $role == "admin")) {
 }
 unset($role);
 
-// Checks if the quiz's ID has been passed to this file
-if (!isset($_POST['quizID'])) die(json_encode(array(
+// Checks if the question's ID has been passed to this file
+if (!isset($_POST['questionID'])) die(json_encode(array(
     "type" => "error",
-    "msg" => "Invalid POST Quiz ID"
+    "msg" => "Invalid POST Question ID"
 )));
-// Checks if the passed quizID belongs to a valid quiz
-if (!CheckQuizIDExists($_POST['quizID'])) die(json_encode(array(
+// Checks if the passed questionID belongs to a valid question
+if (!CheckQuestionIDExists($_POST['questionID'])) die(json_encode(array(
     "type" => "error",
-    "msg" => "Quiz ID does not exist"
+    "msg" => "Question ID does not exist"
 )));
 
-if (!DeleteQuiz($_POST['quizID'])) die(json_encode(array(
+if (!DeleteQuestion($_POST['questionID'])) die(json_encode(array(
     "type" => "error",
-    "msg" => "Failed to delete the quiz"
+    "msg" => "Failed to delete the question"
 )));
 
 exit(json_encode(array(
     "type" => "success",
-    "msg" => "Successfully deleted the quiz"
+    "msg" => "Successfully deleted the question"
 )));
 
 ?>

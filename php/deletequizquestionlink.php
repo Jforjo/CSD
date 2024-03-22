@@ -47,14 +47,25 @@ if (!CheckQuizIDExists($_POST['quizID'])) die(json_encode(array(
     "msg" => "Quiz ID does not exist"
 )));
 
-if (!DeleteQuiz($_POST['quizID'])) die(json_encode(array(
+// Checks if the question's ID has been passed to this file
+if (!isset($_POST['questionID'])) die(json_encode(array(
     "type" => "error",
-    "msg" => "Failed to delete the quiz"
+    "msg" => "Invalid POST Question ID"
+)));
+// Checks if the passed questionID belongs to a valid question
+if (!CheckQuestionIDExists($_POST['questionID'])) die(json_encode(array(
+    "type" => "error",
+    "msg" => "Question ID does not exist"
+)));
+
+if (!DeleteQuizQuestionLink($_POST['quizID'], $_POST['questionID'])) die(json_encode(array(
+    "type" => "error",
+    "msg" => "Failed to delete the link"
 )));
 
 exit(json_encode(array(
     "type" => "success",
-    "msg" => "Successfully deleted the quiz"
+    "msg" => "Successfully deleted the link"
 )));
 
 ?>
