@@ -41,6 +41,9 @@
 
    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $quizID = $_POST['quizID'];
+    $studentQuizLinkID = $_POST['studentQuizLinkID'];
+
+    //echo "Student Quiz Link ID: " . $studentQuizLinkID;
 
     //Get Quiz Data
     $stmt = $conn->prepare("CALL GetQuizData(:quizID)");
@@ -132,6 +135,7 @@
     let score = 0;
     let userChoice;
     let correctQuestions = 0;
+    let studentQuizLinkID = <?php echo json_encode($studentQuizLinkID); ?>;
 
     // Show the first question
     document.getElementById('question-1').style.display = 'block';
@@ -181,6 +185,10 @@
                 document.getElementById('total-score').textContent += score;
                 document.getElementById('correct-answers').textContent += `${correctQuestions}/${totalQuestions}`;
                 document.getElementById('percentage').textContent += `${percentage}%`;
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "../../php/updateCompletedQuiz.php", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.send(`studentQuizLinkID=${studentQuizLinkID}&completed=1&questionCount=${totalQuestions}&correctCount=${correctQuestions}&points=${score}`);
             }
 
             document.getElementById('show-results-button').addEventListener('click', () => {
