@@ -54,10 +54,10 @@
     $quizName = $quizData['title'];
 
     //Get Quiz Set
-    $limit = 50;
-    $stmt = $conn->prepare("CALL GetQuizSet(:quizID, :limit)");
+    //$limit = 50;
+    $stmt = $conn->prepare("CALL GetAllQuestions(:quizID)");
     $stmt->bindParam(":quizID", $quizID, PDO::PARAM_STR);
-    $stmt->bindParam(":limit", $quizID, PDO::PARAM_INT);
+    //$stmt->bindParam(":limit", $quizID, PDO::PARAM_INT);
     $stmt->execute();
     $allQuestions = $stmt->fetchAll();
 
@@ -77,8 +77,8 @@
         <?php foreach ($allQuestions as $question): ?>
         <!-- Increment the question number -->
         <?php $questionNumber++; ?>
-        <?php //$correctAnswer = $question['correctAnswer'];?>
-        <div class="question-container" id="question-<?php echo $questionNumber; ?>" style="display: none;">
+        <?php $correctAnswer = intval($question['correctAnswer']);?>
+        <div class="question-container" id="question-<?php echo $questionNumber; ?>" data-correct-answer="<?php echo $correctAnswer; ?>" style="display: none;">
     <div class="question">
         <p><?php echo htmlspecialchars($question['question'], ENT_QUOTES, 'UTF-8'); ?></p>
     </div>
@@ -107,68 +107,80 @@
     </div>
     <?php endforeach; ?>
     </div>
+
+    <div id="results" style="display: none;">
+        <h1>Results</h1>
+        <p id="total-score">Score: </p>
+        <p id="correct-answers">Correct questions: </p>
+        <p id="percentage">Percentage: </p>
+    </div>
     
     <script>
     let currentQuestion = 1;
     const totalQuestions = <?php echo $totalQuestions; ?>;
     let score = 0;
+    let userChoice;
+    let correctQuestions = 0;
 
     // Show the first question
     document.getElementById('question-1').style.display = 'block';
 
     // Add click event listeners to the answers and next question buttons
     document.querySelectorAll('.question-container').forEach((questionContainer) => {
-    const answers = questionContainer.querySelectorAll('.answer');
-    answers.forEach((answer, index) => {
-        answer.addEventListener('click', () => {
-            // Store the number of the clicked answer
-            const userChoice = index + 1;
+        const answers = questionContainer.querySelectorAll('.answer');
+        answers.forEach((answer, index) => {
+            answer.addEventListener('click', () => {
+                // Store the number of the clicked answer
+                userChoice = index + 1;
 
+                console.log('User choice:', userChoice);
+
+                // Display the "Next Question" button
+                questionContainer.querySelector('.next-question').style.display = 'block';
+            });
+        });
+
+        // Add click event listener to the "Next Question" button
+        const nextQuestionButton = questionContainer.querySelector('.next-question');
+        nextQuestionButton.addEventListener('click', () => {
             // Get the correct answer from the question's data attribute
-            const correctAnswer = parseInt(answer.parentNode.dataset.correctAnswer, 10);
+            const correctAnswer = parseInt(questionContainer.dataset.correctAnswer, 10);
 
             // Compare the user's choice with the correct answer
             if (userChoice === correctAnswer) {
-                score+=30;
+                score += 30;
+                correctQuestions++;
+            } else {
+                score -= 10;
             }
-            else{
-                score-=10;
-            }
-
-            // Log the user's choice and the correct answer
-            console.log('User choice:', userChoice);
             console.log('Correct answer:', correctAnswer);
+            console.log('Score:', score);
 
-            // Display the "Next Question" button
-            document.querySelector(`#question-${currentQuestion} .next-question`).style.display = 'block';
-        });
-    });
-});
-
-    // Set progress bar to 0% on question 1
-    document.querySelector('#question-1 .progress-bar i').style.width = '0%';
-
-    document.querySelectorAll('.next-question').forEach(button => {
-        button.addEventListener('click', () => {
-            // Hide the current question
-            document.getElementById(`question-${currentQuestion}`).style.display = 'none';
-
-            // Show the next question
-            currentQuestion++;
-            if (currentQuestion <= totalQuestions) {
+            // Go to the next question
+            if (currentQuestion < totalQuestions) {
+                document.getElementById(`question-${currentQuestion}`).style.display = 'none';
+                currentQuestion++;
                 document.getElementById(`question-${currentQuestion}`).style.display = 'block';
             }
-            else{
-                document.body.innerHTML = '<h1>Quiz complete</h1>'; //After the user has completed all the questions
+            else{ //Display the results
+                const percentage = (correctQuestions / totalQuestions) * 100;
+                document.getElementById(`question-${currentQuestion}`).style.display = 'none';
+                document.getElementById('results').style.display = 'block';
+                document.getElementById('total-score').textContent += score;
+                document.getElementById('correct-answers').textContent += `${correctQuestions}/${totalQuestions}`;
+                document.getElementById('percentage').textContent += `${percentage}%`;
             }
 
-            // Calculate the progress percentage
+            // Calculate the progress percentage for the progress bar
             const progressPercentage = ((currentQuestion - 1) / totalQuestions) * 100;
 
             // Set the width of the progress bar div to the progress percentage
             document.querySelector(`#question-${currentQuestion} .progress-bar i`).style.width = `${progressPercentage}%`;
         });
     });
+
+    // Set progress bar to 0% on question 1
+    document.querySelector('#question-1 .progress-bar i').style.width = '0%';
 </script>
 </body>
 </html>
