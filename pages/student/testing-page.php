@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Testing Page</title>
     <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head> 
 <body>
     <header>
@@ -118,9 +119,9 @@
     <div id="results-modal" class ="results-modal" style="display: none;">
     <div class="results-content">
         <h1>Results</h1>
-        <p id="total-score">Score: </p>
-        <p id="correct-answers">Correct questions: </p>
-        <p id="percentage">Percentage: </p>
+        <p id="total-score"><i class="fas fa-trophy"></i>Score: </p>
+        <p id="correct-answers"><i class="fas fa-check"></i>Correct questions: </p>
+        <p id="percentage"><i class="fas fa-chart-line"></i>Percentage: </p>
         <button onclick="window.location.href='index.php'">Finish</button>
     </div>
 </div>
@@ -173,9 +174,10 @@
                 document.getElementById(`question-${currentQuestion}`).style.display = 'block';
             }
             else{ //Display the results
-                const percentage = (correctQuestions / totalQuestions) * 100;
-                document.getElementById(`question-${currentQuestion}`).style.display = 'none';
-                document.getElementById('complete-modal').style.display = 'block';
+                let percentage = (correctQuestions / totalQuestions) * 100;
+                percentage = Math.round(percentage);
+                //document.getElementById(`question-${currentQuestion}`).style.display = 'none';
+                document.getElementById('complete-modal').style.display = 'flex';
                 document.getElementById('total-score').textContent += score;
                 document.getElementById('correct-answers').textContent += `${correctQuestions}/${totalQuestions}`;
                 document.getElementById('percentage').textContent += `${percentage}%`;

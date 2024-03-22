@@ -306,6 +306,20 @@
         border: 1px solid #5e0000; 
     }
 
+    @keyframes pop-up {
+        0% {
+            transform: scale(0);
+            opacity: 0;
+        }
+        50% {
+            transform: scale(1.05);
+        }
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
     .results-modal, .complete-modal {
         display: flex;
         justify-content: center;
@@ -327,6 +341,12 @@
         width: 300px;
         height: 200px;
         border-radius: 10px;
+        animation: pop-up 0.5s;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
     }
 
     .results-modal button, .complete-modal button {
@@ -337,6 +357,12 @@
         font-size: 16px;
         margin-top: 10px;
 
+    }
+
+    .results-content i {
+        color: #fff;
+        font-size: 24px;
+        margin-right: 5px;
     }
 
     @media screen and (max-width: 1600px)
