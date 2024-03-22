@@ -108,12 +108,22 @@
     <?php endforeach; ?>
     </div>
 
-    <div id="results" style="display: none;">
+    <div id="complete-modal" class ="complete-modal" style="display: none;">
+    <div class="complete-content">
+        <h1>Test Complete</h1>
+        <button id="show-results-button">View Results</button>
+    </div>
+</div>
+
+    <div id="results-modal" class ="results-modal" style="display: none;">
+    <div class="results-content">
         <h1>Results</h1>
         <p id="total-score">Score: </p>
         <p id="correct-answers">Correct questions: </p>
         <p id="percentage">Percentage: </p>
+        <button onclick="window.location.href='index.php'">Finish</button>
     </div>
+</div>
     
     <script>
     let currentQuestion = 1;
@@ -165,11 +175,17 @@
             else{ //Display the results
                 const percentage = (correctQuestions / totalQuestions) * 100;
                 document.getElementById(`question-${currentQuestion}`).style.display = 'none';
-                document.getElementById('results').style.display = 'block';
+                document.getElementById('complete-modal').style.display = 'block';
                 document.getElementById('total-score').textContent += score;
                 document.getElementById('correct-answers').textContent += `${correctQuestions}/${totalQuestions}`;
                 document.getElementById('percentage').textContent += `${percentage}%`;
             }
+
+            document.getElementById('show-results-button').addEventListener('click', () => {
+            // Hide the complete modal and show the results modal
+            document.getElementById('complete-modal').style.display = 'none';
+            document.getElementById('results-modal').style.display = 'flex';
+        });
 
             // Calculate the progress percentage for the progress bar
             const progressPercentage = ((currentQuestion - 1) / totalQuestions) * 100;
