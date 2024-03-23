@@ -19,7 +19,6 @@
         </nav>
     </header>
     <?php 
-    require_once('../../php/connection.php');
     require_once(__DIR__ . '/../../php/dbfuncs.php');
     session_start();
 
