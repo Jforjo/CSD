@@ -580,6 +580,27 @@ function CreateQuestion(string $question, string $answerOne, string $answerTwo, 
     return $success;
 }
 /**
+ * Create a quiz based on the given parameters.
+ * 
+ * @param string $name The name of the subject.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE on success or FALSE on failure.
+ */
+function CreateSubject(string $name): bool {
+    $sql = "CALL CreateSubject(:subjectID, :name);";
+    do {
+        $subjectID = bin2hex(random_bytes(16));
+    } while (CheckSubjectIDExists($subjectID));
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":subjectID", $subjectID, PDO::PARAM_STR);
+    $stmt->bindValue(":name", $name, PDO::PARAM_STR);
+    $success = $stmt->execute();
+    $conn = null;
+    return $success;
+}
+/**
  * Edit the data of the user with the given ID.
  * 
  * @param string $userID The user's ID.
@@ -766,6 +787,25 @@ function EditQuestion(string $questionID, string $question, string $answerOne, s
     $stmt->bindValue(":answerThree", $answerThree, PDO::PARAM_STR);
     $stmt->bindValue(":answerFour", $answerFour, PDO::PARAM_STR);
     $stmt->bindValue(":correctAnswer", $correctAnswer, PDO::PARAM_INT);
+    $success = $stmt->execute();
+    $conn = null;
+    return $success;
+}
+/**
+ * Edit the data of the subject with the given ID.
+ * 
+ * @param string $subjectID The subject's ID.
+ * @param string $name The subject's new name.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE on success or FALSE on failure.
+ */
+function EditSubject(string $subjectID, string $name): bool {
+    $sql = "CALL EditSubject(:subjectID, :name);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":subjectID", $subjectID, PDO::PARAM_STR);
+    $stmt->bindValue(":name", $name, PDO::PARAM_STR);
     $success = $stmt->execute();
     $conn = null;
     return $success;

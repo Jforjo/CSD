@@ -373,6 +373,17 @@
             });
             editQuestionForm.classList.add('events-listening');
         }
+        const editSubjectForm = document.querySelector('#subject-management + #dialog-edit-subject form');
+        if (editSubjectForm?.classList.contains('events-listening') === false) {
+            editSubjectForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (editSubjectForm.querySelector('input#form-subjectID').value != '')
+                    ModifySubject(null, "/php/editsubject.php");
+                else
+                    ModifySubject(null, "/php/createsubject.php");
+            });
+            editSubjectForm.classList.add('events-listening');
+        }
         // If there has been an error and a field has a red border
         //  then remove it if the input is modified.
         document.querySelectorAll('form .form-input')?.forEach(inputField => {
@@ -398,6 +409,13 @@
                 CreateQuestion();
             });
             createQuestionBtn.classList.add('events-listening');
+        }
+        const createSubjectBtn = document.querySelector('#subject-management .table-btns .create');
+        if (createSubjectBtn?.classList.contains('events-listening') === false) {
+            createSubjectBtn.addEventListener('click', () => {
+                CreateSubject();
+            });
+            createSubjectBtn.classList.add('events-listening');
         }
 
 
@@ -819,6 +837,65 @@
             });
         });
     }
+    function ModifySubject(subjectid, page) {
+        if (page == null) return;
+        document.querySelectorAll(`#dialog-edit-subject *[name]`).forEach(input => {
+            input.classList.remove('error');
+        });
+        document.querySelector('#dialog-edit-subject .error-msg').innerHTML = '';
+        const formData = new FormData(document.querySelector('#dialog-edit-subject form'));
+        if (subjectid != null) formData.append('subjectID', subjectid);
+        fetch(page, {
+            method: "POST",
+            body: formData,
+        }).then(res => {
+            if (res.status >= 200 && res.status < 300) {
+               return res.text();
+            }
+            throw new Error(res.statusText);
+        }).then(data => {
+            data = JSON.parse(data);
+            if (data?.type === "refresh") window.location.reload();
+            else if (data?.type === "error") {
+                if (data?.input != null) {
+                    document.querySelector(`#dialog-edit-subject *[name="${data.input}"]`).classList.add('error');
+                    document.querySelector('#dialog-edit-subject .error-msg').innerHTML = data.msg;
+                } else {
+                    DisplayModel('popup', [
+                        ['popup-title', "Error"],
+                        ['popup-msg', data.msg]
+                    ], {
+                        class: "error"
+                    });
+                }
+            } else if (data?.type === "success") {
+                DisplayModel('popup', [
+                    ['popup-title', "Success"],
+                    ['popup-msg', data.msg]
+                ], {
+                    class: "success",
+                    closeAll: true
+                });
+            } else if (data?.type === "data") {
+                DisplayModel('dialog-edit-subject', [
+                    ['form-subjectID', data?.data?.subjectID],
+                    ['form-subject', data?.data?.name],
+                ], {
+                    closeAll: true
+                });
+                document.querySelector('#dialog-edit-subject button[type="submit"]').innerHTML = "Edit";
+            }
+        }).catch(error => {
+            if (error === null || error === '') error = "An Unknown Error Occurred";
+            console.error(error);
+            DisplayModel('popup', [
+                ['popup-title', "Error"],
+                ['popup-msg', error]
+            ], {
+                class: "error"
+            });
+        });
+    }
 
     function CreateQuiz() {
         DisplayModel('dialog-edit-quiz', [], {
@@ -831,6 +908,12 @@
             closeAll: true
         });
         document.querySelector('#dialog-edit-question button[type="submit"]').innerHTML = "Create";
+    }
+    function CreateSubject() {
+        DisplayModel('dialog-edit-subject', [], {
+            closeAll: true
+        });
+        document.querySelector('#dialog-edit-subject button[type="submit"]').innerHTML = "Create";
     }
 
     function DisplayModel(id, data = [], options) {
