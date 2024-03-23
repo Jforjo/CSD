@@ -12,10 +12,10 @@ $userChoice = $_POST['userChoice'];
 $conn = newConn();
 
 // Get the correct answer from the database
-$stmt = $conn->prepare("SELECT correctAnswer FROM questions WHERE questionID = :questionID");
+$stmt = $conn->prepare("CALL CheckUserAnswer(:questionID, @correctAnswer)");
 $stmt->bindValue(":questionID", $questionID, PDO::PARAM_STR);
 $stmt->execute();
-$correctAnswer = $stmt->fetchColumn();
+$correctAnswer = $conn->query("SELECT @correctAnswer")->fetch(PDO::FETCH_ASSOC)['@correctAnswer'];
 
 // Check if the user's answer is correct
 $correct = ($userChoice == $correctAnswer);

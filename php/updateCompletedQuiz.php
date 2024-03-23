@@ -10,12 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['studentQuizLinkID']) &
     $dateCompleted = date("Y-m-d H:i:s");
 
     $conn = newConn();
-    $sql = "
-        UPDATE `studentQuizLink`
-        SET `completed` = :completed, `questionCount` = :questionCount, `correctCount` = :correctCount, `points` = :points, `dateCompleted` = :dateCompleted
-        WHERE `studentQuizLinkID` = :studentQuizLinkID
-    ";
-    $stmt = $conn->prepare($sql);
+
+    $stmt = $conn->prepare("CALL UpdateQuizResults(:studentQuizLinkID, :completed, :questionCount, :correctCount, :points, :dateCompleted)");
     $stmt->bindValue(":studentQuizLinkID", $studentQuizLinkID, PDO::PARAM_STR);
     $stmt->bindValue(":completed", $completed, PDO::PARAM_INT);
     $stmt->bindValue(":questionCount", $questionCount, PDO::PARAM_INT);

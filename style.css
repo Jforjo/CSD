@@ -356,13 +356,14 @@
         font-size: 20px;
     }
 
-    .results-modal button, .complete-modal button {
+    .results-modal a, .complete-modal button {
         background-color: darkred;
         border: 1px solid darkred;
         border-radius: 5px;
         padding: 10px;
         font-size: 16px;
         margin-top: 10px;
+        text-decoration: none;
 
     }
 
