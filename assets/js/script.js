@@ -335,6 +335,13 @@
             });
             tableRow.classList.add('events-listening');
         });
+        document.querySelectorAll('#subject-management .table tr')?.forEach(tableRow => {
+            if (tableRow.classList.contains('events-listening') != false) return;
+            tableRow.querySelector('.icons .table-edit-btn')?.addEventListener('click', () => {
+                ModifySubject(tableRow?.dataset?.subjectid, "/php/getsubjectdata.php");
+            });
+            tableRow.classList.add('events-listening');
+        });
         const editStudentForm = document.querySelector('#student-management + #dialog-edit-user form');
         if (editStudentForm?.classList.contains('events-listening') === false) {
             editStudentForm.addEventListener('submit', (e) => {
@@ -879,7 +886,7 @@
             } else if (data?.type === "data") {
                 DisplayModel('dialog-edit-subject', [
                     ['form-subjectID', data?.data?.subjectID],
-                    ['form-subject', data?.data?.name],
+                    ['form-name', data?.data?.name],
                 ], {
                     closeAll: true
                 });

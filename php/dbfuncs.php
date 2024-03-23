@@ -503,6 +503,24 @@ function GetQuestionData(string $questionData): mixed {
     return $data;
 }
 /**
+ * Fetches all data of a subject with the given ID.
+ * 
+ * @param string $subjectID The subject's ID.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return mixed Array of mixed data of the subject or FALSE on failure.
+ */
+function GetSubjectData(string $subjectID): mixed {
+    $sql = "CALL GetSubjectData(:subjectID);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":subjectID", $subjectID, PDO::PARAM_STR);
+    $stmt->execute();
+    $data = $stmt->fetch();
+    $conn = null;
+    return $data;
+}
+/**
  * Fetches data of the most recently created student.
  * 
  * @author Jforjo <https://github.com/Jforjo>
