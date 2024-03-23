@@ -276,6 +276,19 @@ function GetQuestionCount(string|null $quizID): mixed {
     return $data['count'];
 }
 /**
+ * Fetches the amount of subjects.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return mixed The amount of subjects as an int or FALSE on failure.
+ */
+function GetSubjectCount(): mixed {
+    $sql = "CALL GetSubjectCount();";
+    $conn = newConn();
+    $data = $conn->query($sql)->fetch();
+    $conn = null;
+    return $data['count'];
+}
+/**
  * Fetches a specified range of student data.
  * 
  * @param int $limit [optional] The max amount of rows to return.
@@ -353,6 +366,26 @@ function GetLimitedQuestionsData(int|null $limit = 5, int|null $offset = 0, stri
     $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
     if ($quizID == null) $quizID = "";
     $stmt->bindValue(":quizID", $quizID, PDO::PARAM_STR);
+    $stmt->execute();
+    $data = $stmt->fetchAll();
+    $conn = null;
+    return $data;
+}
+/**
+ * Fetches a specified range of subject data.
+ * 
+ * @param int $limit [optional] The max amount of rows to return.
+ * @param int $offset [optional] The row offset.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return mixed Array of mixed data of subjects or FALSE on failure.
+ */
+function GetLimitedSubjectsData(int|null $limit = 5, int|null $offset = 0): mixed {
+    $sql = "CALL GetLimitedSubjectsData(:limit, :offset);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":limit", $limit, PDO::PARAM_INT);
+    $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
     $stmt->execute();
     $data = $stmt->fetchAll();
     $conn = null;

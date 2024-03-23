@@ -406,6 +406,7 @@
         const lecturerManagement = document.getElementById('lecturer-management');
         const quizManagement = document.getElementById('quiz-management');
         const questionManagement = document.getElementById('question-management');
+        const subjectManagement = document.getElementById('subject-management');
 
         if (studentManagement != null && studentManagement.classList.contains('loaded') == false) {
             PopulateTable('student-management', '/php/loadstudenttable.php');
@@ -419,6 +420,9 @@
         } else if (questionManagement != null && questionManagement.classList.contains('loaded') == false) {
             PopulateTable('question-management', `/php/loadquestiontable.php${location.search}`);
             questionManagement.classList.add('loaded');
+        } else if (subjectManagement != null && subjectManagement.classList.contains('loaded') == false) {
+            PopulateTable('subject-management', '/php/loadsubjecttable.php');
+            subjectManagement.classList.add('loaded');
         }
 
         if (document.getElementById('user-management-perpage')?.classList.contains('events-listening') === false) {
@@ -437,6 +441,10 @@
             document.querySelector('#question-management #user-management-perpage')?.addEventListener('change', () => {
                 SetPerPage();
                 PopulateTable('question-management', '/php/loadquestiontable.php');
+            });
+            document.querySelector('#subject-management #user-management-perpage')?.addEventListener('change', () => {
+                SetPerPage();
+                PopulateTable('subject-management', '/php/loadsubjecttable.php');
             });
             document.getElementById('user-management-perpage').classList.add('events-listening');
         }
@@ -463,6 +471,12 @@
                 btn.addEventListener('click', () => {
                     SetPagination(btn.dataset.id);
                     PopulateTable('question-management', '/php/loadquestiontable.php');
+                });
+            });
+            document.querySelectorAll('#subject-management #pagination-menu li')?.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    SetPagination(btn.dataset.id);
+                    PopulateTable('subject-management', '/php/loadsubjecttable.php');
                 });
             });
             document.getElementById('pagination-menu').classList.add('events-listening');
@@ -503,6 +517,15 @@
             document.querySelectorAll('#question-management .pagination .arrow')[1]?.addEventListener('click', () => {
                 SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id + 1);
                 PopulateTable('question-management', '/php/loadquestiontable.php');
+            });
+            
+            document.querySelectorAll('#subject-management .pagination .arrow')[0]?.addEventListener('click', () => {
+                SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id - 1);
+                PopulateTable('subject-management', '/php/loadsubjecttable.php');
+            });
+            document.querySelectorAll('#subject-management .pagination .arrow')[1]?.addEventListener('click', () => {
+                SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id + 1);
+                PopulateTable('subject-management', '/php/loadsubjecttable.php');
             });
 
             document.querySelector('.pagination').classList.add('events-listening');
