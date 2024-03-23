@@ -74,6 +74,8 @@
     <script defer src="graph.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.0.0-rc.7/html2canvas.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -121,7 +123,7 @@
                         <td><?php echo htmlspecialchars($test['subject'], ENT_QUOTES, 'UTF-8'); ?></td>
                         <td><?php echo date('d/m/Y', strtotime($test['dateCompleted'])); ?></td>
                         <td><?php echo $test['correctCount'] . '/' . $test['questionCount']; ?></td>
-                        <td><?php echo (($test['correctCount'] / $test['questionCount']) * 100) . '%'; ?></td>
+                        <td><?php echo round(($test['correctCount'] / $test['questionCount']) * 100) . '%'; ?></td>
                         <td><?php echo $test['points']; ?></td>
                     </tr>
                 <?php endforeach; ?>
@@ -130,7 +132,9 @@
         </div>
     </div>
 
-    <button id="exportButton">Export</button>
+    <div class="exportButtonContainer">
+        <button id="exportButton">Export Data</button>
+    </div>
 
     <!-- Modal that appears when button is clicked -->
     <div id="exportModal" class="exportModal">
@@ -138,10 +142,12 @@
             <span class="close">&times;</span>
             <h2>Export Data</h2>
             <p>Choose the format you would like to export your data in:</p>
+            <div class="export-buttons">
             <form action="php/exportCSV.php" method="post">
                 <button type="submit" id="exportCSV">CSV</button>
             </form>
             <button id="exportPDF">PDF</button>
+            </div>
         </div>
     </div>
 
@@ -150,7 +156,8 @@ $(document).ready(function() {
     $('.table').DataTable({
         "searching": false,
         "pageLength": 10,
-        "lengthChange": false
+        "lengthChange": false,
+        "order": [[2, "desc"]]
     });
 });
 </script>
@@ -160,7 +167,7 @@ $(document).ready(function() {
     var btn = document.getElementById("exportButton");
     var span = document.getElementsByClassName("close")[0];
     btn.onclick = function() {
-        modal.style.display = "block";
+        modal.style.display = "flex";
     }
     span.onclick = function() {
         modal.style.display = "none";
