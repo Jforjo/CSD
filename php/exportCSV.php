@@ -3,6 +3,7 @@
     session_start();
 
     $userID = $_SESSION["userID"];
+    $userName = $_SESSION['userName'];
     $conn = newConn();
 
     $stmt = $conn->prepare("CALL GetStudentData(:userID)");
@@ -18,8 +19,11 @@
 
     $completedTests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    $date = date('dMY'); //Get current date in the format dMY (e.g. 24Mar2024)
+    $filename = $userName . "_Stats_" . $date . ".csv"; // Generate the filename
+
     header('Content-Type: text/csv');
-    header('Content-Disposition: attachment; filename="user_stats.csv"'); //Set the file name for the CSV
+    header('Content-Disposition: attachment; filename="' . $filename . '"'); //Set the file name for the CSV
 
     // Open CSV file
     $fp = fopen('php://output', 'w');

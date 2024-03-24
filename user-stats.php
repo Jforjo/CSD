@@ -14,6 +14,8 @@
     $userName = $studentData['firstname'];
     $studentID = $studentData['studentID'];
 
+    $_SESSION['userName'] = $userName;
+
     //Query to get the tests
     $stmt = $conn->prepare("CALL GetStudentsQuizzes(:studentID)");
     $stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);

@@ -65,6 +65,9 @@ $pdf->SetFont('helvetica', '', 20);
 // Write the main heading that says "Stats for [name]"
 $pdf->Write(0, "Stats for " . $userName, '', 0, 'L', true, 0, false, false, 0);
 
+// Add a gap
+$pdf->Ln(10); // Add a 10mm gap
+
 //Set font back to 12 for the table
 $pdf->SetFont('helvetica', '', 12);
 
@@ -103,6 +106,10 @@ foreach ($completedTests as $test) {
 $html .= '</table>';
 $pdf->writeHTML($html, true, false, true, false, '');
 
+$date = date('dMY'); //Get current date in the format dMY (e.g. 24Mar2024)
+$filename = $userName . "_Stats_" . $date . ".pdf"; // Generate the filename
+
+
 // Close and output PDF document
-$pdf->Output('user_stats.pdf', 'I');
+$pdf->Output($filename, 'I');
 ?>
