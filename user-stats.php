@@ -30,17 +30,16 @@
 
    if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] === 'getTestData') {
     // Get test names
-    $stmt = $conn->prepare("CALL GetStudentsQuizzes(:studentID)");
-    $stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
-    $stmt->execute();
-    $allTests = $stmt->fetchAll();
-    $testNames = array_column($allTests, 'quiz');
-
-    // Get percentages
     $stmt = $conn->prepare("CALL GetStudentsQuizPercentages(:studentID)");
     $stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
     $stmt->execute();
-    $percentages = $stmt->fetchAll(PDO::FETCH_COLUMN, 0); // Fetch only the first column of each row
+    $allTests = $stmt->fetchAll();
+
+    $testNames = array_column($allTests, 'title');
+    $percentages = array_column($allTests, 'percentage');
+
+    // Round the percentages
+    $percentages = array_map('round', $percentages);
 
     header('Content-Type: application/json');
     echo json_encode(['testNames' => $testNames, 'percentages' => $percentages]);
