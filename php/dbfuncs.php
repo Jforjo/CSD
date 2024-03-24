@@ -123,6 +123,26 @@ function CheckUserIsStudent(string $userID): bool {
     return $data['exists'];
 }
 /**
+ * Checks if the a user with the give ID has been assigned a specific student number.
+ * 
+ * @param string $userID The user's ID.
+ * @param string $userID The student ID.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE if the user has been assigned that specific student number or FALSE if it doesn't. Also, FALSE is returned on failure.
+ */
+function CheckUserOwnsStudentID(string $userID, string $studentID): bool {
+    $sql = "SELECT CheckUserOwnsStudentID(:userID, :studentID) AS 'exists';";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":userID", $userID, PDO::PARAM_STR);
+    $stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
+    $stmt->execute();
+    $data = $stmt->fetch();
+    $conn = null;
+    return $data['exists'];
+}
+/**
  * Fetches the user's role.
  * 
  * @param string $userID The user's ID.
@@ -256,6 +276,19 @@ function GetQuestionCount(string|null $quizID): mixed {
     return $data['count'];
 }
 /**
+ * Fetches the amount of subjects.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return mixed The amount of subjects as an int or FALSE on failure.
+ */
+function GetSubjectCount(): mixed {
+    $sql = "CALL GetSubjectCount();";
+    $conn = newConn();
+    $data = $conn->query($sql)->fetch();
+    $conn = null;
+    return $data['count'];
+}
+/**
  * Fetches a specified range of student data.
  * 
  * @param int $limit [optional] The max amount of rows to return.
@@ -333,6 +366,26 @@ function GetLimitedQuestionsData(int|null $limit = 5, int|null $offset = 0, stri
     $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
     if ($quizID == null) $quizID = "";
     $stmt->bindValue(":quizID", $quizID, PDO::PARAM_STR);
+    $stmt->execute();
+    $data = $stmt->fetchAll();
+    $conn = null;
+    return $data;
+}
+/**
+ * Fetches a specified range of subject data.
+ * 
+ * @param int $limit [optional] The max amount of rows to return.
+ * @param int $offset [optional] The row offset.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return mixed Array of mixed data of subjects or FALSE on failure.
+ */
+function GetLimitedSubjectsData(int|null $limit = 5, int|null $offset = 0): mixed {
+    $sql = "CALL GetLimitedSubjectsData(:limit, :offset);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":limit", $limit, PDO::PARAM_INT);
+    $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
     $stmt->execute();
     $data = $stmt->fetchAll();
     $conn = null;
@@ -450,6 +503,24 @@ function GetQuestionData(string $questionData): mixed {
     return $data;
 }
 /**
+ * Fetches all data of a subject with the given ID.
+ * 
+ * @param string $subjectID The subject's ID.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return mixed Array of mixed data of the subject or FALSE on failure.
+ */
+function GetSubjectData(string $subjectID): mixed {
+    $sql = "CALL GetSubjectData(:subjectID);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":subjectID", $subjectID, PDO::PARAM_STR);
+    $stmt->execute();
+    $data = $stmt->fetch();
+    $conn = null;
+    return $data;
+}
+/**
  * Fetches data of the most recently created student.
  * 
  * @author Jforjo <https://github.com/Jforjo>
@@ -467,12 +538,12 @@ function GetRecentPendingStudentData(): mixed {
  * 
  * @param string $title The title of the quiz.
  * @param string $subjectID The ID of the subject.
- * @param string $available The timestamp of when the quiz will become available.
+ * @param string|null $available [optional] The timestamp of when the quiz will become available.
  * 
  * @author Jforjo <https://github.com/Jforjo>
  * @return bool TRUE on success or FALSE on failure.
  */
-function CreateQuiz(string $subjectID, string $title, string $available): bool {
+function CreateQuiz(string $subjectID, string $title, string|null $available): bool {
     $sql = "CALL CreateQuiz(:quizID, :subjectID, :title, :available);";
     do {
         $quizID = bin2hex(random_bytes(16));
@@ -522,6 +593,27 @@ function CreateQuestion(string $question, string $answerOne, string $answerTwo, 
     else $stmt->bindValue(":answerThree", $answerThree, PDO::PARAM_STR);
 
     $stmt->bindValue(":correctAnswer", $correctAnswer, PDO::PARAM_INT);
+    $success = $stmt->execute();
+    $conn = null;
+    return $success;
+}
+/**
+ * Create a quiz based on the given parameters.
+ * 
+ * @param string $name The name of the subject.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE on success or FALSE on failure.
+ */
+function CreateSubject(string $name): bool {
+    $sql = "CALL CreateSubject(:subjectID, :name);";
+    do {
+        $subjectID = bin2hex(random_bytes(16));
+    } while (CheckSubjectIDExists($subjectID));
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":subjectID", $subjectID, PDO::PARAM_STR);
+    $stmt->bindValue(":name", $name, PDO::PARAM_STR);
     $success = $stmt->execute();
     $conn = null;
     return $success;
@@ -713,6 +805,25 @@ function EditQuestion(string $questionID, string $question, string $answerOne, s
     $stmt->bindValue(":answerThree", $answerThree, PDO::PARAM_STR);
     $stmt->bindValue(":answerFour", $answerFour, PDO::PARAM_STR);
     $stmt->bindValue(":correctAnswer", $correctAnswer, PDO::PARAM_INT);
+    $success = $stmt->execute();
+    $conn = null;
+    return $success;
+}
+/**
+ * Edit the data of the subject with the given ID.
+ * 
+ * @param string $subjectID The subject's ID.
+ * @param string $name The subject's new name.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE on success or FALSE on failure.
+ */
+function EditSubject(string $subjectID, string $name): bool {
+    $sql = "CALL EditSubject(:subjectID, :name);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":subjectID", $subjectID, PDO::PARAM_STR);
+    $stmt->bindValue(":name", $name, PDO::PARAM_STR);
     $success = $stmt->execute();
     $conn = null;
     return $success;

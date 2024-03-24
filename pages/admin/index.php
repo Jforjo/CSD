@@ -214,6 +214,32 @@ if ($role === 'admin') {
                     </span>
                 </a>
             </li>
+            <?php if ($role === "admin") { ?>
+            <li <?php if ($routerPage == '/subject-management.php') echo 'class="active"'; ?>>
+                <a data-link="admin/subjects">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="<?php if ($routerPage == '/subject-management.php') echo 'nc-int-icon-state-b'; ?>">
+                        <g stroke-linecap="square" stroke-miterlimit="10" fill="currentColor" stroke-linejoin="miter" class="nc-icon-wrapper">
+                            <g class="nc-int-icon js-nc-int-icon">
+                                <g class="nc-int-icon-a">
+                                    <path data-cap="butt" fill="none" stroke="currentColor" d="M12,22v20c0,4.971,8.954,9,20,9 c11.046,0,20-4.029,20-9V22" stroke-linecap="butt"></path>
+                                    <polyline data-cap="butt" data-color="color-2" fill="none" stroke="currentColor" points="44,54 49,61 39,61 44,54 44,26 " stroke-linecap="butt"></polyline>
+                                    <polygon fill="none" stroke="currentColor" points="32,32 4,18 32,4 60,18 "></polygon>
+                                </g>
+                                <g class="nc-int-icon-b">
+                                    <path fill="currentColor" d="M62.423,17.094l-30-14c-0.268-0.125-0.578-0.125-0.846,0l-30,14C1.225,17.258,1,17.611,1,18 s0.225,0.742,0.577,0.906l30,14C31.711,32.969,31.855,33,32,33s0.289-0.031,0.423-0.094L43,27.97V53.68l-4.814,6.739 c-0.217,0.305-0.247,0.705-0.075,1.039C38.282,61.791,38.625,62,39,62h10c0.375,0,0.718-0.209,0.889-0.542 c0.171-0.334,0.142-0.734-0.075-1.039L45,53.68V27.037l17.423-8.131C62.775,18.742,63,18.389,63,18S62.775,17.258,62.423,17.094z"></path>
+                                    <path data-color="color-2" fill="currentColor" d="M41,31.111l-7.731,3.608C32.875,34.902,32.436,35,32,35s-0.875-0.098-1.27-0.281L11,25.511 V42c0,5.607,9.224,10,21,10c3.244,0,6.283-0.343,9-0.944V31.111z"></path>
+                                    <path data-color="color-2" fill="currentColor" d="M47,28.311v20.748c3.726-1.796,6-4.277,6-7.059V25.51L47,28.311z"></path>
+                                </g>
+                            </g>
+                            <style fill="currentColor">.nc-int-icon{position:relative;}.nc-int-icon-b{position: absolute;top: calc(50% - 0.5em);left: calc(50% - 0.5em);opacity: 0;}.nc-int-icon-state-b .nc-int-icon-a{opacity: 0;}.nc-int-icon-state-b .nc-int-icon-b{opacity: 1;}</style>
+                        </g>
+                    </svg>
+                    <span>
+                        Subjects
+                    </span>
+                </a>
+            </li>
+            <?php } ?>
         </ul>
     </nav>
     <header>

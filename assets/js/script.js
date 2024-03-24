@@ -335,6 +335,13 @@
             });
             tableRow.classList.add('events-listening');
         });
+        document.querySelectorAll('#subject-management .table tr')?.forEach(tableRow => {
+            if (tableRow.classList.contains('events-listening') != false) return;
+            tableRow.querySelector('.icons .table-edit-btn')?.addEventListener('click', () => {
+                ModifySubject(tableRow?.dataset?.subjectid, "/php/getsubjectdata.php");
+            });
+            tableRow.classList.add('events-listening');
+        });
         const editStudentForm = document.querySelector('#student-management + #dialog-edit-user form');
         if (editStudentForm?.classList.contains('events-listening') === false) {
             editStudentForm.addEventListener('submit', (e) => {
@@ -373,6 +380,17 @@
             });
             editQuestionForm.classList.add('events-listening');
         }
+        const editSubjectForm = document.querySelector('#subject-management + #dialog-edit-subject form');
+        if (editSubjectForm?.classList.contains('events-listening') === false) {
+            editSubjectForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (editSubjectForm.querySelector('input#form-subjectID').value != '')
+                    ModifySubject(null, "/php/editsubject.php");
+                else
+                    ModifySubject(null, "/php/createsubject.php");
+            });
+            editSubjectForm.classList.add('events-listening');
+        }
         // If there has been an error and a field has a red border
         //  then remove it if the input is modified.
         document.querySelectorAll('form .form-input')?.forEach(inputField => {
@@ -399,6 +417,13 @@
             });
             createQuestionBtn.classList.add('events-listening');
         }
+        const createSubjectBtn = document.querySelector('#subject-management .table-btns .create');
+        if (createSubjectBtn?.classList.contains('events-listening') === false) {
+            createSubjectBtn.addEventListener('click', () => {
+                CreateSubject();
+            });
+            createSubjectBtn.classList.add('events-listening');
+        }
 
 
         // Automatiicaly populate table on load
@@ -406,6 +431,7 @@
         const lecturerManagement = document.getElementById('lecturer-management');
         const quizManagement = document.getElementById('quiz-management');
         const questionManagement = document.getElementById('question-management');
+        const subjectManagement = document.getElementById('subject-management');
 
         if (studentManagement != null && studentManagement.classList.contains('loaded') == false) {
             PopulateTable('student-management', '/php/loadstudenttable.php');
@@ -419,6 +445,9 @@
         } else if (questionManagement != null && questionManagement.classList.contains('loaded') == false) {
             PopulateTable('question-management', `/php/loadquestiontable.php${location.search}`);
             questionManagement.classList.add('loaded');
+        } else if (subjectManagement != null && subjectManagement.classList.contains('loaded') == false) {
+            PopulateTable('subject-management', '/php/loadsubjecttable.php');
+            subjectManagement.classList.add('loaded');
         }
 
         if (document.getElementById('user-management-perpage')?.classList.contains('events-listening') === false) {
@@ -437,6 +466,10 @@
             document.querySelector('#question-management #user-management-perpage')?.addEventListener('change', () => {
                 SetPerPage();
                 PopulateTable('question-management', '/php/loadquestiontable.php');
+            });
+            document.querySelector('#subject-management #user-management-perpage')?.addEventListener('change', () => {
+                SetPerPage();
+                PopulateTable('subject-management', '/php/loadsubjecttable.php');
             });
             document.getElementById('user-management-perpage').classList.add('events-listening');
         }
@@ -463,6 +496,12 @@
                 btn.addEventListener('click', () => {
                     SetPagination(btn.dataset.id);
                     PopulateTable('question-management', '/php/loadquestiontable.php');
+                });
+            });
+            document.querySelectorAll('#subject-management #pagination-menu li')?.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    SetPagination(btn.dataset.id);
+                    PopulateTable('subject-management', '/php/loadsubjecttable.php');
                 });
             });
             document.getElementById('pagination-menu').classList.add('events-listening');
@@ -503,6 +542,15 @@
             document.querySelectorAll('#question-management .pagination .arrow')[1]?.addEventListener('click', () => {
                 SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id + 1);
                 PopulateTable('question-management', '/php/loadquestiontable.php');
+            });
+            
+            document.querySelectorAll('#subject-management .pagination .arrow')[0]?.addEventListener('click', () => {
+                SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id - 1);
+                PopulateTable('subject-management', '/php/loadsubjecttable.php');
+            });
+            document.querySelectorAll('#subject-management .pagination .arrow')[1]?.addEventListener('click', () => {
+                SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id + 1);
+                PopulateTable('subject-management', '/php/loadsubjecttable.php');
             });
 
             document.querySelector('.pagination').classList.add('events-listening');
@@ -796,6 +844,65 @@
             });
         });
     }
+    function ModifySubject(subjectid, page) {
+        if (page == null) return;
+        document.querySelectorAll(`#dialog-edit-subject *[name]`).forEach(input => {
+            input.classList.remove('error');
+        });
+        document.querySelector('#dialog-edit-subject .error-msg').innerHTML = '';
+        const formData = new FormData(document.querySelector('#dialog-edit-subject form'));
+        if (subjectid != null) formData.append('subjectID', subjectid);
+        fetch(page, {
+            method: "POST",
+            body: formData,
+        }).then(res => {
+            if (res.status >= 200 && res.status < 300) {
+               return res.text();
+            }
+            throw new Error(res.statusText);
+        }).then(data => {
+            data = JSON.parse(data);
+            if (data?.type === "refresh") window.location.reload();
+            else if (data?.type === "error") {
+                if (data?.input != null) {
+                    document.querySelector(`#dialog-edit-subject *[name="${data.input}"]`).classList.add('error');
+                    document.querySelector('#dialog-edit-subject .error-msg').innerHTML = data.msg;
+                } else {
+                    DisplayModel('popup', [
+                        ['popup-title', "Error"],
+                        ['popup-msg', data.msg]
+                    ], {
+                        class: "error"
+                    });
+                }
+            } else if (data?.type === "success") {
+                DisplayModel('popup', [
+                    ['popup-title', "Success"],
+                    ['popup-msg', data.msg]
+                ], {
+                    class: "success",
+                    closeAll: true
+                });
+            } else if (data?.type === "data") {
+                DisplayModel('dialog-edit-subject', [
+                    ['form-subjectID', data?.data?.subjectID],
+                    ['form-name', data?.data?.name],
+                ], {
+                    closeAll: true
+                });
+                document.querySelector('#dialog-edit-subject button[type="submit"]').innerHTML = "Edit";
+            }
+        }).catch(error => {
+            if (error === null || error === '') error = "An Unknown Error Occurred";
+            console.error(error);
+            DisplayModel('popup', [
+                ['popup-title', "Error"],
+                ['popup-msg', error]
+            ], {
+                class: "error"
+            });
+        });
+    }
 
     function CreateQuiz() {
         DisplayModel('dialog-edit-quiz', [], {
@@ -808,6 +915,12 @@
             closeAll: true
         });
         document.querySelector('#dialog-edit-question button[type="submit"]').innerHTML = "Create";
+    }
+    function CreateSubject() {
+        DisplayModel('dialog-edit-subject', [], {
+            closeAll: true
+        });
+        document.querySelector('#dialog-edit-subject button[type="submit"]').innerHTML = "Create";
     }
 
     function DisplayModel(id, data = [], options) {
