@@ -60,6 +60,9 @@
     }
 
     $averageScore = $NoOfTests > 0 ? round($totalScore / $NoOfTests) : 0;
+
+    $_SESSION['userName'] = $userName;
+    $_SESSION['completedTests'] = $completedTests;
     ?>
     <!DOCTYPE html>
 <html lang="en">
@@ -146,7 +149,9 @@
             <form action="php/exportCSV.php" method="post">
                 <button type="submit" id="exportCSV">CSV</button>
             </form>
-            <button id="exportPDF">PDF</button>
+            <form action="php/exportPDF.php" method="post">
+                <button type="submit" id="exportPDF">PDF</button>
+            </form>
             </div>
         </div>
     </div>
