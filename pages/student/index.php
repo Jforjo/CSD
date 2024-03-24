@@ -47,6 +47,12 @@
    $testsToComplete = array_filter($allTests, function($test) {
        return $test['completed'] == 0;
    });
+
+    //Get the subjects
+    $stmt = $conn->prepare("CALL GetAllSubjects()");
+    $stmt->execute();
+
+    $subjects = $stmt->fetchAll(PDO::FETCH_ASSOC);
     ?>
     <section class="welcome-section">
         <h2 class="welcome-message"><?php echo "Welcome, " . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></h2>
@@ -62,6 +68,18 @@
             <span class="close">&times;</span>
             <h2>Create Quiz</h2>
             <p>Select the subject</p>
+            <select name="subject">
+            <option selected disabled>Select a subject</option>
+            <?php foreach ($subjects as $subject): ?>
+                <option value="<?= $subject['subjectID'] ?>"><?= $subject['name'] ?></option>
+            <?php endforeach; ?>
+        </select>
+        <select name="question-amount">
+            <option value="10">10 Questions</option>
+            <option value="15">15 Questions</option>
+            <option value="20">20 Questions</option>
+        </select>
+        <button>Create</button>
         </div>
     </div>
     <!-- Tests to complete section -->
