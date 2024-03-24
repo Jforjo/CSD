@@ -53,6 +53,17 @@
     </section>
     <!-- Main Content of Page (Test Boxes) -->
     <div class="main-content">
+    <div class="createQuizButtonContainer">
+        <button id="createQuizButton">Create Quiz</button>
+    </div>
+    <!-- Modal that appears when button is clicked -->
+    <div id="createQuizModal" class="createQuizModal">
+        <div class="create-quiz-modal-content">
+            <span class="close">&times;</span>
+            <h2>Create Quiz</h2>
+            <p>Select the subject</p>
+        </div>
+    </div>
     <!-- Tests to complete section -->
     <section>
         <h2 class="section-title">Tests to complete</h2>
@@ -116,5 +127,21 @@
     </section>
     </div>
     <footer>Footer</footer>
+    <script>
+    var modal = document.getElementById("createQuizModal");
+    var btn = document.getElementById("createQuizButton");
+    var span = document.getElementsByClassName("close")[0];
+    btn.onclick = function() {
+        modal.style.display = "flex";
+    }
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
 </body>
 </html>
