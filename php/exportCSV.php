@@ -16,8 +16,11 @@
     $stmt = $conn->prepare("CALL GetStudentsQuizzes(:studentID)");
     $stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
     $stmt->execute();
+    $allTests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $completedTests = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $completedTests = array_filter($allTests, function($test) {
+        return $test['completed'] == 1;
+    });
 
     $date = date('dMY'); //Get current date in the format dMY (e.g. 24Mar2024)
     $filename = $userName . "_Stats_" . $date . ".csv"; // Generate the filename
@@ -36,7 +39,7 @@
     {
         $date = date('d/m/Y', strtotime($test['dateCompleted']));
         $score = $test['correctCount'] . '/' . $test['questionCount'];
-        $percentage = ($test['correctCount'] / $test['questionCount']) * 100;
+        $percentage = round(($test['correctCount'] / $test['questionCount']) * 100);
         fputcsv($fp, array($test['quiz'], $test['subject'], $date, $score, $percentage, $test['points']));
     }
 
