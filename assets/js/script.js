@@ -307,6 +307,13 @@
             tableRow.querySelector('.icons .table-delete-btn')?.addEventListener('click', () => {
                 DeleteQuiz(tableRow?.dataset?.quizid, "/php/deletequiz.php");
             });
+            tableRow.querySelector('.icons .table-assignquiz-btn')?.addEventListener('click', () => {
+                DisplayModel('dialog-assign-quiz', [
+                    ['form-assignQuizID', tableRow?.dataset?.quizid]
+                ], {
+                    closeAll: true
+                });
+            });
             tableRow.classList.add('events-listening');
         });
         document.querySelectorAll('#question-management .table tr')?.forEach(tableRow => {
@@ -568,6 +575,28 @@
             });
             linkQuestion.classList.add('events-listening');
         }
+        const assignQuiz = document.getElementById('dialog-assign-quiz');
+        if (assignQuiz?.classList.contains('events-listening') === false) {
+            assignQuiz.querySelector('form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const values = [];
+                // document.getElementById('form-assignStudent').selectedOptions?.forEach(option => {
+                //     values.push(option.value);
+                // });
+                const studentOptions = document.getElementById('form-assignStudent').selectedOptions;
+                for (let i = 0; i < studentOptions.length; i++) {
+                    values.push(studentOptions[i].value);
+                    
+                }
+                // students[] doesn't seem to work.
+                SimpleForm([
+                    ['quizID', document.getElementById('form-assignQuizID').value],
+                    ['questionCount', document.getElementById('form-questionCount').value],
+                    ['students', values],
+                ], "/php/assignquiz.php");
+            });
+            assignQuiz.classList.add('events-listening');
+        }
     }
 
     function SimpleForm(opt, page) {
@@ -584,7 +613,11 @@
             }
             throw new Error(res.statusText);
         }).then(data => {
-            data = JSON.parse(data);
+            try {
+                data = JSON.parse(data);
+            } catch {
+                throw new Error(data);
+            }
             if (data?.type === "refresh") window.location.reload();
             else if (data?.type === "error") {
                 DisplayModel('popup', [

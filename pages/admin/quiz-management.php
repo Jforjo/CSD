@@ -98,7 +98,6 @@ $quizCount = GetQuizCount();
 <?php
 $subjects = GetAllSubjects();
 $subjectCount = count($subjects);
-
 ?>
 <dialog id="dialog-edit-quiz" aria-modal="true">
     <form method="dialog">
@@ -132,6 +131,42 @@ $subjectCount = count($subjects);
             <menu>
                 <button autofocus type="reset" onclick="this.closest('dialog').close('cancel');">Cancel</button>
                 <button type="submit">Edit</button>
+            </menu>
+        </footer>
+    </form>
+</dialog>
+<?php
+$students = GetAllStudentsData();
+$studentCount = count($students);
+?>
+<dialog id="dialog-assign-quiz" aria-modal="true">
+    <form method="dialog">
+        <fieldset>
+            <span class="error-msg"></span>
+            <input type="hidden" name="quizID" id="form-assignQuizID">
+            <div class="form-input">
+                <label for="form-questionCount">Number of Questions<i aria-hidden="true">*</i></label>
+                <input type="number" name="questionCount" id="form-questionCount" required>
+            </div>
+            <div class="form-input">
+                <label for="form-student">Students<i aria-hidden="true">*</i></label>
+                <select name="students[]" id="form-assignStudent" <?php if ($studentCount == 0) echo "disabled"; ?> multiple size="8">
+                    <?php if ($studentCount == 0) { ?>
+                        <option selected>None Available</option>
+                    <?php } else { ?>
+                        <option disabled>Select an option</option>
+                        <?php foreach ($students as $student) { ?>
+                            <option value="<?php echo $student['studentID']; ?>"><?php echo $student['studentID'] . " - " . $student['firstname'] . " " . $student['lastname']; ?></option>
+                        <?php } ?>
+                    <?php } ?>
+                </select>
+            </div>
+        </fieldset>
+        <hr>
+        <footer>
+            <menu>
+                <button autofocus type="reset" onclick="this.closest('dialog').close('cancel');">Cancel</button>
+                <button type="submit">Submit</button>
             </menu>
         </footer>
     </form>

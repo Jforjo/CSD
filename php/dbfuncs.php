@@ -1014,6 +1014,49 @@ function DeleteQuizQuestionLink(string $quizID, string $questionID): bool {
     $conn = null;
     return $success && !CheckQuizQuestionLinkExists($quizID, $questionID);
 }
+/**
+ * Checks if the the link between a student and a quiz with the ID already exists.
+ * 
+ * @param string $studentQuizLinkID The student-quiz link ID to check exists.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE if the link between a student and a quiz with the ID exists or FALSE if it doesn't. Also, FALSE is returned on failure.
+ */
+function CheckStudentQuizLinkIDExists(string $studentQuizLinkID): bool {
+    $sql = "SELECT CheckStudentQuizLinkIDExists(:studentQuizLinkID) AS 'exists';";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":studentQuizLinkID", $studentQuizLinkID, PDO::PARAM_STR);
+    $stmt->execute();
+    $data = $stmt->fetch();
+    $conn = null;
+    return $data['exists'];
+}
+/**
+ * Assigns a quiz to a student.
+ * 
+ * @param string $studentID The ID of a student.
+ * @param string $quizID The ID of a quiz.
+ * @param int $questionCount The number of questions in the quiz.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return bool TRUE on success or FALSE on failure.
+ */
+function AssignQuiz(string $studentID, string $quizID, int $questionCount): bool {
+    $sql = "CALL AssignQuiz(:studentQuizLinkID, :studentID, :quizID, :questionCount);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    do {
+        $studentQuizLinkID = bin2hex(random_bytes(16));
+    } while (CheckStudentQuizLinkIDExists($studentQuizLinkID));
+    $stmt->bindValue(":studentQuizLinkID", $studentQuizLinkID, PDO::PARAM_STR);
+    $stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
+    $stmt->bindValue(":quizID", $quizID, PDO::PARAM_STR);
+    $stmt->bindValue(":questionCount", $questionCount, PDO::PARAM_INT);
+    $success = $stmt->execute();
+    $conn = null;
+    return $success && CheckStudentQuizLinkIDExists($studentQuizLinkID);
+}
 
 
 ?>
