@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $conn->beginTransaction();
 
-$stmt = $conn->prepare("INSERT INTO quizzes (quizID, subjectID, title, available) VALUES (:quizID, :subjectID, :title, :available)");
+$stmt = $conn->prepare("CALL StudentCreateQuiz(:quizID, :subjectID, :title, :available)");
 $quizID = bin2hex(random_bytes(16));
 $stmt->bindValue(":quizID", $quizID, PDO::PARAM_STR);
 $stmt->bindValue(":subjectID", $subjectID, PDO::PARAM_STR);
@@ -31,7 +31,7 @@ $stmt->bindValue(":title", $title, PDO::PARAM_STR);
 $stmt->bindValue(":available", $available, PDO::PARAM_STR);
 $stmt->execute();
 
-$stmt = $conn->prepare("INSERT INTO quizQuestionLink (quizQuestionLinkID, quizID, questionID) VALUES (:quizQuestionLinkID, :quizID, :questionID)");
+$stmt = $conn->prepare("CALL StudentCreateQuizQuestionLink(:quizQuestionLinkID, :quizID, :questionID)");
 foreach ($questions as $question) {
     $quizQuestionLinkID = bin2hex(random_bytes(16));
     $stmt->bindValue(":quizQuestionLinkID", $quizQuestionLinkID, PDO::PARAM_STR);
@@ -42,7 +42,7 @@ foreach ($questions as $question) {
 
     $studentID = $_POST['studentID'];
 
-$stmt = $conn->prepare("INSERT INTO studentQuizLink (studentQuizLinkID, studentID, quizID, questionCount) VALUES (:studentQuizLinkID, :studentID, :quizID, :questionCount)");
+$stmt = $conn->prepare("CALL StudentCreateStudentQuizLink(:studentQuizLinkID, :studentID, :quizID, :questionCount)");
 $studentQuizLinkID = bin2hex(random_bytes(16));
 $stmt->bindValue(":studentQuizLinkID", $studentQuizLinkID, PDO::PARAM_STR);
 $stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
