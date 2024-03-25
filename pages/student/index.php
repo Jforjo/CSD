@@ -19,11 +19,24 @@
         </nav>
     </header>
     <?php 
-    require_once('../../php/connection.php');
+    require_once(__DIR__ . '/../../php/dbfuncs.php');
     session_start();
 
     $userID = $_SESSION["userID"];
     $conn = newConn();
+
+    //Check to see if user is logged in, if not then redirect to login page
+    if (!isset($_SESSION['userID']))
+    {
+        header("Location: /login");
+        exit();    
+    }
+
+    //Check to see if the user is a student, if not then display error message
+    $role = GetUserRole($_SESSION['userID']);
+if (!($role == "student")) {
+    die("You do not have permission to view this page.");
+}
 
     //Get the logged in user's details, things like the first name and studentID
     $stmt = $conn->prepare("CALL GetStudentData(:userID)");
@@ -81,6 +94,7 @@
                 <h6><?php echo date('d/m/Y', strtotime($test['dateSet'])); ?></h6>
                 <form method="POST" action="testing-page.php">
                     <input type="hidden" name="quizID" value="<?php echo htmlspecialchars($test['quizID'], ENT_QUOTES, 'UTF-8'); ?>">
+                    <input type="hidden" name="studentQuizLinkID" value="<?php echo htmlspecialchars($test['studentQuizLinkID'], ENT_QUOTES, 'UTF-8'); ?>">
                     <button type="submit" class="btn btn-primary">Start Test</button>
                 </form>
             </div>
