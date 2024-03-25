@@ -1014,6 +1014,19 @@ function DeleteQuizQuestionLink(string $quizID, string $questionID): bool {
     $conn = null;
     return $success && !CheckQuizQuestionLinkExists($quizID, $questionID);
 }
+/**
+ * Fetches the average quiz percentages of each quiz.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return mixed The quiz IDs and the avg percentage for each or FALSE on failure.
+ */
+function GetAvgQuizScores(): mixed {
+    $sql = "CALL GetAvgQuizScores();";
+    $conn = newConn();
+    $data = $conn->query($sql)->fetchAll();
+    $conn = null;
+    return $data;
+}
 
 
 ?>

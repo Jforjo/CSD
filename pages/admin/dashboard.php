@@ -92,22 +92,15 @@ $inactiveStudentCount = GetInactiveStudentCount();
         <h2>Quiz results<i></i></h2>
         <div class="bar-chart bar-chart-align-right">
             <div class="bar-chart-graph">
-                <div class="bar-chart-bar" style="--value:100;"><i></i></div>
-                <div class="bar-chart-bar" style="--value:60;"><i></i></div>
-                <div class="bar-chart-bar" style="--value:40;"><i></i></div>
-                <div class="bar-chart-bar" style="--value:80;"><i></i></div>
-                <div class="bar-chart-bar" style="--value:20;"><i></i></div>
-                <div class="bar-chart-bar" style="--value:60;"><i></i></div>
-                <div class="bar-chart-bar" style="--value:40;"><i></i></div>
-                <div class="bar-chart-bar" style="--value:80;"><i></i></div>
-                <div class="bar-chart-bar" style="--value:20;"><i></i></div>
-                <div class="bar-chart-bar" style="--value:60;"><i></i></div>
-                <div class="bar-chart-bar" style="--value:40;"><i></i></div>
-                <div class="bar-chart-bar" style="--value:80;"><i></i></div>
-                <div class="bar-chart-bar" style="--value:20;"><i></i></div>
-                <div class="bar-chart-bar" style="--value:60;"><i></i></div>
-                <div class="bar-chart-bar" style="--value:40;"><i></i></div>
-                <div class="bar-chart-bar" style="--value:80;"><i></i></div>
+                <?php
+                $quizzes = GetAvgQuizScores();
+                if (count($quizzes) == 0) { ?>
+                    <h3>N/A</h3>
+                <?php } else { ?>
+                    <?php foreach ($quizzes as $quiz) { ?>
+                        <div class="bar-chart-bar" style="--value:<?php echo round($quiz['avgPercentage']); ?>;"><i></i></div>
+                    <?php } ?>
+                <?php } ?>
             </div>
             <div class="bar-chart-values">
                 <span>100%</span>
