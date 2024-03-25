@@ -80,6 +80,7 @@
             <option value="15">15 Questions</option>
             <option value="20">20 Questions</option>
         </select>
+        <input type="hidden" name="studentID" value="<?= $studentID ?>">
             <input type="submit" class="createQuizConfirmButton" value="Create">
         </form>
         </div>
