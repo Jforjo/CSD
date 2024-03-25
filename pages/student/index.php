@@ -66,6 +66,7 @@
     <div id="createQuizModal" class="createQuizModal">
         <div class="create-quiz-modal-content">
             <span class="close">&times;</span>
+            <form method="post" action="../../php/studentAssignQuiz.php">
             <h2>Create Quiz</h2>
             <p>Select the subject</p>
             <select name="subject">
@@ -79,7 +80,8 @@
             <option value="15">15 Questions</option>
             <option value="20">20 Questions</option>
         </select>
-        <button>Create</button>
+            <input type="submit" class="createQuizConfirmButton" value="Create">
+        </form>
         </div>
     </div>
     <!-- Tests to complete section -->

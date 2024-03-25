@@ -206,7 +206,7 @@
         background-color: #181818;
     }
 
-    .create-quiz-modal-content button
+    .createQuizConfirmButton
     {
         background-color: darkred;
         border: 1px solid darkred;
