@@ -93,7 +93,7 @@ if (strlen($studentID) > 16) die(json_encode(array(
 )));
 
 $state = '';
-if ($state == 'accept') $state = 'active';
+if ($action == 'accept') $state = 'active';
 else $state = 'inactive';
 
 if (!EditUserState($_POST['userID'], $state) || !CreateStudent($_POST['userID'], $studentID)) die(json_encode(array(
