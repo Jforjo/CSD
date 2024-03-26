@@ -37,24 +37,24 @@ if (!($role == "lecturer" || $role == "admin")) {
 unset($role);
 
 // Checks if the user's ID has been passed to this file
-if (!isset($_POST['userID'])) die(json_encode(array(
+if (!isset($_POST['studentID'])) die(json_encode(array(
     "type" => "error",
     "msg" => "Invalid POST User ID"
 )));
 // Checks if the passed userID belongs to a valid user
-if (!CheckUserIDExists($_POST['userID'])) die(json_encode(array(
+if (!CheckUserIDExists($_POST['studentID'])) die(json_encode(array(
     "type" => "error",
     "msg" => "User ID does not exist"
 )));
 // Checks if the passed userID belongs to a student
-$role = GetUserRole($_POST['userID']);
+$role = GetUserRole($_POST['studentID']);
 if ($role != "student") die(json_encode(array(
     "type" => "error",
     "msg" => "You do not have permission to delete this user"
 )));
 unset($role);
 
-if (!DeleteUser($_POST['userID'])) die(json_encode(array(
+if (!DeleteUser($_POST['studentID'])) die(json_encode(array(
     "type" => "error",
     "msg" => "Failed to delete the student"
 )));

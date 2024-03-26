@@ -49,7 +49,7 @@ $quizCount = count($quizzes);
     <h3 class="n-a">N/A</h3>
 <?php } else { ?>
     <?php foreach($quizzes as $quiz) { ?>
-    <tr data-quizid="<?php echo $quiz['quizID']; ?>">
+    <tr data-id="<?php echo $quiz['quizID']; ?>">
         <td><span><?php echo $quiz['title']; ?></span></td>
         <td><span><?php echo $quiz['subject']; ?></span></td>
         <td>

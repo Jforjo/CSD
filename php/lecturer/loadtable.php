@@ -49,7 +49,7 @@ $lecturerCount = count($lecturers);
     <h3 class="n-a">N/A</h3>
 <?php } else { ?>
     <?php foreach($lecturers as $lecturer) { ?>
-    <tr data-userid="<?php echo $lecturer['userID']; ?>">
+    <tr data-id="<?php echo $lecturer['userID']; ?>">
         <td>
             <div>
                 <span><?php echo ucwords($lecturer['firstname'] . ' ' . $lecturer['lastname']); ?></span>

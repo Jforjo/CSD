@@ -57,7 +57,7 @@ $studentCount = count($students);
     <h3 class="n-a">N/A</h3>
 <?php } else { ?>
     <?php foreach($students as $student) { ?>
-    <tr data-userid="<?php echo $student['userID']; ?>">
+    <tr data-id="<?php echo $student['userID']; ?>">
         <td>
             <div>
                 <span><?php echo ucwords($student['firstname'] . ' ' . $student['lastname']); ?></span>

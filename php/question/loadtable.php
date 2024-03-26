@@ -57,7 +57,7 @@ $questionCount = count($questions);
     <h3 class="n-a">N/A</h3>
 <?php } else { ?>
     <?php foreach($questions as $question) { ?>
-    <tr data-questionid="<?php echo $question['questionID']; ?>">
+    <tr data-id="<?php echo $question['questionID']; ?>">
         <td colspan="12" align="center"><span><?php echo $question['question'] . " (" . $question['subject'] . ")"; ?></span></td>
         <td rowspan="2">
             <div class="icons">

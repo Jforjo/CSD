@@ -600,7 +600,7 @@ body > main .dashboard-cards .card form .user-row-btns button.to-error:hover {
 }
 
 /* Student Management */
-section.user-management {
+section.management {
     background-color: rgb(var(--elevate-2));
     display: flex;
     flex-direction: column;

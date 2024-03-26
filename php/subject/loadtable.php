@@ -49,7 +49,7 @@ $subjectCount = count($subjects);
     <h3 class="n-a">N/A</h3>
 <?php } else { ?>
     <?php foreach($subjects as $subject) { ?>
-    <tr data-subjectid="<?php echo $subject['subjectID']; ?>">
+    <tr data-id="<?php echo $subject['subjectID']; ?>">
         <td><?php echo $subject['name']; ?></td>
         <td>
             <div class="icons">

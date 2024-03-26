@@ -30,11 +30,11 @@ if (!($role == "lecturer" || $role == "admin")) {
 
 $quizCount = GetQuizCount();
 ?>
-<section class="user-management" id="quiz-management">
+<section class="management" data-type="quiz">
     <div class="table-header">
         <div class="table-perpage">
             Show
-            <select id="user-management-perpage">
+            <select id="perpage">
                 <option value="5" selected>5</option>
                 <option value="10" <?php if ($quizCount <= 5) echo "hidden"; ?>>10</option>
                 <option value="15" <?php if ($quizCount <= 10) echo "hidden"; ?>>15</option>
@@ -100,7 +100,7 @@ $subjects = GetAllSubjects();
 $subjectCount = count($subjects);
 
 ?>
-<dialog id="dialog-edit-quiz" aria-modal="true">
+<dialog data-type="edit" aria-modal="true">
     <form method="dialog">
         <fieldset>
             <span class="error-msg"></span>
@@ -111,7 +111,7 @@ $subjectCount = count($subjects);
             </div>
             <div class="form-input">
                 <label for="form-subject">Subject<i aria-hidden="true">*</i></label>
-                <select name="subject" id="form-subject" <?php if ($subjectCount == 0) echo "disabled"; ?>>
+                <select name="subject" id="form-subjectID" <?php if ($subjectCount == 0) echo "disabled"; ?>>
                     <?php if ($subjectCount == 0) { ?>
                         <option selected>None Available</option>
                     <?php } else { ?>

@@ -97,20 +97,20 @@
     }
     */
 
-    function PopulateTable(tableID, page) {
-        if (page == null) return;
-        const section = document.getElementById(tableID);
+    function PopulateTable() {
+        const section = document.querySelector("section.management");
         if (section == null) return;
-        const loader = section.querySelector('.lds-ring');
+        if (section.dataset?.type == null) return;
+        const loader = section?.querySelector('.lds-ring');
         loader.classList.remove('hidden');
-        const output = section.querySelector('.table table tbody');
-        const limit = document.getElementById('user-management-perpage').value;
+        const output = section?.querySelector('.table table tbody');
+        const limit = document.getElementById('perpage').value;
         // -1 because page 1 starts at offset of 0s
         const offset = ( document.querySelector('#pagination-menu li.active').dataset.id - 1 ) * limit;
         const formData = new FormData();
         formData.append('limit', limit);
         formData.append('offset', offset);
-        fetch(page, {
+        fetch(`/php/${section.dataset.type}/loadtable.php${location.search}`, {
             method: "POST",
             body: formData,
         }).then(res => {
@@ -182,7 +182,7 @@
     }
     function SetPerPage() {
         const total = document.getElementById('pagination-total').innerHTML;
-        const perpage = document.getElementById('user-management-perpage').value;
+        const perpage = document.getElementById('perpage').value;
         const paginationMenu = document.getElementById('pagination-menu');
         paginationMenu.classList.remove('events-listening');
         paginationMenu.innerHTML = '';
@@ -225,48 +225,13 @@
                 const formData = new FormData(e.target);
                 // Absolutely no idea why it doesn't work without this line
                 // It just doesn't seem to pass the button value without it
-                formData.append(e.submitter.name, e.submitter.value);
-                fetch('/php/student/accept.php', {
-                    method: "POST",
-                    body: formData,
-                }).then(res => {
-                    if (res.status >= 200 && res.status < 300) {
-                       return res.text();
-                    }
-                    throw new Error(res.statusText);
-                }).then(data => {
-                    try {
-                        data = JSON.parse(data);
-                    } catch {
-                        throw new Error(data);
-                    }
-                    if (data?.type === "refresh") window.location.reload();
-                    else if (data?.type === "error") {
-                        DisplayModel('popup', [
-                            ['popup-title', "Error"],
-                            ['popup-msg', data.msg]
-                        ], {
-                            class: "error"
-                        });
-                    } else if (data?.type === "success") {
-                        DisplayModel('popup', [
-                            ['popup-title', "Success"],
-                            ['popup-msg', data.msg]
-                        ], {
-                            class: "success",
-                            closeAll: true
-                        });
-                    }
-                }).catch(error => {
-                    if (error === null || error === '') error = "An Unknown Error Occurred";
-                    console.error(error);
-                    DisplayModel('popup', [
-                        ['popup-title', "Error"],
-                        ['popup-msg', error]
-                    ], {
-                        class: "error"
-                    });
-                });
+                formData.append([e.submitter.name, e.submitter.value]);
+
+                const values = [];
+                for (const pair of formData.entries()) {
+                    values.push([pair[0], pair[1]]);
+                }
+                SimpleForm(values, '/php/student/accept.php');
             });
             recentStudent.classList.contains('events-listening');
         }
@@ -281,131 +246,70 @@
             });
             inputSwitch.classList.add('events-listening');
         });
-        document.querySelectorAll('#student-management .table tr')?.forEach(tableRow => {
-            if (tableRow.classList.contains('events-listening') != false) return;
-            tableRow.querySelector('.icons .table-edit-btn')?.addEventListener('click', () => {
-                ModifyUser(tableRow?.dataset?.userid, "/php/student/getdata.php");
-            });
-            tableRow.querySelector('.icons .table-delete-btn')?.addEventListener('click', () => {
-                DeleteUser(tableRow?.dataset?.userid, "/php/student/delete.php");
-            });
-            tableRow.querySelector('.icons .table-promote-btn')?.addEventListener('click', () => {
-                PromoteUser(tableRow?.dataset?.userid, "/php/student/promote.php");
-            });
-            tableRow.classList.add('events-listening');
-        });
-        document.querySelectorAll('#lecturer-management .table tr')?.forEach(tableRow => {
-            if (tableRow.classList.contains('events-listening') != false) return;
-            tableRow.querySelector('.icons .table-edit-btn')?.addEventListener('click', () => {
-                ModifyUser(tableRow?.dataset?.userid, "/php/lecturer/getdata.php");
-            });
-            tableRow.querySelector('.icons .table-delete-btn')?.addEventListener('click', () => {
-                DeleteUser(tableRow?.dataset?.userid, "/php/lecturer/delete.php");
-            });
-            tableRow.querySelector('.icons .table-demote-btn')?.addEventListener('click', () => {
-                DemoteUser(tableRow?.dataset?.userid, "/php/lecturer/demote.php");
-            });
-            tableRow.classList.add('events-listening');
-        });
-        document.querySelectorAll('#quiz-management .table tr')?.forEach(tableRow => {
-            if (tableRow.classList.contains('events-listening') != false) return;
-            tableRow.querySelector('.icons .table-edit-btn')?.addEventListener('click', () => {
-                ModifyQuiz(tableRow?.dataset?.quizid, "/php/quiz/getdata.php");
-            });
-            tableRow.querySelector('.icons .table-delete-btn')?.addEventListener('click', () => {
-                DeleteQuiz(tableRow?.dataset?.quizid, "/php/quiz/delete.php");
-            });
-            tableRow.querySelector('.icons .table-assignquiz-btn')?.addEventListener('click', () => {
-                DisplayModel('dialog-assign-quiz', [
-                    ['form-assignQuizID', tableRow?.dataset?.quizid]
-                ], {
-                    closeAll: true
+
+        const section = document.querySelector('section.management');
+        // Table buttons in the "Manage" column
+        if (section != null && section.dataset?.type != null) {
+            section?.querySelectorAll('.table tr')?.forEach(tableRow => {
+                if (tableRow.classList.contains('events-listening') != false) return;
+                tableRow.querySelector('.icons .table-edit-btn')?.addEventListener('click', () => {
+                    Edit(tableRow?.dataset?.id, `/php/${section.dataset.type}/getdata.php`);
                 });
-            });
-            tableRow.classList.add('events-listening');
-        });
-        document.querySelectorAll('#question-management .table tr')?.forEach(tableRow => {
-            if (tableRow.classList.contains('events-listening') != false) return;
-            tableRow.querySelector('.icons .table-edit-btn')?.addEventListener('click', () => {
-                ModifyQuestion(tableRow?.dataset?.questionid, "/php/question/getdata.php");
-            });
-            tableRow.querySelector('.icons .table-delete-btn')?.addEventListener('click', () => {
-                DeleteQuestion(tableRow?.dataset?.questionid, "/php/question/delete.php");
-            });
-            tableRow.querySelector('.icons .table-linkquiz-btn')?.addEventListener('click', () => {
-                DisplayModel('dialog-link-question', [
-                    ['form-linkQuestion', tableRow.querySelector('td').innerText],
-                    ['form-linkQuestionID', tableRow?.dataset?.questionid]
-                ], {
-                    closeAll: true
+                tableRow.querySelector('.icons .table-delete-btn')?.addEventListener('click', () => {
+                    if (!confirm(`Are you sure you wish to delete this ${section.dataset.type}?`)) return;
+                    SimpleForm([[`${section.dataset.type}ID`, tableRow?.dataset?.id]], `/php/${section.dataset.type}/delete.php`);
                 });
+                tableRow.querySelector('.icons .table-promote-btn')?.addEventListener('click', () => {
+                    if (!confirm(`Are you sure you wish to promote this ${section.dataset.type}?`)) return;
+                    SimpleForm([[`${section.dataset.type}ID`, tableRow?.dataset?.id]], `/php/${section.dataset.type}/promote.php`);
+                });
+                tableRow.querySelector('.icons .table-demote-btn')?.addEventListener('click', () => {
+                    if (!confirm(`Are you sure you wish to demote this ${section.dataset.type}?`)) return;
+                    SimpleForm([[`${section.dataset.type}ID`, tableRow?.dataset?.id]], `/php/${section.dataset.type}/demote.php`);
+                });
+                tableRow.querySelector('.icons .table-assignquiz-btn')?.addEventListener('click', () => {
+                    DisplayModel('dialog-assign-quiz', [
+                        ['form-assignQuizID', tableRow?.dataset?.quizid]
+                    ], {
+                        closeAll: true
+                    });
+                });
+                tableRow.querySelector('.icons .table-linkquiz-btn')?.addEventListener('click', () => {
+                    DisplayModel('dialog-link-question', [
+                        ['form-linkQuestion', tableRow.querySelector('td').innerText],
+                        ['form-linkQuestionID', tableRow?.dataset?.questionid]
+                    ], {
+                        closeAll: true
+                    });
+                });
+                tableRow.querySelector('.icons .table-deletelinkquiz-btn')?.addEventListener('click', () => {
+                    if (!confirm("Are you sure you wish to delete this link?")) return;
+                    let urlparams = new URLSearchParams(location.search);
+                    SimpleForm([
+                        ["quizID", urlparams.get('quiz')],
+                        ["questionID", tableRow?.dataset?.questionid]
+                    ], "/php/deletequizquestionlink.php");
+                });
+                tableRow.classList.add('events-listening');
             });
-            tableRow.querySelector('.icons .table-deletelinkquiz-btn')?.addEventListener('click', () => {
-                if (!confirm("Are you sure you wish to delete this link?")) return;
-                let urlparams = new URLSearchParams(location.search);
-                SimpleForm([
-                    ["quizID", urlparams.get('quiz')],
-                    ["questionID", tableRow?.dataset?.questionid]
-                ], "/php/deletequizquestionlink.php");
-            });
-            tableRow.classList.add('events-listening');
-        });
-        document.querySelectorAll('#subject-management .table tr')?.forEach(tableRow => {
-            if (tableRow.classList.contains('events-listening') != false) return;
-            tableRow.querySelector('.icons .table-edit-btn')?.addEventListener('click', () => {
-                ModifySubject(tableRow?.dataset?.subjectid, "/php/subject/getdata.php");
-            });
-            tableRow.classList.add('events-listening');
-        });
-        const editStudentForm = document.querySelector('#student-management + #dialog-edit-user form');
-        if (editStudentForm?.classList.contains('events-listening') === false) {
-            editStudentForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                ModifyUser(null, "/php/student/edit.php");
-            });
-            editStudentForm.classList.add('events-listening');
         }
-        const editLecturerForm = document.querySelector('#lecturer-management + #dialog-edit-user form');
-        if (editLecturerForm?.classList.contains('events-listening') === false) {
-            editLecturerForm.addEventListener('submit', (e) => {
+        const dialog = document.querySelector('section.management + #dialog[data-type="edit"] form');
+        if (dialog?.classList.contains('events-listening') === false) {
+            const creation = ["quiz", "question", "subject"];
+            dialog.addEventListener('submit', (e) => {
                 e.preventDefault();
-                ModifyUser(null, "/php/lecturer/edit.php");
+                if (creation.includes(section.dataset.type)) {
+                    if (editQuizForm.querySelector(`input#form-${section.dataset.type}ID`).value != '')
+                        Edit(null, `/php/${section.dataset.type}/edit.php`);
+                    else
+                        Edit(null, `/php/${section.dataset.type}/create.php`);
+                } else {
+                    Edit(null, `/php/${section.dataset.type}/edit.php`);
+                }
             });
-            editLecturerForm.classList.add('events-listening');
+            dialog.classList.add('events-listening');
         }
-        const editQuizForm = document.querySelector('#quiz-management + #dialog-edit-quiz form');
-        if (editQuizForm?.classList.contains('events-listening') === false) {
-            editQuizForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                if (editQuizForm.querySelector('input#form-quizID').value != '')
-                    ModifyQuiz(null, "/php/quiz/edit.php");
-                else
-                    ModifyQuiz(null, "/php/quiz/create.php");
-            });
-            editQuizForm.classList.add('events-listening');
-        }
-        const editQuestionForm = document.querySelector('#question-management + #dialog-edit-question form');
-        if (editQuestionForm?.classList.contains('events-listening') === false) {
-            editQuestionForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                if (editQuestionForm.querySelector('input#form-questionID').value != '')
-                    ModifyQuestion(null, "/php/question/edit.php");
-                else
-                    ModifyQuestion(null, "/php/question/create.php");
-            });
-            editQuestionForm.classList.add('events-listening');
-        }
-        const editSubjectForm = document.querySelector('#subject-management + #dialog-edit-subject form');
-        if (editSubjectForm?.classList.contains('events-listening') === false) {
-            editSubjectForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                if (editSubjectForm.querySelector('input#form-subjectID').value != '')
-                    ModifySubject(null, "/php/subject/edit.php");
-                else
-                    ModifySubject(null, "/php/subject/create.php");
-            });
-            editSubjectForm.classList.add('events-listening');
-        }
+
         // If there has been an error and a field has a red border
         //  then remove it if the input is modified.
         document.querySelectorAll('form .form-input')?.forEach(inputField => {
@@ -418,163 +322,55 @@
             });
         });
 
-        const createQuizBtn = document.querySelector('#quiz-management .table-btns .create');
-        if (createQuizBtn?.classList.contains('events-listening') === false) {
-            createQuizBtn.addEventListener('click', () => {
-                CreateQuiz();
+        const createBtn = section?.querySelector('.table-btns .create');
+        if (createBtn?.classList.contains('events-listening') === false) {
+            createBtn.addEventListener('click', () => {
+                DisplayModel('dialog[data-type="edit"]', [], {
+                    closeAll: true
+                });
+                document.querySelector('#dialog[data-type="edit"] button[type="submit"]').innerHTML = "Create";
             });
-            createQuizBtn.classList.add('events-listening');
-        }
-        const createQuestionBtn = document.querySelector('#question-management .table-btns .create');
-        if (createQuestionBtn?.classList.contains('events-listening') === false) {
-            createQuestionBtn.addEventListener('click', () => {
-                CreateQuestion();
-            });
-            createQuestionBtn.classList.add('events-listening');
-        }
-        const createSubjectBtn = document.querySelector('#subject-management .table-btns .create');
-        if (createSubjectBtn?.classList.contains('events-listening') === false) {
-            createSubjectBtn.addEventListener('click', () => {
-                CreateSubject();
-            });
-            createSubjectBtn.classList.add('events-listening');
+            createBtn.classList.add('events-listening');
         }
 
 
         // Automatiicaly populate table on load
-        const studentManagement = document.getElementById('student-management');
-        const lecturerManagement = document.getElementById('lecturer-management');
-        const quizManagement = document.getElementById('quiz-management');
-        const questionManagement = document.getElementById('question-management');
-        const subjectManagement = document.getElementById('subject-management');
-
-        if (studentManagement != null && studentManagement.classList.contains('loaded') == false) {
-            PopulateTable('student-management', '/php/student/loadtable.php');
-            studentManagement.classList.add('loaded');
-        } else if (lecturerManagement != null && lecturerManagement.classList.contains('loaded') == false) {
-            PopulateTable('lecturer-management', '/php/lecturer/loadtable.php');
-            lecturerManagement.classList.add('loaded');
-        } else if (quizManagement != null && quizManagement.classList.contains('loaded') == false) {
-            PopulateTable('quiz-management', '/php/quiz/loadtable.php');
-            quizManagement.classList.add('loaded');
-        } else if (questionManagement != null && questionManagement.classList.contains('loaded') == false) {
-            PopulateTable('question-management', `/php/question/loadtable.php${location.search}`);
-            questionManagement.classList.add('loaded');
-        } else if (subjectManagement != null && subjectManagement.classList.contains('loaded') == false) {
-            PopulateTable('subject-management', '/php/subject/loadtable.php');
-            subjectManagement.classList.add('loaded');
+        if (section != null && section.classList.contains('loaded') == false) {
+            PopulateTable();
+            section.classList.add('loaded');
         }
-
-        if (document.getElementById('user-management-perpage')?.classList.contains('events-listening') === false) {
-            document.querySelector('#student-management #user-management-perpage')?.addEventListener('change', () => {
+        if (document.getElementById('management-perpage')?.classList.contains('events-listening') === false) {
+            section?.querySelector('#perpage')?.addEventListener('change', () => {
                 SetPerPage();
-                PopulateTable('student-management', '/php/student/loadtable.php');
+                PopulateTable();
             });
-            document.querySelector('#lecturer-management #user-management-perpage')?.addEventListener('change', () => {
-                SetPerPage();
-                PopulateTable('lecturer-management', '/php/lecturer/loadtable.php');
-            });
-            document.querySelector('#quiz-management #user-management-perpage')?.addEventListener('change', () => {
-                SetPerPage();
-                PopulateTable('quiz-management', '/php/quiz/loadtable.php');
-            });
-            document.querySelector('#question-management #user-management-perpage')?.addEventListener('change', () => {
-                SetPerPage();
-                PopulateTable('question-management', '/php/question/loadtable.php');
-            });
-            document.querySelector('#subject-management #user-management-perpage')?.addEventListener('change', () => {
-                SetPerPage();
-                PopulateTable('subject-management', '/php/subject/loadtable.php');
-            });
-            document.getElementById('user-management-perpage').classList.add('events-listening');
+            document.getElementById('perpage').classList.add('events-listening');
         }
         if (document.getElementById('pagination-menu')?.classList.contains('events-listening') === false) {
-            document.querySelectorAll('#student-management #pagination-menu li')?.forEach(btn => {
+            section?.querySelectorAll('#pagination-menu li')?.forEach(btn => {
                 btn.addEventListener('click', () => {
                     SetPagination(btn.dataset.id);
-                    PopulateTable('student-management', '/php/student/loadtable.php');
-                });
-            });
-            document.querySelectorAll('#lecturer-management #pagination-menu li')?.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    SetPagination(btn.dataset.id);
-                    PopulateTable('lecturer-management', '/php/lecturer/loadtable.php');
-                });
-            });
-            document.querySelectorAll('#quiz-management #pagination-menu li')?.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    SetPagination(btn.dataset.id);
-                    PopulateTable('quiz-management', '/php/quiz/loadtable.php');
-                });
-            });
-            document.querySelectorAll('#question-management #pagination-menu li')?.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    SetPagination(btn.dataset.id);
-                    PopulateTable('question-management', '/php/question/loadtable.php');
-                });
-            });
-            document.querySelectorAll('#subject-management #pagination-menu li')?.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    SetPagination(btn.dataset.id);
-                    PopulateTable('subject-management', '/php/subject/loadtable.php');
+                    PopulateTable();
                 });
             });
             document.getElementById('pagination-menu').classList.add('events-listening');
         }
-
-        if (document.querySelector('.pagination')?.classList.contains('events-listening') === false) {
-            document.querySelectorAll('#student-management .pagination .arrow')[0]?.addEventListener('click', () => {
-                SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id - 1);
-                PopulateTable('student-management', '/php/student/loadtable.php');
+        if (section?.querySelector('.pagination')?.classList.contains('events-listening') === false) {
+            section?.querySelectorAll('.pagination .arrow')[0]?.addEventListener('click', () => {
+                SetPagination(+section?.querySelector('#pagination-menu li.active')?.dataset.id - 1);
+                PopulateTable();
             });
-            document.querySelectorAll('#student-management .pagination .arrow')[1]?.addEventListener('click', () => {
-                SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id + 1);
-                PopulateTable('student-management', '/php/student/loadtable.php');
+            section?.querySelectorAll('.pagination .arrow')[1]?.addEventListener('click', () => {
+                SetPagination(+section?.querySelector('#pagination-menu li.active')?.dataset.id + 1);
+                PopulateTable();
             });
-            
-            document.querySelectorAll('#lecturer-management .pagination .arrow')[0]?.addEventListener('click', () => {
-                SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id - 1);
-                PopulateTable('lecturer-management', '/php/lecturer/loadtable.php');
-            });
-            document.querySelectorAll('#lecturer-management .pagination .arrow')[1]?.addEventListener('click', () => {
-                SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id + 1);
-                PopulateTable('lecturer-management', '/php/lecturer/loadtable.php');
-            });
-            
-            document.querySelectorAll('#quiz-management .pagination .arrow')[0]?.addEventListener('click', () => {
-                SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id - 1);
-                PopulateTable('quiz-management', '/php/quiz/loadtable.php');
-            });
-            document.querySelectorAll('#quiz-management .pagination .arrow')[1]?.addEventListener('click', () => {
-                SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id + 1);
-                PopulateTable('quiz-management', '/php/quiz/loadtable.php');
-            });
-            
-            document.querySelectorAll('#question-management .pagination .arrow')[0]?.addEventListener('click', () => {
-                SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id - 1);
-                PopulateTable('question-management', '/php/question/loadtable.php');
-            });
-            document.querySelectorAll('#question-management .pagination .arrow')[1]?.addEventListener('click', () => {
-                SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id + 1);
-                PopulateTable('question-management', '/php/question/loadtable.php');
-            });
-            
-            document.querySelectorAll('#subject-management .pagination .arrow')[0]?.addEventListener('click', () => {
-                SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id - 1);
-                PopulateTable('subject-management', '/php/subject/loadtable.php');
-            });
-            document.querySelectorAll('#subject-management .pagination .arrow')[1]?.addEventListener('click', () => {
-                SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id + 1);
-                PopulateTable('subject-management', '/php/subject/loadtable.php');
-            });
-
-            document.querySelector('.pagination').classList.add('events-listening');
+            section?.querySelector('.pagination').classList.add('events-listening');
         }
 
 
         const linkQuestion = document.getElementById('dialog-link-question');
         if (linkQuestion?.classList.contains('events-listening') === false) {
-            linkQuestion.querySelector('form').addEventListener('submit', (e) => {
+            linkQuestion?.querySelector('form').addEventListener('submit', (e) => {
                 e.preventDefault();
                 SimpleForm([
                     ['questionID', document.getElementById('form-linkQuestionID').value],
@@ -653,39 +449,16 @@
             });
         });
     }
-    function PromoteUser(userid, page) {
-        if (userid == null || page == null) return;
-        if (!confirm("Are you sure you wish to promote this user?")) return;
-        SimpleForm([["userID", userid]], page);
-    }
-    function DemoteUser(userid, page) {
-        if (userid == null || page == null) return;
-        if (!confirm("Are you sure you wish to demote this user?")) return;
-        SimpleForm([["userID", userid]], page);
-    }
-    function DeleteUser(userid, page) {
-        if (userid == null || page == null) return;
-        if (!confirm("Are you sure you wish to delete this user?")) return;
-        SimpleForm([["userID", userid]], page);
-    }
-    function DeleteQuiz(quizid, page) {
-        if (quizid == null || page == null) return;
-        if (!confirm("Are you sure you wish to delete this quiz?")) return;
-        SimpleForm([["quizID", quizid]], page);
-    }
-    function DeleteQuestion(questionid, page) {
-        if (questionid == null || page == null) return;
-        if (!confirm("Are you sure you wish to delete this question?")) return;
-        SimpleForm([["questionID", questionid]], page);
-    }
-    function ModifyUser(userid, page) {
+    function Edit(opt, page) {
         if (page == null) return;
-        document.querySelectorAll(`#dialog-edit-user *[name]`).forEach(input => {
+        document.querySelectorAll(`#dialog[data-type="edit"] *[name]`).forEach(input => {
             input.classList.remove('error');
         });
-        document.querySelector('#dialog-edit-user .error-msg').innerHTML = '';
-        const formData = new FormData(document.querySelector('#dialog-edit-user form'));
-        if (userid != null) formData.append('userID', userid);
+        document.querySelector('#dialog[data-type="edit"] .error-msg').innerHTML = '';
+        const formData = new FormData(document.querySelector('#dialog[data-type="edit"] form'));
+        opt?.forEach(option => {
+            formData.append(option[0], option[1]);
+        });
         fetch(page, {
             method: "POST",
             body: formData,
@@ -703,8 +476,8 @@
             if (data?.type === "refresh") window.location.reload();
             else if (data?.type === "error") {
                 if (data?.input != null) {
-                    document.querySelector(`#dialog-edit-user *[name="${data.input}"]`).classList.add('error');
-                    document.querySelector('#dialog-edit-user .error-msg').innerHTML = data.msg;
+                    document.querySelector(`#dialog[data-type="edit"] *[name="${data.input}"]`).classList.add('error');
+                    document.querySelector('#dialog[data-type="edit"] .error-msg').innerHTML = data.msg;
                 } else {
                     DisplayModel('popup', [
                         ['popup-title', "Error"],
@@ -722,232 +495,21 @@
                     closeAll: true
                 });
             } else if (data?.type === "data") {
-                // Object.keys(data.data).forEach(key => {
-                //     const input = document.querySelector(`#dialog-edit-user *[name="${key}"]`);
-                //     if (input?.type === "radio" || input?.type === "checkbox") {
-                //         document.querySelector(`#dialog-edit-user *[name="${key}"][value="${data[key]}"]`)?.checked = true;
-                //     } else {
-                //         input?.value = data[key];
-                //     }
-                // });
-                // Gonna manually input all this bit for now
-                let stateID = "form-state-";
-                if (data?.data?.state == 'inactive') stateID += '1';
-                else if (data?.data?.state == 'pending') stateID += '2';
-                else if (data?.data?.state == 'active') stateID += '3';
-                DisplayModel('dialog-edit-user', [
-                    ['form-userID', data?.data?.userID],
-                    ['form-firstname', data?.data?.firstname],
-                    ['form-lastname', data?.data?.lastname],
-                    ['form-studentID', data?.data?.studentID],
-                    ['form-email', data?.data?.email],
-                    [stateID, true],
-                ], {
+                const values = [];
+                Object.keys(data.data).forEach(key => {
+                    values.push([`form-${key}`, data.data[key]])
+                });
+                if (data?.data?.state == 'inactive') values.push(['form-state-1', true]);
+                else if (data?.data?.state == 'pending') values.push(['form-state-2', true]);
+                else if (data?.data?.state == 'active') values.push(['form-state-3', true]);
+                if (data?.data?.correctAnswer == '1') values.push(['form-correct-1', true]);
+                else if (data?.data?.correctAnswer == '2') values.push(['form-correct-2', true]);
+                else if (data?.data?.correctAnswer == '3') values.push(['form-correct-3', true]);
+                else if (data?.data?.correctAnswer == '4') values.push(['form-correct-4', true]);
+                DisplayModel('dialog[data-type="edit"]', values, {
                     closeAll: true
                 });
-                document.querySelector('#dialog-edit-user button[type="submit"]').innerHTML = "Edit";
-            }
-        }).catch(error => {
-            if (error === null || error === '') error = "An Unknown Error Occurred";
-            console.error(error);
-            DisplayModel('popup', [
-                ['popup-title', "Error"],
-                ['popup-msg', error]
-            ], {
-                class: "error"
-            });
-        });
-    }
-    function ModifyQuiz(quizid, page) {
-        if (page == null) return;
-        document.querySelectorAll(`#dialog-edit-quiz *[name]`).forEach(input => {
-            input.classList.remove('error');
-        });
-        document.querySelector('#dialog-edit-quiz .error-msg').innerHTML = '';
-        const formData = new FormData(document.querySelector('#dialog-edit-quiz form'));
-        if (quizid != null) formData.append('quizID', quizid);
-        fetch(page, {
-            method: "POST",
-            body: formData,
-        }).then(res => {
-            if (res.status >= 200 && res.status < 300) {
-               return res.text();
-            }
-            throw new Error(res.statusText);
-        }).then(data => {
-            try {
-                data = JSON.parse(data);
-            } catch {
-                throw new Error(data);
-            }
-            if (data?.type === "refresh") window.location.reload();
-            else if (data?.type === "error") {
-                if (data?.input != null) {
-                    document.querySelector(`#dialog-edit-quiz *[name="${data.input}"]`).classList.add('error');
-                    document.querySelector('#dialog-edit-quiz .error-msg').innerHTML = data.msg;
-                } else {
-                    DisplayModel('popup', [
-                        ['popup-title', "Error"],
-                        ['popup-msg', data.msg]
-                    ], {
-                        class: "error"
-                    });
-                }
-            } else if (data?.type === "success") {
-                DisplayModel('popup', [
-                    ['popup-title', "Success"],
-                    ['popup-msg', data.msg]
-                ], {
-                    class: "success",
-                    closeAll: true
-                });
-            } else if (data?.type === "data") {
-                DisplayModel('dialog-edit-quiz', [
-                    ['form-quizID', data?.data?.quizID],
-                    ['form-title', data?.data?.title],
-                    ['form-subject', data?.data?.subjectID],
-                    ['form-available', data?.data?.available],
-                ], {
-                    closeAll: true
-                });
-                document.querySelector('#dialog-edit-quiz button[type="submit"]').innerHTML = "Edit";
-            }
-        }).catch(error => {
-            if (error === null || error === '') error = "An Unknown Error Occurred";
-            console.error(error);
-            DisplayModel('popup', [
-                ['popup-title', "Error"],
-                ['popup-msg', error]
-            ], {
-                class: "error"
-            });
-        });
-    }
-    function ModifyQuestion(questionid, page) {
-        if (page == null) return;
-        document.querySelectorAll(`#dialog-edit-question *[name]`).forEach(input => {
-            input.classList.remove('error');
-        });
-        document.querySelector('#dialog-edit-question .error-msg').innerHTML = '';
-        const formData = new FormData(document.querySelector('#dialog-edit-question form'));
-        if (questionid != null) formData.append('questionID', questionid);
-        fetch(page, {
-            method: "POST",
-            body: formData,
-        }).then(res => {
-            if (res.status >= 200 && res.status < 300) {
-               return res.text();
-            }
-            throw new Error(res.statusText);
-        }).then(data => {
-            try {
-                data = JSON.parse(data);
-            } catch {
-                throw new Error(data);
-            }
-            if (data?.type === "refresh") window.location.reload();
-            else if (data?.type === "error") {
-                if (data?.input != null) {
-                    document.querySelector(`#dialog-edit-question *[name="${data.input}"]`).classList.add('error');
-                    document.querySelector('#dialog-edit-question .error-msg').innerHTML = data.msg;
-                } else {
-                    DisplayModel('popup', [
-                        ['popup-title', "Error"],
-                        ['popup-msg', data.msg]
-                    ], {
-                        class: "error"
-                    });
-                }
-            } else if (data?.type === "success") {
-                DisplayModel('popup', [
-                    ['popup-title', "Success"],
-                    ['popup-msg', data.msg]
-                ], {
-                    class: "success",
-                    closeAll: true
-                });
-            } else if (data?.type === "data") {
-                let correct = "form-correct-";
-                if (data?.data?.correctAnswer == '1') correct += '1';
-                else if (data?.data?.correctAnswer == '2') correct += '2';
-                else if (data?.data?.correctAnswer == '3') correct += '3';
-                else if (data?.data?.correctAnswer == '4') correct += '4';
-                DisplayModel('dialog-edit-question', [
-                    ['form-questionID', data?.data?.questionID],
-                    ['form-question', data?.data?.question],
-                    ['form-subject', data?.data?.subjectID],
-                    [correct, true],
-                    ['form-answerOne', data?.data?.answerOne],
-                    ['form-answerTwo', data?.data?.answerTwo],
-                    ['form-answerThree', data?.data?.answerThree],
-                    ['form-answerFour', data?.data?.answerFour],
-                ], {
-                    closeAll: true
-                });
-                document.querySelector('#dialog-edit-question button[type="submit"]').innerHTML = "Edit";
-            }
-        }).catch(error => {
-            if (error === null || error === '') error = "An Unknown Error Occurred";
-            console.error(error);
-            DisplayModel('popup', [
-                ['popup-title', "Error"],
-                ['popup-msg', error]
-            ], {
-                class: "error"
-            });
-        });
-    }
-    function ModifySubject(subjectid, page) {
-        if (page == null) return;
-        document.querySelectorAll(`#dialog-edit-subject *[name]`).forEach(input => {
-            input.classList.remove('error');
-        });
-        document.querySelector('#dialog-edit-subject .error-msg').innerHTML = '';
-        const formData = new FormData(document.querySelector('#dialog-edit-subject form'));
-        if (subjectid != null) formData.append('subjectID', subjectid);
-        fetch(page, {
-            method: "POST",
-            body: formData,
-        }).then(res => {
-            if (res.status >= 200 && res.status < 300) {
-               return res.text();
-            }
-            throw new Error(res.statusText);
-        }).then(data => {
-            try {
-                data = JSON.parse(data);
-            } catch {
-                throw new Error(data);
-            }
-            if (data?.type === "refresh") window.location.reload();
-            else if (data?.type === "error") {
-                if (data?.input != null) {
-                    document.querySelector(`#dialog-edit-subject *[name="${data.input}"]`).classList.add('error');
-                    document.querySelector('#dialog-edit-subject .error-msg').innerHTML = data.msg;
-                } else {
-                    DisplayModel('popup', [
-                        ['popup-title', "Error"],
-                        ['popup-msg', data.msg]
-                    ], {
-                        class: "error"
-                    });
-                }
-            } else if (data?.type === "success") {
-                DisplayModel('popup', [
-                    ['popup-title', "Success"],
-                    ['popup-msg', data.msg]
-                ], {
-                    class: "success",
-                    closeAll: true
-                });
-            } else if (data?.type === "data") {
-                DisplayModel('dialog-edit-subject', [
-                    ['form-subjectID', data?.data?.subjectID],
-                    ['form-name', data?.data?.name],
-                ], {
-                    closeAll: true
-                });
-                document.querySelector('#dialog-edit-subject button[type="submit"]').innerHTML = "Edit";
+                document.querySelector('#dialog[data-type="edit"] button[type="submit"]').innerHTML = "Edit";
             }
         }).catch(error => {
             if (error === null || error === '') error = "An Unknown Error Occurred";
@@ -961,24 +523,6 @@
         });
     }
 
-    function CreateQuiz() {
-        DisplayModel('dialog-edit-quiz', [], {
-            closeAll: true
-        });
-        document.querySelector('#dialog-edit-quiz button[type="submit"]').innerHTML = "Create";
-    }
-    function CreateQuestion() {
-        DisplayModel('dialog-edit-question', [], {
-            closeAll: true
-        });
-        document.querySelector('#dialog-edit-question button[type="submit"]').innerHTML = "Create";
-    }
-    function CreateSubject() {
-        DisplayModel('dialog-edit-subject', [], {
-            closeAll: true
-        });
-        document.querySelector('#dialog-edit-subject button[type="submit"]').innerHTML = "Create";
-    }
 
     function DisplayModel(id, data = [], options) {
         if (id == null) return;
