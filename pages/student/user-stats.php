@@ -98,11 +98,17 @@ if (!($role == "student")) {
 </head>
 <body>
     <header>
-        <nav>
+    <nav>
             <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Stats</a></li>
-                <li><a href="#">Leaderboards</a></li>
+            <div class="logo">
+            <a>
+                <span>Qu</span><i>?</i><span>z</span>
+            </a>
+            </div>
+            <div class="nav-links">
+                <li><a href="/dashboard">Home</a></li>
+                <li><a href="/stats">Stats</a></li>
+            </div>
                 <li><a href="/logout" class="btn btn-primary logout-button">Logout</a></li>
             </ul>
         </nav>

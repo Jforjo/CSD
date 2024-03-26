@@ -21,8 +21,16 @@
     {
         display: flex;
         list-style-type: none;
-        justify-content: center;
+        justify-content: space-between;
+        align-items: center;
         margin-bottom: 0;
+        padding: 10px;
+    }
+
+    .nav-links
+    {
+        display: flex;
+        font-size: 20px;
     }
 
     nav ul li
@@ -39,6 +47,34 @@
     nav ul li a:hover
     {
         text-decoration: underline;
+    }
+
+    .logo
+    {
+        margin-left: 5px;
+        font-size: 48px;
+        width: 150px;
+        align-self: center;
+    }
+
+    .logo span
+    {
+        
+    }
+
+    .logo a
+    {
+        text-transform: uppercase;
+        text-decoration: none;
+        font-weight: 600;
+        letter-spacing: 2px;
+        cursor: pointer;
+    }
+
+    .logo i
+    {
+        color: #FF799D;
+        font-style: normal;
     }
 
     .logout-button
