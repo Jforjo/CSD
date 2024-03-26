@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="../../style.css">
     <title>Dashboard</title>
 </head>
@@ -60,12 +61,51 @@ if (!($role == "student")) {
    $testsToComplete = array_filter($allTests, function($test) {
        return $test['completed'] == 0;
    });
+
+    //Get the subjects
+    $stmt = $conn->prepare("CALL GetAllSubjects()");
+    $stmt->execute();
+
+    $subjects = $stmt->fetchAll(PDO::FETCH_ASSOC);
     ?>
     <section class="welcome-section">
         <h2 class="welcome-message"><?php echo "Welcome, " . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></h2>
     </section>
     <!-- Main Content of Page (Test Boxes) -->
     <div class="main-content">
+    <div class="createQuizButtonContainer">
+        <button id="createQuizButton">Create Quiz</button>
+    </div>
+    <!-- Modal that appears when button is clicked -->
+    <div id="createQuizModal" class="createQuizModal">
+        <div class="create-quiz-modal-content">
+            <span class="close">&times;</span>
+            <form method="post" action="../../php/studentAssignQuiz.php">
+            <h2>Create Quiz</h2>
+            <p>Select the subject</p>
+            <select name="subject">
+            <option selected disabled>Select a subject</option>
+            <?php foreach ($subjects as $subject): ?>
+                <option value="<?= $subject['subjectID'] ?>"><?= $subject['name'] ?></option>
+            <?php endforeach; ?>
+        </select>
+        <select name="question-amount">
+            <option value="10">10 Questions</option>
+            <option value="15">15 Questions</option>
+            <option value="20">20 Questions</option>
+        </select>
+        <input type="hidden" name="studentID" value="<?= $studentID ?>">
+            <input type="submit" class="createQuizConfirmButton" value="Create">
+        </form>
+        </div>
+    </div>
+    <!-- Modal that appears after a quiz has successfully been created -->
+    <div id="successModal" class="successModal">
+    <div class="success-modal-content">
+        <p>Quiz successfully created!</p>
+        <button id="successButton">OK</button>
+    </div>
+    </div>
     <!-- Tests to complete section -->
     <section>
         <h2 class="section-title">Tests to complete</h2>
@@ -130,5 +170,46 @@ if (!($role == "student")) {
     </section>
     </div>
     <footer>Footer</footer>
+    <script>
+    var modal = document.getElementById("createQuizModal");
+    var btn = document.getElementById("createQuizButton");
+    var span = document.getElementsByClassName("close")[0];
+    btn.onclick = function() {
+        modal.style.display = "flex";
+    }
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+<script>
+$(document).ready(function(){
+    $("form").on("submit", function(event){
+        event.preventDefault();
+
+        $.ajax({
+            url: "../../php/studentAssignQuiz.php",
+            type: "post",
+            data: $(this).serialize(),
+            success: function(response){
+                //Close the create quiz modal
+                document.getElementById('createQuizModal').style.display = 'none';
+
+                //Open the success modal
+                document.getElementById('successModal').style.display = 'flex';
+            },
+        });
+    });
+
+    //Add an event listener to the OK button that refreshes the page when clicked
+    document.getElementById('successButton').addEventListener('click', function() {
+        location.reload();
+    });
+});
+</script>
 </body>
 </html>
