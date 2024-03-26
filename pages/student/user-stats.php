@@ -1,12 +1,13 @@
     <?php 
-    require_once(__DIR__ . '/../../php/dbfuncs.php');
+    //require_once(__DIR__ . '/../../php/dbfuncs.php');
+    require_once('../../php/connection.php');
     session_start();
 
     $userID = $_SESSION["userID"];
     $conn = newConn();
 
     //Check to see if user is logged in, if not then redirect to login page
-    if (!isset($_SESSION['userID']))
+    /*if (!isset($_SESSION['userID']))
     {
         header("Location: /login");
         exit();    
@@ -16,7 +17,7 @@
     $role = GetUserRole($_SESSION['userID']);
 if (!($role == "student")) {
     die("You do not have permission to view this page.");
-}
+}*/
 
     //Get the logged in user's details, things like the first name and studentID
     $stmt = $conn->prepare("CALL GetStudentData(:userID)");
@@ -88,12 +89,12 @@ if (!($role == "student")) {
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script defer src="graph.js"></script>
+    <script defer src="../../graph.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.0.0-rc.7/html2canvas.min.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../../style.css">
 </head>
 <body>
     <header>

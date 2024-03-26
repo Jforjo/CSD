@@ -20,14 +20,15 @@
         </nav>
     </header>
     <?php 
-    require_once(__DIR__ . '/../../php/dbfuncs.php');
+    //require_once(__DIR__ . '/../../php/dbfuncs.php');
+    require_once('../../php/connection.php');
     session_start();
 
     $userID = $_SESSION["userID"];
     $conn = newConn();
 
     //Check to see if user is logged in, if not then redirect to login page
-    if (!isset($_SESSION['userID']))
+    /*if (!isset($_SESSION['userID']))
     {
         header("Location: /login");
         exit();    
@@ -37,7 +38,7 @@
     $role = GetUserRole($_SESSION['userID']);
 if (!($role == "student")) {
     die("You do not have permission to view this page.");
-}
+}*/
 
     //Get the logged in user's details, things like the first name and studentID
     $stmt = $conn->prepare("CALL GetStudentData(:userID)");
@@ -80,7 +81,7 @@ if (!($role == "student")) {
     <div id="createQuizModal" class="createQuizModal">
         <div class="create-quiz-modal-content">
             <span class="close">&times;</span>
-            <form method="post" action="../../php/studentAssignQuiz.php">
+            <form id="createQuizForm" method="post" action="../../php/studentAssignQuiz.php">
             <h2>Create Quiz</h2>
             <p>Select the subject</p>
             <select name="subject">
@@ -188,7 +189,7 @@ if (!($role == "student")) {
 </script>
 <script>
 $(document).ready(function(){
-    $("form").on("submit", function(event){
+    $("#createQuizForm").on("submit", function(event){
         event.preventDefault();
 
         $.ajax({
