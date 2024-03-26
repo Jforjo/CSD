@@ -226,7 +226,7 @@
                 // Absolutely no idea why it doesn't work without this line
                 // It just doesn't seem to pass the button value without it
                 formData.append(e.submitter.name, e.submitter.value);
-                fetch('/php/acceptstudent.php', {
+                fetch('/php/student/accept.php', {
                     method: "POST",
                     body: formData,
                 }).then(res => {
@@ -284,36 +284,36 @@
         document.querySelectorAll('#student-management .table tr')?.forEach(tableRow => {
             if (tableRow.classList.contains('events-listening') != false) return;
             tableRow.querySelector('.icons .table-edit-btn')?.addEventListener('click', () => {
-                ModifyUser(tableRow?.dataset?.userid, "/php/getstudentdata.php");
+                ModifyUser(tableRow?.dataset?.userid, "/php/student/getdata.php");
             });
             tableRow.querySelector('.icons .table-delete-btn')?.addEventListener('click', () => {
-                DeleteUser(tableRow?.dataset?.userid, "/php/deletestudent.php");
+                DeleteUser(tableRow?.dataset?.userid, "/php/student/delete.php");
             });
             tableRow.querySelector('.icons .table-promote-btn')?.addEventListener('click', () => {
-                PromoteUser(tableRow?.dataset?.userid, "/php/promotestudent.php");
+                PromoteUser(tableRow?.dataset?.userid, "/php/student/promote.php");
             });
             tableRow.classList.add('events-listening');
         });
         document.querySelectorAll('#lecturer-management .table tr')?.forEach(tableRow => {
             if (tableRow.classList.contains('events-listening') != false) return;
             tableRow.querySelector('.icons .table-edit-btn')?.addEventListener('click', () => {
-                ModifyUser(tableRow?.dataset?.userid, "/php/getlecturerdata.php");
+                ModifyUser(tableRow?.dataset?.userid, "/php/lecturer/getdata.php");
             });
             tableRow.querySelector('.icons .table-delete-btn')?.addEventListener('click', () => {
-                DeleteUser(tableRow?.dataset?.userid, "/php/deletelecturer.php");
+                DeleteUser(tableRow?.dataset?.userid, "/php/lecturer/delete.php");
             });
             tableRow.querySelector('.icons .table-demote-btn')?.addEventListener('click', () => {
-                DemoteUser(tableRow?.dataset?.userid, "/php/demotelecturer.php");
+                DemoteUser(tableRow?.dataset?.userid, "/php/lecturer/demote.php");
             });
             tableRow.classList.add('events-listening');
         });
         document.querySelectorAll('#quiz-management .table tr')?.forEach(tableRow => {
             if (tableRow.classList.contains('events-listening') != false) return;
             tableRow.querySelector('.icons .table-edit-btn')?.addEventListener('click', () => {
-                ModifyQuiz(tableRow?.dataset?.quizid, "/php/getquizdata.php");
+                ModifyQuiz(tableRow?.dataset?.quizid, "/php/quiz/getdata.php");
             });
             tableRow.querySelector('.icons .table-delete-btn')?.addEventListener('click', () => {
-                DeleteQuiz(tableRow?.dataset?.quizid, "/php/deletequiz.php");
+                DeleteQuiz(tableRow?.dataset?.quizid, "/php/quiz/delete.php");
             });
             tableRow.querySelector('.icons .table-assignquiz-btn')?.addEventListener('click', () => {
                 DisplayModel('dialog-assign-quiz', [
@@ -327,10 +327,10 @@
         document.querySelectorAll('#question-management .table tr')?.forEach(tableRow => {
             if (tableRow.classList.contains('events-listening') != false) return;
             tableRow.querySelector('.icons .table-edit-btn')?.addEventListener('click', () => {
-                ModifyQuestion(tableRow?.dataset?.questionid, "/php/getquestiondata.php");
+                ModifyQuestion(tableRow?.dataset?.questionid, "/php/question/getdata.php");
             });
             tableRow.querySelector('.icons .table-delete-btn')?.addEventListener('click', () => {
-                DeleteQuestion(tableRow?.dataset?.questionid, "/php/deletequestion.php");
+                DeleteQuestion(tableRow?.dataset?.questionid, "/php/question/delete.php");
             });
             tableRow.querySelector('.icons .table-linkquiz-btn')?.addEventListener('click', () => {
                 DisplayModel('dialog-link-question', [
@@ -353,7 +353,7 @@
         document.querySelectorAll('#subject-management .table tr')?.forEach(tableRow => {
             if (tableRow.classList.contains('events-listening') != false) return;
             tableRow.querySelector('.icons .table-edit-btn')?.addEventListener('click', () => {
-                ModifySubject(tableRow?.dataset?.subjectid, "/php/getsubjectdata.php");
+                ModifySubject(tableRow?.dataset?.subjectid, "/php/subject/getdata.php");
             });
             tableRow.classList.add('events-listening');
         });
@@ -361,7 +361,7 @@
         if (editStudentForm?.classList.contains('events-listening') === false) {
             editStudentForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                ModifyUser(null, "/php/editstudent.php");
+                ModifyUser(null, "/php/student/edit.php");
             });
             editStudentForm.classList.add('events-listening');
         }
@@ -369,7 +369,7 @@
         if (editLecturerForm?.classList.contains('events-listening') === false) {
             editLecturerForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                ModifyUser(null, "/php/editlecturer.php");
+                ModifyUser(null, "/php/lecturer/edit.php");
             });
             editLecturerForm.classList.add('events-listening');
         }
@@ -378,9 +378,9 @@
             editQuizForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 if (editQuizForm.querySelector('input#form-quizID').value != '')
-                    ModifyQuiz(null, "/php/editquiz.php");
+                    ModifyQuiz(null, "/php/quiz/edit.php");
                 else
-                    ModifyQuiz(null, "/php/createquiz.php");
+                    ModifyQuiz(null, "/php/quiz/create.php");
             });
             editQuizForm.classList.add('events-listening');
         }
@@ -389,9 +389,9 @@
             editQuestionForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 if (editQuestionForm.querySelector('input#form-questionID').value != '')
-                    ModifyQuestion(null, "/php/editquestion.php");
+                    ModifyQuestion(null, "/php/question/edit.php");
                 else
-                    ModifyQuestion(null, "/php/createquestion.php");
+                    ModifyQuestion(null, "/php/question/create.php");
             });
             editQuestionForm.classList.add('events-listening');
         }
@@ -400,9 +400,9 @@
             editSubjectForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 if (editSubjectForm.querySelector('input#form-subjectID').value != '')
-                    ModifySubject(null, "/php/editsubject.php");
+                    ModifySubject(null, "/php/subject/edit.php");
                 else
-                    ModifySubject(null, "/php/createsubject.php");
+                    ModifySubject(null, "/php/subject/create.php");
             });
             editSubjectForm.classList.add('events-listening');
         }
@@ -449,42 +449,42 @@
         const subjectManagement = document.getElementById('subject-management');
 
         if (studentManagement != null && studentManagement.classList.contains('loaded') == false) {
-            PopulateTable('student-management', '/php/loadstudenttable.php');
+            PopulateTable('student-management', '/php/student/loadtable.php');
             studentManagement.classList.add('loaded');
         } else if (lecturerManagement != null && lecturerManagement.classList.contains('loaded') == false) {
-            PopulateTable('lecturer-management', '/php/loadlecturertable.php');
+            PopulateTable('lecturer-management', '/php/lecturer/loadtable.php');
             lecturerManagement.classList.add('loaded');
         } else if (quizManagement != null && quizManagement.classList.contains('loaded') == false) {
-            PopulateTable('quiz-management', '/php/loadquiztable.php');
+            PopulateTable('quiz-management', '/php/quiz/loadtable.php');
             quizManagement.classList.add('loaded');
         } else if (questionManagement != null && questionManagement.classList.contains('loaded') == false) {
-            PopulateTable('question-management', `/php/loadquestiontable.php${location.search}`);
+            PopulateTable('question-management', `/php/question/loadtable.php${location.search}`);
             questionManagement.classList.add('loaded');
         } else if (subjectManagement != null && subjectManagement.classList.contains('loaded') == false) {
-            PopulateTable('subject-management', '/php/loadsubjecttable.php');
+            PopulateTable('subject-management', '/php/subject/loadtable.php');
             subjectManagement.classList.add('loaded');
         }
 
         if (document.getElementById('user-management-perpage')?.classList.contains('events-listening') === false) {
             document.querySelector('#student-management #user-management-perpage')?.addEventListener('change', () => {
                 SetPerPage();
-                PopulateTable('student-management', '/php/loadstudenttable.php');
+                PopulateTable('student-management', '/php/student/loadtable.php');
             });
             document.querySelector('#lecturer-management #user-management-perpage')?.addEventListener('change', () => {
                 SetPerPage();
-                PopulateTable('lecturer-management', '/php/loadlecturertable.php');
+                PopulateTable('lecturer-management', '/php/lecturer/loadtable.php');
             });
             document.querySelector('#quiz-management #user-management-perpage')?.addEventListener('change', () => {
                 SetPerPage();
-                PopulateTable('quiz-management', '/php/loadquiztable.php');
+                PopulateTable('quiz-management', '/php/quiz/loadtable.php');
             });
             document.querySelector('#question-management #user-management-perpage')?.addEventListener('change', () => {
                 SetPerPage();
-                PopulateTable('question-management', '/php/loadquestiontable.php');
+                PopulateTable('question-management', '/php/question/loadtable.php');
             });
             document.querySelector('#subject-management #user-management-perpage')?.addEventListener('change', () => {
                 SetPerPage();
-                PopulateTable('subject-management', '/php/loadsubjecttable.php');
+                PopulateTable('subject-management', '/php/subject/loadtable.php');
             });
             document.getElementById('user-management-perpage').classList.add('events-listening');
         }
@@ -492,31 +492,31 @@
             document.querySelectorAll('#student-management #pagination-menu li')?.forEach(btn => {
                 btn.addEventListener('click', () => {
                     SetPagination(btn.dataset.id);
-                    PopulateTable('student-management', '/php/loadstudenttable.php');
+                    PopulateTable('student-management', '/php/student/loadtable.php');
                 });
             });
             document.querySelectorAll('#lecturer-management #pagination-menu li')?.forEach(btn => {
                 btn.addEventListener('click', () => {
                     SetPagination(btn.dataset.id);
-                    PopulateTable('lecturer-management', '/php/loadlecturertable.php');
+                    PopulateTable('lecturer-management', '/php/lecturer/loadtable.php');
                 });
             });
             document.querySelectorAll('#quiz-management #pagination-menu li')?.forEach(btn => {
                 btn.addEventListener('click', () => {
                     SetPagination(btn.dataset.id);
-                    PopulateTable('quiz-management', '/php/loadquiztable.php');
+                    PopulateTable('quiz-management', '/php/quiz/loadtable.php');
                 });
             });
             document.querySelectorAll('#question-management #pagination-menu li')?.forEach(btn => {
                 btn.addEventListener('click', () => {
                     SetPagination(btn.dataset.id);
-                    PopulateTable('question-management', '/php/loadquestiontable.php');
+                    PopulateTable('question-management', '/php/question/loadtable.php');
                 });
             });
             document.querySelectorAll('#subject-management #pagination-menu li')?.forEach(btn => {
                 btn.addEventListener('click', () => {
                     SetPagination(btn.dataset.id);
-                    PopulateTable('subject-management', '/php/loadsubjecttable.php');
+                    PopulateTable('subject-management', '/php/subject/loadtable.php');
                 });
             });
             document.getElementById('pagination-menu').classList.add('events-listening');
@@ -525,47 +525,47 @@
         if (document.querySelector('.pagination')?.classList.contains('events-listening') === false) {
             document.querySelectorAll('#student-management .pagination .arrow')[0]?.addEventListener('click', () => {
                 SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id - 1);
-                PopulateTable('student-management', '/php/loadstudenttable.php');
+                PopulateTable('student-management', '/php/student/loadtable.php');
             });
             document.querySelectorAll('#student-management .pagination .arrow')[1]?.addEventListener('click', () => {
                 SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id + 1);
-                PopulateTable('student-management', '/php/loadstudenttable.php');
+                PopulateTable('student-management', '/php/student/loadtable.php');
             });
             
             document.querySelectorAll('#lecturer-management .pagination .arrow')[0]?.addEventListener('click', () => {
                 SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id - 1);
-                PopulateTable('lecturer-management', '/php/loadlecturertable.php');
+                PopulateTable('lecturer-management', '/php/lecturer/loadtable.php');
             });
             document.querySelectorAll('#lecturer-management .pagination .arrow')[1]?.addEventListener('click', () => {
                 SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id + 1);
-                PopulateTable('lecturer-management', '/php/loadlecturertable.php');
+                PopulateTable('lecturer-management', '/php/lecturer/loadtable.php');
             });
             
             document.querySelectorAll('#quiz-management .pagination .arrow')[0]?.addEventListener('click', () => {
                 SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id - 1);
-                PopulateTable('quiz-management', '/php/loadquiztable.php');
+                PopulateTable('quiz-management', '/php/quiz/loadtable.php');
             });
             document.querySelectorAll('#quiz-management .pagination .arrow')[1]?.addEventListener('click', () => {
                 SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id + 1);
-                PopulateTable('quiz-management', '/php/loadquiztable.php');
+                PopulateTable('quiz-management', '/php/quiz/loadtable.php');
             });
             
             document.querySelectorAll('#question-management .pagination .arrow')[0]?.addEventListener('click', () => {
                 SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id - 1);
-                PopulateTable('question-management', '/php/loadquestiontable.php');
+                PopulateTable('question-management', '/php/question/loadtable.php');
             });
             document.querySelectorAll('#question-management .pagination .arrow')[1]?.addEventListener('click', () => {
                 SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id + 1);
-                PopulateTable('question-management', '/php/loadquestiontable.php');
+                PopulateTable('question-management', '/php/question/loadtable.php');
             });
             
             document.querySelectorAll('#subject-management .pagination .arrow')[0]?.addEventListener('click', () => {
                 SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id - 1);
-                PopulateTable('subject-management', '/php/loadsubjecttable.php');
+                PopulateTable('subject-management', '/php/subject/loadtable.php');
             });
             document.querySelectorAll('#subject-management .pagination .arrow')[1]?.addEventListener('click', () => {
                 SetPagination(+document.querySelector('#pagination-menu li.active')?.dataset.id + 1);
-                PopulateTable('subject-management', '/php/loadsubjecttable.php');
+                PopulateTable('subject-management', '/php/subject/loadtable.php');
             });
 
             document.querySelector('.pagination').classList.add('events-listening');
@@ -600,7 +600,7 @@
                     ['quizID', document.getElementById('form-assignQuizID').value],
                     ['questionCount', document.getElementById('form-questionCount').value],
                     ['students', values],
-                ], "/php/assignquiz.php");
+                ], "/php/quiz/assign.php");
             });
             assignQuiz.classList.add('events-listening');
         }

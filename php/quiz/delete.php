@@ -1,5 +1,5 @@
 <?php session_start();
-require_once('dbfuncs.php');
+require_once('../dbfuncs.php');
 // Checks if they are logged in
 // Header will not work as what it would link to
 //  would be sent to the JavaScript instead of actually
@@ -36,28 +36,25 @@ if (!($role == "lecturer" || $role == "admin")) {
 }
 unset($role);
 
-// Checks if the question's ID to retireve data has been passed to this file
-if (!isset($_POST['questionID'])) die(json_encode(array(
+// Checks if the quiz's ID has been passed to this file
+if (!isset($_POST['quizID'])) die(json_encode(array(
     "type" => "error",
     "msg" => "Invalid POST Quiz ID"
 )));
-// Checks if the passed questionID belongs to a valid user
-if (!CheckQuestionIDExists($_POST['questionID'])) die(json_encode(array(
+// Checks if the passed quizID belongs to a valid quiz
+if (!CheckQuizIDExists($_POST['quizID'])) die(json_encode(array(
     "type" => "error",
     "msg" => "Quiz ID does not exist"
 )));
 
-// Retrieve the question's data from the database
-$queustionData = GetQuestionData($_POST['questionID']);
-// Checks if, for some reason, FALSE was returned
-if ($queustionData === false) die(json_encode(array(
+if (!DeleteQuiz($_POST['quizID'])) die(json_encode(array(
     "type" => "error",
-    "msg" => "An unknown error occurred while retrieving the question's data"
+    "msg" => "Failed to delete the quiz"
 )));
-// Return the question's data
+
 exit(json_encode(array(
-    "type" => "data",
-    "data" => $queustionData
+    "type" => "success",
+    "msg" => "Successfully deleted the quiz"
 )));
 
 ?>

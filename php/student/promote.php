@@ -1,5 +1,5 @@
 <?php session_start();
-require_once('dbfuncs.php');
+require_once('../dbfuncs.php');
 // Checks if they are logged in
 // Header will not work as what it would link to
 //  would be sent to the JavaScript instead of actually
@@ -26,7 +26,7 @@ if (GetUserState($_SESSION['userID']) !== "active") {
 }
 // Checks if they have the correct permissions
 $role = GetUserRole($_SESSION['userID']);
-if (!($role == "lecturer" || $role == "admin")) {
+if ($role != "admin") {
     // They shouldn't have been able to access this file without
     //  these permissions, so log them out just incase.
     DestroySession();
@@ -36,25 +36,35 @@ if (!($role == "lecturer" || $role == "admin")) {
 }
 unset($role);
 
-// Checks if the quiz's ID has been passed to this file
-if (!isset($_POST['quizID'])) die(json_encode(array(
+// Checks if the user's ID has been passed to this file
+if (!isset($_POST['userID'])) die(json_encode(array(
     "type" => "error",
-    "msg" => "Invalid POST Quiz ID"
+    "msg" => "Invalid POST User ID"
 )));
-// Checks if the passed quizID belongs to a valid quiz
-if (!CheckQuizIDExists($_POST['quizID'])) die(json_encode(array(
+// Checks if the passed userID belongs to a valid user
+if (!CheckUserIDExists($_POST['userID'])) die(json_encode(array(
     "type" => "error",
-    "msg" => "Quiz ID does not exist"
+    "msg" => "User ID does not exist"
 )));
+// Checks if the passed userID belongs to a student
+$role = GetUserRole($_POST['userID']);
+if ($role != "student") die(json_encode(array(
+    "type" => "error",
+    "msg" => "You do not have permission to promote this user"
+)));
+unset($role);
 
-if (!DeleteQuiz($_POST['quizID'])) die(json_encode(array(
-    "type" => "error",
-    "msg" => "Failed to delete the quiz"
-)));
+if (!(EditUserRole($_POST['userID'], "lecturer") && DeleteStudent($_POST['userID']))) {
+    EditUserRole($_POST['userID'], "student");
+    die(json_encode(array(
+        "type" => "error",
+        "msg" => "Failed to promote the student"
+    )));
+}
 
 exit(json_encode(array(
     "type" => "success",
-    "msg" => "Successfully deleted the quiz"
+    "msg" => "Successfully promoted the student"
 )));
 
 ?>

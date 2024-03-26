@@ -1,5 +1,5 @@
 <?php session_start();
-require_once('dbfuncs.php');
+require_once('../dbfuncs.php');
 // Checks if they are logged in
 // Header will not work as what it would link to
 //  would be sent to the JavaScript instead of actually
@@ -36,7 +36,7 @@ if ($role != "admin") {
 }
 unset($role);
 
-// Checks if the user's ID has been passed to this file
+// Checks if the user's ID to retireve data has been passed to this file
 if (!isset($_POST['userID'])) die(json_encode(array(
     "type" => "error",
     "msg" => "Invalid POST User ID"
@@ -46,25 +46,28 @@ if (!CheckUserIDExists($_POST['userID'])) die(json_encode(array(
     "type" => "error",
     "msg" => "User ID does not exist"
 )));
-// Checks if the passed userID belongs to a student
+// Checks if the passed userID belongs to a lecturer
 $role = GetUserRole($_POST['userID']);
-if ($role != "student") die(json_encode(array(
+// This will also throw an error if the user's role is a student
+//  even though an admin has edit permissions for them,
+//  but there is a seperate file for getting a student's data.
+if ($role != "lecturer") die(json_encode(array(
     "type" => "error",
-    "msg" => "You do not have permission to promote this user"
+    "msg" => "You do not have permission to view this user"
 )));
 unset($role);
 
-if (!(EditUserRole($_POST['userID'], "lecturer") && DeleteStudent($_POST['userID']))) {
-    EditUserRole($_POST['userID'], "student");
-    die(json_encode(array(
-        "type" => "error",
-        "msg" => "Failed to promote the student"
-    )));
-}
-
+// Retrieve the user's data from the database
+$lecturerData = GetLecturerData($_POST['userID']);
+// Checks if, for some reason, FALSE was returned
+if ($lecturerData === false) die(json_encode(array(
+    "type" => "error",
+    "msg" => "An unknown error occurred while retrieving the user's data"
+)));
+// Return the user's data
 exit(json_encode(array(
-    "type" => "success",
-    "msg" => "Successfully promoted the student"
+    "type" => "data",
+    "data" => $lecturerData
 )));
 
 ?>

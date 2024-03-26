@@ -1,5 +1,5 @@
 <?php session_start();
-require_once('dbfuncs.php');
+require_once('../dbfuncs.php');
 // Checks if they are logged in
 // Header will not work as what it would link to
 //  would be sent to the JavaScript instead of actually
@@ -35,17 +35,6 @@ if (!($role == "lecturer" || $role == "admin")) {
     )));
 }
 unset($role);
-
-// Checks if the question's ID to retireve data has been passed to this file
-if (!isset($_POST['questionID'])) die(json_encode(array(
-    "type" => "error",
-    "msg" => "Invalid POST Question ID"
-)));
-// Checks if the passed questionID belongs to a valid question
-if (!CheckQuestionIDExists($_POST['questionID'])) die(json_encode(array(
-    "type" => "error",
-    "msg" => "Question ID does not exist"
-)));
 
 // Checks if the 'subject' value was passed to the file
 if (!isset($_POST['subject'])) die(json_encode(array(
@@ -131,14 +120,14 @@ if (!isset($_POST['answerFour']) || ctype_space($_POST['answerFour']) || $_POST[
     $answerFour = $_POST['answerFour'];
 }
 
-if (!EditQuestion($_POST['questionID'], $_POST['subject'], $question, $answerOne, $answerTwo, $answerThree, $answerFour, intval($correctAnswer))) die(json_encode(array(
+if (!CreateQuestion($_POST['subject'], $question, $answerOne, $answerTwo, $answerThree, $answerFour, intval($correctAnswer))) die(json_encode(array(
     "type" => "error",
-    "msg" => "Failed to edit the question"
+    "msg" => "Failed to create the question"
 )));
 
 exit(json_encode(array(
     "type" => "success",
-    "msg" => "Successfully edited the question"
+    "msg" => "Successfully created the question"
 )));
 
 ?>
