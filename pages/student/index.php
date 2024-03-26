@@ -19,11 +19,17 @@
                 <span>Qu</span><i>?</i><span>z</span>
             </a>
             </div>
+            <button class="mobile-nav-dropdown">&#9776;</button>
+            <div class="dropdown-links">
+                <a href="/dashboard">Home</a>
+                <a href="/stats">Stats</a>
+                <a href="/logout">Logout</a>
+            </div>
             <div class="nav-links">
                 <li><i class="fas fa-home"></i><a href="/dashboard"> Home</a></li>
                 <li><i class="fas fa-chart-line"></i><a href="/stats"> Stats</a></li>
             </div>
-                <li><a href="/logout" class="btn btn-primary logout-button">Logout</a></li>
+                <li><a href="/logout" class="btn btn-primary logout-button"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
         </nav>
     </header>
@@ -222,6 +228,21 @@ $(document).ready(function(){
     document.getElementById('successButton').addEventListener('click', function() {
         location.reload();
     });
+});
+document.querySelector('.mobile-nav-dropdown').addEventListener('click', function() {
+    var dropdownLinks = document.querySelector('.dropdown-links');
+    if (dropdownLinks.style.display === 'none' || dropdownLinks.style.display === '') {
+        dropdownLinks.style.display = 'block';
+    } else {
+        dropdownLinks.style.display = 'none';
+    }
+});
+
+window.addEventListener('resize', function() {
+    var dropdownLinks = document.querySelector('.dropdown-links');
+    if (window.innerWidth >= 769) {
+        dropdownLinks.style.display = 'none';
+    }
 });
 </script>
 </body>

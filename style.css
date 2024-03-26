@@ -15,6 +15,7 @@
     nav
     {
         background-color: #484848;
+        position: relative;
     }
 
     nav ul 
@@ -75,6 +76,66 @@
     .logout-button
     {
         margin-left: 40px;
+    }
+
+    .mobile-nav-dropdown 
+    {
+        display: none;
+        color: white;
+        background: transparent;
+        font-size: 32px;
+    }
+
+    .dropdown-links
+    {
+        display: none;
+    }
+
+    @media (max-width: 768px) {
+        nav ul {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .mobile-nav-dropdown {
+            display: block;
+            order: 2;
+        }
+
+        .logout-button, .nav-links
+        {
+            display: none;
+        }
+
+        .logo {
+            order: 1;
+            margin: 0 auto;
+        }
+
+        .dropdown-links {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #181818;
+            width: 200px;
+        }
+
+        .dropdown-links a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .dropdown-links a:hover {
+            background: #404040;
+        }
+    }
+
+    @media (min-width: 769px) {
+        .dropdown-links {
+            display: none;
+        }
     }
 
     footer
