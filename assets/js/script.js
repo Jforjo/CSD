@@ -855,6 +855,7 @@
                 DisplayModel('dialog-edit-question', [
                     ['form-questionID', data?.data?.questionID],
                     ['form-question', data?.data?.question],
+                    ['form-subject', data?.data?.subjectID],
                     [correct, true],
                     ['form-answerOne', data?.data?.answerOne],
                     ['form-answerTwo', data?.data?.answerTwo],

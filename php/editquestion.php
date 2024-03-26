@@ -47,6 +47,11 @@ if (!CheckQuestionIDExists($_POST['questionID'])) die(json_encode(array(
     "msg" => "Question ID does not exist"
 )));
 
+// Checks if the 'subject' value was passed to the file
+if (!isset($_POST['subject'])) die(json_encode(array(
+    "type" => "error",
+    "msg" => "Invalid POST subject"
+)));
 // Checks if the 'question' value was passed to the file
 if (!isset($_POST['question'])) die(json_encode(array(
     "type" => "error",
@@ -68,6 +73,11 @@ if (!isset($_POST['answerTwo'])) die(json_encode(array(
     "msg" => "Invalid POST answerTwo"
 )));
 
+// Checks if the passed subject belongs to a valid subject
+if (!CheckSubjectIDExists($_POST['subject'])) die(json_encode(array(
+    "type" => "error",
+    "msg" => "A subject with that ID does not exists"
+)));
 // Checks if the 'question' is NULL or empty
 $question = $_POST['question'];
 if (ctype_space($question) || $question == '') die(json_encode(array(
@@ -121,7 +131,7 @@ if (!isset($_POST['answerFour']) || ctype_space($_POST['answerFour']) || $_POST[
     $answerFour = $_POST['answerFour'];
 }
 
-if (!EditQuestion($_POST['questionID'], $question, $answerOne, $answerTwo, $answerThree, $answerFour, intval($correctAnswer))) die(json_encode(array(
+if (!EditQuestion($_POST['questionID'], $_POST['subject'], $question, $answerOne, $answerTwo, $answerThree, $answerFour, intval($correctAnswer))) die(json_encode(array(
     "type" => "error",
     "msg" => "Failed to edit the question"
 )));

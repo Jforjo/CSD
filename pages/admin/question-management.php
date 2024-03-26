@@ -95,6 +95,11 @@ $questionCount = GetQuestionCount($quizID);
     </div>
 </section>
 
+<?php
+$subjects = GetAllSubjects();
+$subjectCount = count($subjects);
+
+?>
 <dialog id="dialog-edit-question" aria-modal="true">
     <form method="dialog">
         <fieldset>
@@ -103,6 +108,19 @@ $questionCount = GetQuestionCount($quizID);
             <div class="form-input">
                 <label for="form-question">Question<i aria-hidden="true">*</i></label>
                 <textarea type="text" name="question" id="form-question" required></textarea>
+            </div>
+            <div class="form-input">
+                <label for="form-subject">Subject<i aria-hidden="true">*</i></label>
+                <select name="subject" id="form-subject" <?php if ($subjectCount == 0) echo "disabled"; ?>>
+                    <?php if ($subjectCount == 0) { ?>
+                        <option selected>None Available</option>
+                    <?php } else { ?>
+                        <option disabled>Select an option</option>
+                        <?php foreach ($subjects as $subject) { ?>
+                            <option value="<?php echo $subject['subjectID']; ?>"><?php echo $subject['name']; ?></option>
+                        <?php } ?>
+                    <?php } ?>
+                </select>
             </div>
             <div class="form-input">
                 <label>Correct Annswer<i aria-hidden="true">*</i></label>

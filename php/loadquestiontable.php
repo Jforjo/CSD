@@ -58,7 +58,7 @@ $questionCount = count($questions);
 <?php } else { ?>
     <?php foreach($questions as $question) { ?>
     <tr data-questionid="<?php echo $question['questionID']; ?>">
-        <td colspan="12" align="center"><span><?php echo $question['question']; ?></span></td>
+        <td colspan="12" align="center"><span><?php echo $question['question'] . " (" . $question['subject'] . ")"; ?></span></td>
         <td rowspan="2">
             <div class="icons">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="table-edit-btn" title="Edit" aria-label="Edit" aria-haspopup="dialog">
