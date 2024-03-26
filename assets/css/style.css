@@ -71,7 +71,7 @@ body {
         )
     ;
     display: grid;
-    grid-template-columns:
+    /* grid-template-columns:
         [full-width-start navbar-start]
         minmax(200px, 12%)
         [main-start navbar-end header-start]
@@ -79,6 +79,13 @@ body {
         [main-end aside-start]
         minmax(200px, 12%)
         [full-width-end header-end aside-end]
+    ; */
+    grid-template-columns:
+        [full-width-start navbar-start]
+        minmax(200px, 12%)
+        [main-start navbar-end header-start]
+        1fr
+        [full-width-end main-end header-end]
     ;
     grid-template-rows:
         [full-height-start header-row-start]
@@ -131,7 +138,7 @@ body > header .search {
     gap: 2px;
     background: rgb(var(--elevate-1));
     border-radius: 28px;
-    min-width: 256px;
+    /* min-width: 256px; */
     height: 48px;
     z-index: 1;
     transition: min-width 0.5s;
@@ -325,9 +332,7 @@ body > nav .top > a i {
             56px
             [main-start navbar-end header-start]
             1fr
-            [main-end aside-start]
-            minmax(200px, 12%)
-            [full-width-end header-end aside-end]
+            [full-width-end main-end header-end]
         ;
     }
     body > nav .top > a span {
@@ -1206,3 +1211,28 @@ dialog#popup > form footer menu button:hover {
     }
 }
 
+
+
+
+
+@media (max-width: 512px) {
+    body {
+        grid-template-rows:
+            [full-height-start header-row-start]
+            64px
+            [header-row-end main-row-start]
+            1fr
+            [full-height-end main-row-end]
+        ;
+    }
+    body > header {
+        height: 64px;
+        padding: 16px;
+    }
+    body > nav .top {
+        height: 64px;
+    }
+    body > main {
+        padding: 0;
+    }
+}
