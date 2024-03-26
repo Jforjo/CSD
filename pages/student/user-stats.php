@@ -106,8 +106,8 @@ if (!($role == "student")) {
             </a>
             </div>
             <div class="nav-links">
-                <li><a href="/dashboard">Home</a></li>
-                <li><a href="/stats">Stats</a></li>
+                <li><i class="fas fa-home"></i><a href="/dashboard"> Home</a></li>
+                <li><i class="fas fa-chart-line"></i><a href="/stats"> Stats</a></li>
             </div>
                 <li><a href="/logout" class="btn btn-primary logout-button">Logout</a></li>
             </ul>

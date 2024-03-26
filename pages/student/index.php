@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    
     <link rel="stylesheet" href="../../style.css">
     <title>Dashboard</title>
 </head>
@@ -18,8 +20,8 @@
             </a>
             </div>
             <div class="nav-links">
-                <li><a href="/dashboard">Home</a></li>
-                <li><a href="/stats">Stats</a></li>
+                <li><i class="fas fa-home"></i><a href="/dashboard"> Home</a></li>
+                <li><i class="fas fa-chart-line"></i><a href="/stats"> Stats</a></li>
             </div>
                 <li><a href="/logout" class="btn btn-primary logout-button">Logout</a></li>
             </ul>
@@ -137,8 +139,12 @@ if (!($role == "student")) {
                 $result = $stmt->fetch();
                 $questionCount = $result['questionCount'];
                 ?>
+                <div class="num-of-questions-label">
                 <h6><?php echo $questionCount; ?> Questions</h6>
+                </div>
+                <div class="date-set-label">
                 <h6><?php echo date('d/m/Y', strtotime($test['dateSet'])); ?></h6>
+                </div>
                 <form method="POST" action="testing-page.php">
                     <input type="hidden" name="quizID" value="<?php echo htmlspecialchars($test['quizID'], ENT_QUOTES, 'UTF-8'); ?>">
                     <input type="hidden" name="studentQuizLinkID" value="<?php echo htmlspecialchars($test['studentQuizLinkID'], ENT_QUOTES, 'UTF-8'); ?>">
