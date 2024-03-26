@@ -222,16 +222,24 @@
         if (recentStudent != null && recentStudent.classList.contains('events-listening') === false) {
             recentStudent.addEventListener('submit', (e) => {
                 e.preventDefault();
+                const formData = new FormData(e.target);
+                // Absolutely no idea why it doesn't work without this line
+                // It just doesn't seem to pass the button value without it
+                formData.append(e.submitter.name, e.submitter.value);
                 fetch('/php/acceptstudent.php', {
                     method: "POST",
-                    body: new FormData(e.target),
+                    body: formData,
                 }).then(res => {
                     if (res.status >= 200 && res.status < 300) {
                        return res.text();
                     }
                     throw new Error(res.statusText);
                 }).then(data => {
-                    data = JSON.parse(data);
+                    try {
+                        data = JSON.parse(data);
+                    } catch {
+                        throw new Error(data);
+                    }
                     if (data?.type === "refresh") window.location.reload();
                     else if (data?.type === "error") {
                         DisplayModel('popup', [
@@ -687,7 +695,11 @@
             }
             throw new Error(res.statusText);
         }).then(data => {
-            data = JSON.parse(data);
+            try {
+                data = JSON.parse(data);
+            } catch {
+                throw new Error(data);
+            }
             if (data?.type === "refresh") window.location.reload();
             else if (data?.type === "error") {
                 if (data?.input != null) {
@@ -763,7 +775,11 @@
             }
             throw new Error(res.statusText);
         }).then(data => {
-            data = JSON.parse(data);
+            try {
+                data = JSON.parse(data);
+            } catch {
+                throw new Error(data);
+            }
             if (data?.type === "refresh") window.location.reload();
             else if (data?.type === "error") {
                 if (data?.input != null) {
@@ -824,7 +840,11 @@
             }
             throw new Error(res.statusText);
         }).then(data => {
-            data = JSON.parse(data);
+            try {
+                data = JSON.parse(data);
+            } catch {
+                throw new Error(data);
+            }
             if (data?.type === "refresh") window.location.reload();
             else if (data?.type === "error") {
                 if (data?.input != null) {
@@ -894,7 +914,11 @@
             }
             throw new Error(res.statusText);
         }).then(data => {
-            data = JSON.parse(data);
+            try {
+                data = JSON.parse(data);
+            } catch {
+                throw new Error(data);
+            }
             if (data?.type === "refresh") window.location.reload();
             else if (data?.type === "error") {
                 if (data?.input != null) {
