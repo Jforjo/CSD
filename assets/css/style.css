@@ -1053,7 +1053,10 @@ dialog > form fieldset .form-input input {
     color: rgb(var(--text));
 }
 dialog > form fieldset .form-input select option {
-    color: rgb(var(--background));
+    background-color: rgb(var(--elevate-4));
+}
+dialog > form fieldset .form-input select[multiple] option {
+    background-color: transparent;
 }
 dialog > form fieldset .form-input.error > select,
 dialog > form fieldset .form-input.error > textarea,

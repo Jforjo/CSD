@@ -123,7 +123,7 @@
                 data = JSON.parse(data);
                 if (data?.type === "refresh") window.location.reload();
                 else if (data?.type === "error") {
-                    DisplayModel('popup', [
+                    DisplayModel('#popup', [
                         ['popup-title', "Error"],
                         ['popup-msg', data.msg]
                     ], {
@@ -136,7 +136,7 @@
         }).catch(error => {
             if (error === null || error === '') error = "An Unknown Error Occurred";
             console.error(error);
-            DisplayModel('popup', [
+            DisplayModel('#popup', [
                 ['popup-title', "Error"],
                 ['popup-msg', error]
             ], {
@@ -253,7 +253,9 @@
             section?.querySelectorAll('.table tr')?.forEach(tableRow => {
                 if (tableRow.classList.contains('events-listening') != false) return;
                 tableRow.querySelector('.icons .table-edit-btn')?.addEventListener('click', () => {
-                    Edit(tableRow?.dataset?.id, `/php/${section.dataset.type}/getdata.php`);
+                    Edit([
+                        [`${section.dataset.type}ID`, tableRow?.dataset?.id]
+                    ], `/php/${section.dataset.type}/getdata.php`);
                 });
                 tableRow.querySelector('.icons .table-delete-btn')?.addEventListener('click', () => {
                     if (!confirm(`Are you sure you wish to delete this ${section.dataset.type}?`)) return;
@@ -268,16 +270,16 @@
                     SimpleForm([[`${section.dataset.type}ID`, tableRow?.dataset?.id]], `/php/${section.dataset.type}/demote.php`);
                 });
                 tableRow.querySelector('.icons .table-assignquiz-btn')?.addEventListener('click', () => {
-                    DisplayModel('dialog-assign-quiz', [
-                        ['form-assignQuizID', tableRow?.dataset?.quizid]
+                    DisplayModel('#dialog-assign-quiz', [
+                        ['form-assignQuizID', tableRow?.dataset?.id]
                     ], {
                         closeAll: true
                     });
                 });
                 tableRow.querySelector('.icons .table-linkquiz-btn')?.addEventListener('click', () => {
-                    DisplayModel('dialog-link-question', [
+                    DisplayModel('#dialog-link-question', [
                         ['form-linkQuestion', tableRow.querySelector('td').innerText],
-                        ['form-linkQuestionID', tableRow?.dataset?.questionid]
+                        ['form-linkQuestionID', tableRow?.dataset?.id]
                     ], {
                         closeAll: true
                     });
@@ -287,19 +289,19 @@
                     let urlparams = new URLSearchParams(location.search);
                     SimpleForm([
                         ["quizID", urlparams.get('quiz')],
-                        ["questionID", tableRow?.dataset?.questionid]
+                        ["questionID", tableRow?.dataset?.id]
                     ], "/php/deletequizquestionlink.php");
                 });
                 tableRow.classList.add('events-listening');
             });
         }
-        const dialog = document.querySelector('section.management + #dialog[data-type="edit"] form');
+        const dialog = document.querySelector('section.management + dialog[data-type="edit"] form');
         if (dialog?.classList.contains('events-listening') === false) {
             const creation = ["quiz", "question", "subject"];
             dialog.addEventListener('submit', (e) => {
                 e.preventDefault();
                 if (creation.includes(section.dataset.type)) {
-                    if (editQuizForm.querySelector(`input#form-${section.dataset.type}ID`).value != '')
+                    if (dialog.querySelector(`input#form-${section.dataset.type}ID`).value != '')
                         Edit(null, `/php/${section.dataset.type}/edit.php`);
                     else
                         Edit(null, `/php/${section.dataset.type}/create.php`);
@@ -328,7 +330,7 @@
                 DisplayModel('dialog[data-type="edit"]', [], {
                     closeAll: true
                 });
-                document.querySelector('#dialog[data-type="edit"] button[type="submit"]').innerHTML = "Create";
+                document.querySelector('dialog[data-type="edit"] button[type="submit"]').innerHTML = "Create";
             });
             createBtn.classList.add('events-listening');
         }
@@ -423,14 +425,14 @@
             }
             if (data?.type === "refresh") window.location.reload();
             else if (data?.type === "error") {
-                DisplayModel('popup', [
+                DisplayModel('#popup', [
                     ['popup-title', "Error"],
                     ['popup-msg', data.msg]
                 ], {
                     class: "error"
                 });
             } else if (data?.type === "success") {
-                DisplayModel('popup', [
+                DisplayModel('#popup', [
                     ['popup-title', "Success"],
                     ['popup-msg', data.msg]
                 ], {
@@ -441,7 +443,7 @@
         }).catch(error => {
             if (error === null || error === '') error = "An Unknown Error Occurred";
             console.error(error);
-            DisplayModel('popup', [
+            DisplayModel('#popup', [
                 ['popup-title', "Error"],
                 ['popup-msg', error]
             ], {
@@ -451,12 +453,12 @@
     }
     function Edit(opt, page) {
         if (page == null) return;
-        document.querySelectorAll(`#dialog[data-type="edit"] *[name]`).forEach(input => {
+        document.querySelectorAll(`dialog[data-type="edit"] *[name]`).forEach(input => {
             input.classList.remove('error');
         });
-        document.querySelector('#dialog[data-type="edit"] .error-msg').innerHTML = '';
-        const formData = new FormData(document.querySelector('#dialog[data-type="edit"] form'));
-        opt?.forEach(option => {
+        document.querySelector('dialog[data-type="edit"] .error-msg').innerHTML = '';
+        const formData = new FormData(document.querySelector('dialog[data-type="edit"] form'));
+        Array.isArray(opt) && opt?.forEach(option => {
             formData.append(option[0], option[1]);
         });
         fetch(page, {
@@ -476,10 +478,10 @@
             if (data?.type === "refresh") window.location.reload();
             else if (data?.type === "error") {
                 if (data?.input != null) {
-                    document.querySelector(`#dialog[data-type="edit"] *[name="${data.input}"]`).classList.add('error');
-                    document.querySelector('#dialog[data-type="edit"] .error-msg').innerHTML = data.msg;
+                    document.querySelector(`dialog[data-type="edit"] *[name="${data.input}"]`).classList.add('error');
+                    document.querySelector('dialog[data-type="edit"] .error-msg').innerHTML = data.msg;
                 } else {
-                    DisplayModel('popup', [
+                    DisplayModel('#popup', [
                         ['popup-title', "Error"],
                         ['popup-msg', data.msg]
                     ], {
@@ -487,7 +489,7 @@
                     });
                 }
             } else if (data?.type === "success") {
-                DisplayModel('popup', [
+                DisplayModel('#popup', [
                     ['popup-title', "Success"],
                     ['popup-msg', data.msg]
                 ], {
@@ -509,12 +511,12 @@
                 DisplayModel('dialog[data-type="edit"]', values, {
                     closeAll: true
                 });
-                document.querySelector('#dialog[data-type="edit"] button[type="submit"]').innerHTML = "Edit";
+                document.querySelector('dialog[data-type="edit"] button[type="submit"]').innerHTML = "Edit";
             }
         }).catch(error => {
             if (error === null || error === '') error = "An Unknown Error Occurred";
             console.error(error);
-            DisplayModel('popup', [
+            DisplayModel('#popup', [
                 ['popup-title', "Error"],
                 ['popup-msg', error]
             ], {
@@ -526,7 +528,7 @@
 
     function DisplayModel(id, data = [], options) {
         if (id == null) return;
-        const modal = document.getElementById(id);
+        const modal = document.querySelector(id);
         if (modal.tagName !== "DIALOG") return;
         modal.className = '';
         if (options?.closeAll === true) document.querySelectorAll('dialog').forEach(dialog => {
