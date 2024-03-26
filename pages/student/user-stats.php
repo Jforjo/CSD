@@ -210,5 +210,22 @@ $(document).ready(function() {
         }
     }
 </script>
+<script>
+    document.querySelector('.mobile-nav-dropdown').addEventListener('click', function() {
+    var dropdownLinks = document.querySelector('.dropdown-links');
+    if (dropdownLinks.style.display === 'none' || dropdownLinks.style.display === '') {
+        dropdownLinks.style.display = 'block';
+    } else {
+        dropdownLinks.style.display = 'none';
+    }
+});
+
+window.addEventListener('resize', function() {
+    var dropdownLinks = document.querySelector('.dropdown-links');
+    if (window.innerWidth >= 769) {
+        dropdownLinks.style.display = 'none';
+    }
+});
+</script>
 </body>
 </html>

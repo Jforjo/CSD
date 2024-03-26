@@ -791,3 +791,43 @@
         padding: 20px;
         margin: 10px;
     }
+
+    #chart-container,
+    .user-scores,
+    .past-tests {
+    overflow: auto;
+    flex-grow: 1;
+    }
+
+    .exportButtonContainer {
+        order: 2;
+    }
+
+@media (max-width: 767px) {
+    #chart-container,
+    .user-scores,
+    .past-tests {
+        width: 100%;
+    }
+
+    .export-modal-content {
+        width: 80%;
+        max-width: 300px;
+    }
+}
+
+@media (min-width: 768px) {
+    #chart-container {
+        width: 800px;
+        height: 400px;
+    }
+
+    .user-scores,
+    .past-tests {
+        width: 400px;
+    }
+
+    .export-modal-content {
+        width: 300px;
+    }
+}
