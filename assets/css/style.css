@@ -356,13 +356,19 @@ body > main .dashboard-cards {
     position: relative;
     min-height: 100%;
     display: grid;
-    grid-template-areas:
+    /* grid-template-areas:
         'card1 card4'
         'card2 card4'
         'card3 card5'
     ;
     grid-template-columns: 1fr 2fr;
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr; */
+    grid-template-areas:
+        'card1 card2'
+        'card3 card3'
+    ;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 2fr;
 }
 body > main .dashboard-cards .card {
     background-color: rgb(var(--elevate-2));
@@ -383,27 +389,18 @@ body > main .dashboard-cards .card:nth-child(2) {
 }
 body > main .dashboard-cards .card:nth-child(3) {
     grid-area: card3;
-}
-body > main .dashboard-cards .card:nth-child(4) {
-    grid-area: card4;
     /* min-height: 512px; */
     /* max-height: unset; */
 }
-body > main .dashboard-cards .card:nth-child(5) {
-    grid-area: card5;
-}
-@media (max-width: 1200px) {
+@media (max-width: 800px) {
     body > main .dashboard-cards {
         grid-template-areas:
-            'card1 card3'
-            'card4 card4'
-            'card5 card5'
+            'card1'
+            'card2'
+            'card3'
         ;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr 2fr 1fr;
-    }
-    body > main .dashboard-cards .card:nth-child(2) {
-        display: none;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 2fr;
     }
 }
 body > main .dashboard-cards .card h2 {

@@ -84,11 +84,6 @@ $inactiveStudentCount = GetInactiveStudentCount();
         <?php }?>
     </div>
     <div class="card">
-        <h2>Demo<i></i></h2>
-        <h3>N/A</h3>
-        <div class="loader-bar"><i></i></div>
-    </div>
-    <div class="card">
         <h2>Quiz results<i></i></h2>
         <div class="bar-chart bar-chart-align-right">
             <div class="bar-chart-graph">
@@ -111,7 +106,9 @@ $inactiveStudentCount = GetInactiveStudentCount();
             </div>
         </div>
     </div>
-    <div class="card">
-
-    </div>
+    <!-- <div class="card">
+        <h2>Demo<i></i></h2>
+        <h3>N/A</h3>
+        <div class="loader-bar"><i></i></div>
+    </div> -->
 </div>
