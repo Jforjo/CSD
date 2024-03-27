@@ -1,5 +1,5 @@
 <?php session_start();
-require_once('dbfuncs.php');
+require_once('../dbfuncs.php');
 // Checks if they are logged in
 // Header will not work as what it would link to
 //  would be sent to the JavaScript instead of actually
@@ -57,7 +57,7 @@ $studentCount = count($students);
     <h3 class="n-a">N/A</h3>
 <?php } else { ?>
     <?php foreach($students as $student) { ?>
-    <tr data-userid="<?php echo $student['userID']; ?>">
+    <tr data-id="<?php echo $student['userID']; ?>">
         <td>
             <div>
                 <span><?php echo ucwords($student['firstname'] . ' ' . $student['lastname']); ?></span>

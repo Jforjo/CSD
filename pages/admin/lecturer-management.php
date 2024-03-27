@@ -30,11 +30,11 @@ if ($role !== "admin") {
 
 $lecturerCount = GetLecturerCount();
 ?>
-<section class="user-management" id="lecturer-management">
+<section class="management" data-type="lecturer">
     <div class="table-header">
         <div class="table-perpage">
             Show
-            <select id="user-management-perpage">
+            <select id="perpage">
                 <option value="5" selected>5</option>
                 <option value="10" <?php if ($lecturerCount <= 5) echo "hidden"; ?>>10</option>
                 <option value="15" <?php if ($lecturerCount <= 10) echo "hidden"; ?>>15</option>
@@ -94,7 +94,7 @@ $lecturerCount = GetLecturerCount();
     </div>
 </section>
 
-<dialog id="dialog-edit-user" aria-modal="true">
+<dialog data-type="edit" aria-modal="true">
     <form method="dialog">
         <fieldset>
             <span class="error-msg"></span>

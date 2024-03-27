@@ -1,5 +1,5 @@
 <?php session_start();
-require_once('dbfuncs.php');
+require_once('../dbfuncs.php');
 // Checks if they are logged in
 // Header will not work as what it would link to
 //  would be sent to the JavaScript instead of actually
@@ -47,44 +47,44 @@ if (!CheckQuizIDExists($_POST['quizID'])) die(json_encode(array(
     "msg" => "Quiz ID does not exist"
 )));
 
-// Checks if the 'title' value was passed to the file
-if (!isset($_POST['title'])) die(json_encode(array(
+// Checks if the 'questionCount' value was passed to the file
+if (!isset($_POST['questionCount'])) die(json_encode(array(
     "type" => "error",
-    "msg" => "Invalid POST title"
+    "msg" => "Invalid POST questionCount"
 )));
-// Checks if the 'subject' value was passed to the file
-if (!isset($_POST['subject'])) die(json_encode(array(
+// Checks if the 'students[]' value was passed to the file (the button)
+if (!isset($_POST['students'])) die(json_encode(array(
     "type" => "error",
-    "msg" => "Invalid POST subject"
+    "msg" => "Invalid POST students[]"
 )));
-// Checks if the 'available' value was passed to the file
-if (!isset($_POST['available'])) die(json_encode(array(
+// Checks if the questionCount is an integer
+if (!is_numeric($_POST['questionCount']) || intval($_POST['questionCount']) <= 0) die(json_encode(array(
     "type" => "error",
-    "msg" => "Invalid POST available"
+    "msg" => "Question count must be a valid positive integer above 0"
 )));
-
-// Checks if the passed subject belongs to a valid subject
-if (!CheckSubjectIDExists($_POST['subject'])) die(json_encode(array(
+$students = str_getcsv($_POST['students']);
+// Checks if the students is an array that isn't empty
+if (!is_array($students) || count($students) <= 0) die(json_encode(array(
     "type" => "error",
-    "msg" => "A subject with that ID does not exists"
+    "msg" => "At least one student must be selected"
 )));
-
-// Checks if the 'title' is NULL or empty
-$title = $_POST['title'];
-if (ctype_space($title) || $title == '') die(json_encode(array(
-    "type" => "error",
-    "input" => "title",
-    "msg" => "Title cannot be NULL or empty"
-)));
-
-if (!EditQuiz($_POST['quizID'], $title, $_POST['subject'], $_POST['available'])) die(json_encode(array(
-    "type" => "error",
-    "msg" => "Failed to edit the quiz"
-)));
+foreach ($students as $studentID) {
+    // Checks if the studentID belongs to a valid student
+    if (!CheckStudentIDExists($studentID)) die(json_encode(array(
+        "type" => "error",
+        "msg" => "A student with the ID '" . $studentID . "' does not exists (".var_dump($students).")"
+    )));
+}
+foreach ($students as $studentID) {
+    if (!AssignQuiz($studentID, $_POST['quizID'], intval($_POST['questionCount']))) die(json_encode(array(
+        "type" => "error",
+        "msg" => "Failed to set the quiz for the student with the ID of '" . $studentID . "'"
+    )));
+}
 
 exit(json_encode(array(
     "type" => "success",
-    "msg" => "Successfully edited the quiz"
+    "msg" => "Successfully set the quiz for the students"
 )));
 
 ?>

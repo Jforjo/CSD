@@ -1,5 +1,5 @@
 <?php session_start();
-require_once('dbfuncs.php');
+require_once('../dbfuncs.php');
 // Checks if they are logged in
 // Header will not work as what it would link to
 //  would be sent to the JavaScript instead of actually
@@ -36,38 +36,28 @@ if ($role != "admin") {
 }
 unset($role);
 
-// Checks if the user's ID to retireve data has been passed to this file
-if (!isset($_POST['userID'])) die(json_encode(array(
+// Checks if the 'name' value was passed to the file
+if (!isset($_POST['name'])) die(json_encode(array(
     "type" => "error",
-    "msg" => "Invalid POST User ID"
+    "msg" => "Invalid POST name"
 )));
-// Checks if the passed userID belongs to a valid user
-if (!CheckUserIDExists($_POST['userID'])) die(json_encode(array(
-    "type" => "error",
-    "msg" => "User ID does not exist"
-)));
-// Checks if the passed userID belongs to a lecturer
-$role = GetUserRole($_POST['userID']);
-// This will also throw an error if the user's role is a student
-//  even though an admin has edit permissions for them,
-//  but there is a seperate file for getting a student's data.
-if ($role != "lecturer") die(json_encode(array(
-    "type" => "error",
-    "msg" => "You do not have permission to view this user"
-)));
-unset($role);
 
-// Retrieve the user's data from the database
-$lecturerData = GetLecturerData($_POST['userID']);
-// Checks if, for some reason, FALSE was returned
-if ($lecturerData === false) die(json_encode(array(
+// Checks if the 'name' is NULL or empty
+$name = $_POST['name'];
+if (ctype_space($name) || $name == '') die(json_encode(array(
     "type" => "error",
-    "msg" => "An unknown error occurred while retrieving the user's data"
+    "input" => "name",
+    "msg" => "Name cannot be NULL or empty"
 )));
-// Return the user's data
+
+if (!EditSubject($_POST['subjectID'], $name)) die(json_encode(array(
+    "type" => "error",
+    "msg" => "Failed to edit the subject"
+)));
+
 exit(json_encode(array(
-    "type" => "data",
-    "data" => $lecturerData
+    "type" => "success",
+    "msg" => "Successfully edited the subject"
 )));
 
 ?>

@@ -1,5 +1,5 @@
 <?php session_start();
-require_once('dbfuncs.php');
+require_once('../dbfuncs.php');
 // Checks if they are logged in
 // Header will not work as what it would link to
 //  would be sent to the JavaScript instead of actually
@@ -26,7 +26,7 @@ if (GetUserState($_SESSION['userID']) !== "active") {
 }
 // Checks if they have the correct permissions
 $role = GetUserRole($_SESSION['userID']);
-if (!($role == "lecturer" || $role == "admin")) {
+if ($role != "admin") {
     // They shouldn't have been able to access this file without
     //  these permissions, so log them out just incase.
     DestroySession();
@@ -36,25 +36,28 @@ if (!($role == "lecturer" || $role == "admin")) {
 }
 unset($role);
 
-// Checks if the question's ID has been passed to this file
-if (!isset($_POST['questionID'])) die(json_encode(array(
+// Checks if the 'name' value was passed to the file
+if (!isset($_POST['name'])) die(json_encode(array(
     "type" => "error",
-    "msg" => "Invalid POST Question ID"
-)));
-// Checks if the passed questionID belongs to a valid question
-if (!CheckQuestionIDExists($_POST['questionID'])) die(json_encode(array(
-    "type" => "error",
-    "msg" => "Question ID does not exist"
+    "msg" => "Invalid POST name"
 )));
 
-if (!DeleteQuestion($_POST['questionID'])) die(json_encode(array(
+// Checks if the 'name' is NULL or empty
+$name = $_POST['name'];
+if (ctype_space($name) || $name == '') die(json_encode(array(
     "type" => "error",
-    "msg" => "Failed to delete the question"
+    "input" => "name",
+    "msg" => "Name cannot be NULL or empty"
+)));
+
+if (!CreateSubject($name)) die(json_encode(array(
+    "type" => "error",
+    "msg" => "Failed to create the subject"
 )));
 
 exit(json_encode(array(
     "type" => "success",
-    "msg" => "Successfully deleted the question"
+    "msg" => "Successfully created the subject"
 )));
 
 ?>

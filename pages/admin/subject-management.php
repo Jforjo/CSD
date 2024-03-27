@@ -30,11 +30,11 @@ if ($role != "admin") {
 
 $subjectCount = GetSubjectCount();
 ?>
-<section class="user-management" id="subject-management">
+<section class="management" data-type="subject">
     <div class="table-header">
         <div class="table-perpage">
             Show
-            <select id="user-management-perpage">
+            <select id="perpage">
                 <option value="5" selected>5</option>
                 <option value="10" <?php if ($subjectCount <= 5) echo "hidden"; ?>>10</option>
                 <option value="15" <?php if ($subjectCount <= 10) echo "hidden"; ?>>15</option>
@@ -93,7 +93,7 @@ $subjectCount = GetSubjectCount();
     </div>
 </section>
 
-<dialog id="dialog-edit-subject" aria-modal="true">
+<dialog data-type="edit" aria-modal="true">
     <form method="dialog">
         <fieldset>
             <span class="error-msg"></span>

@@ -1,5 +1,5 @@
 <?php session_start();
-require_once('dbfuncs.php');
+require_once('../dbfuncs.php');
 // Checks if they are logged in
 // Header will not work as what it would link to
 //  would be sent to the JavaScript instead of actually
@@ -65,9 +65,9 @@ if (!isset($_POST['action'])) die(json_encode(array(
     "msg" => "Invalid POST action"
 )));
 // Checks if the passed studentID belongs to a valid student
-if (!CheckStudentIDExists($_POST['userID'])) die(json_encode(array(
+if (CheckStudentIDExists($_POST['userID'])) die(json_encode(array(
     "type" => "error",
-    "msg" => "A student with that ID does not exists"
+    "msg" => "A student with that ID already exists"
 )));
 
 // Checks if the 'studentID' is NULL or empty
@@ -93,7 +93,7 @@ if (strlen($studentID) > 16) die(json_encode(array(
 )));
 
 $state = '';
-if ($state == 'accept') $state = 'active';
+if ($action == 'accept') $state = 'active';
 else $state = 'inactive';
 
 if (!EditUserState($_POST['userID'], $state) || !CreateStudent($_POST['userID'], $studentID)) die(json_encode(array(

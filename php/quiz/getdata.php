@@ -1,5 +1,5 @@
 <?php session_start();
-require_once('dbfuncs.php');
+require_once('../dbfuncs.php');
 // Checks if they are logged in
 // Header will not work as what it would link to
 //  would be sent to the JavaScript instead of actually
@@ -26,7 +26,7 @@ if (GetUserState($_SESSION['userID']) !== "active") {
 }
 // Checks if they have the correct permissions
 $role = GetUserRole($_SESSION['userID']);
-if ($role != "admin") {
+if (!($role == "lecturer" || $role == "admin")) {
     // They shouldn't have been able to access this file without
     //  these permissions, so log them out just incase.
     DestroySession();
@@ -36,28 +36,28 @@ if ($role != "admin") {
 }
 unset($role);
 
-// Checks if the subject's ID to retireve data has been passed to this file
-if (!isset($_POST['subjectID'])) die(json_encode(array(
+// Checks if the quiz's ID to retireve data has been passed to this file
+if (!isset($_POST['quizID'])) die(json_encode(array(
     "type" => "error",
-    "msg" => "Invalid POST Subject ID"
+    "msg" => "Invalid POST Quiz ID"
 )));
-// Checks if the passed subjectID belongs to a valid subject
-if (!CheckSubjectIDExists($_POST['subjectID'])) die(json_encode(array(
+// Checks if the passed quizID belongs to a valid quiz
+if (!CheckQuizIDExists($_POST['quizID'])) die(json_encode(array(
     "type" => "error",
-    "msg" => "Subject ID does not exist"
+    "msg" => "Quiz ID does not exist"
 )));
 
-// Retrieve the subject's data from the database
-$subjectData = GetSubjectData($_POST['subjectID']);
+// Retrieve the quiz's data from the database
+$quizData = GetQuizData($_POST['quizID']);
 // Checks if, for some reason, FALSE was returned
-if ($subjectData === false) die(json_encode(array(
+if ($quizData === false) die(json_encode(array(
     "type" => "error",
-    "msg" => "An unknown error occurred while retrieving the subject's data"
+    "msg" => "An unknown error occurred while retrieving the quiz's data"
 )));
-// Return the subject's data
+// Return the quiz's data
 exit(json_encode(array(
     "type" => "data",
-    "data" => $subjectData
+    "data" => $quizData
 )));
 
 ?>

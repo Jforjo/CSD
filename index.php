@@ -13,6 +13,9 @@ switch ($url) {
     case 'login':
         include_once(__DIR__ . '/pages/login.php');
         break;
+    case 'v2/login':
+        include_once(__DIR__ . '/pages/v2/login.php');
+        break;
     case 'signup':
         include_once(__DIR__ . '/pages/signup.php');
         break;
@@ -22,6 +25,12 @@ switch ($url) {
 
     case 'dashboard':
         include_once(__DIR__ . '/pages/student/index.php');
+        break;
+    case 'quiz':
+        include_once(__DIR__ . '/pages/student/testing-page.php');
+        break;
+    case 'stats':
+        include_once(__DIR__ . '/pages/student/user-stats.php');
         break;
 
     case 'admin':

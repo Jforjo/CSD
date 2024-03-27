@@ -1,5 +1,5 @@
 <?php session_start();
-require_once('dbfuncs.php');
+require_once('../dbfuncs.php');
 // Checks if they are logged in
 // Header will not work as what it would link to
 //  would be sent to the JavaScript instead of actually
@@ -26,7 +26,7 @@ if (GetUserState($_SESSION['userID']) !== "active") {
 }
 // Checks if they have the correct permissions
 $role = GetUserRole($_SESSION['userID']);
-if ($role != "admin") {
+if (!($role == "lecturer" || $role == "admin")) {
     // They shouldn't have been able to access this file without
     //  these permissions, so log them out just incase.
     DestroySession();
@@ -37,35 +37,31 @@ if ($role != "admin") {
 unset($role);
 
 // Checks if the user's ID has been passed to this file
-if (!isset($_POST['userID'])) die(json_encode(array(
+if (!isset($_POST['studentID'])) die(json_encode(array(
     "type" => "error",
     "msg" => "Invalid POST User ID"
 )));
 // Checks if the passed userID belongs to a valid user
-if (!CheckUserIDExists($_POST['userID'])) die(json_encode(array(
+if (!CheckUserIDExists($_POST['studentID'])) die(json_encode(array(
     "type" => "error",
     "msg" => "User ID does not exist"
 )));
-// Checks if the passed userID belongs to a lecturer
-$role = GetUserRole($_POST['userID']);
-if ($role != "lecturer") die(json_encode(array(
+// Checks if the passed userID belongs to a student
+$role = GetUserRole($_POST['studentID']);
+if ($role != "student") die(json_encode(array(
     "type" => "error",
-    "msg" => "You do not have permission to demote this user"
+    "msg" => "You do not have permission to delete this user"
 )));
 unset($role);
 
-// Make pending so they need to be assigned a student ID first. (done in student management)
-if (!(EditUserRole($_POST['userID'], "student") && EditUserState($_POST['userID'], "pending"))) {
-    EditUserRole($_POST['userID'], "lecturer");
-    die(json_encode(array(
-        "type" => "error",
-        "msg" => "Failed to demote the lecturer"
-    )));
-}
+if (!DeleteUser($_POST['studentID'])) die(json_encode(array(
+    "type" => "error",
+    "msg" => "Failed to delete the student"
+)));
 
 exit(json_encode(array(
     "type" => "success",
-    "msg" => "Successfully demoted the lecturer"
+    "msg" => "Successfully deleted the student"
 )));
 
 ?>

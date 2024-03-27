@@ -1,5 +1,5 @@
 <?php session_start();
-require_once('dbfuncs.php');
+require_once('../dbfuncs.php');
 // Checks if they are logged in
 // Header will not work as what it would link to
 //  would be sent to the JavaScript instead of actually
@@ -40,17 +40,23 @@ if (!isset($_POST['limit']) || $_POST['limit'] < 5) $limit = 5;
 $offset = $_POST['offset'];
 if (!isset($_POST['offset']) || $_POST['offset'] < 0) $offset = 0;
 
-$subjects = GetLimitedSubjectsData($limit, $offset);
+$lecturers = GetLimitedLecturersData($limit, $offset);
 
-$subjectCount = count($subjects);
+$lecturerCount = count($lecturers);
 ?>
 
-<?php if ($subjectCount == 0) { ?>
+<?php if ($lecturerCount == 0) { ?>
     <h3 class="n-a">N/A</h3>
 <?php } else { ?>
-    <?php foreach($subjects as $subject) { ?>
-    <tr data-subjectid="<?php echo $subject['subjectID']; ?>">
-        <td><?php echo $subject['name']; ?></td>
+    <?php foreach($lecturers as $lecturer) { ?>
+    <tr data-id="<?php echo $lecturer['userID']; ?>">
+        <td>
+            <div>
+                <span><?php echo ucwords($lecturer['firstname'] . ' ' . $lecturer['lastname']); ?></span>
+                <a href="mailto:<?php echo $lecturer['email']; ?>"><?php echo $lecturer['email']; ?></a>
+            </div>
+        </td>
+        <td><span><?php echo ucfirst($lecturer['state']); ?></span></td>
         <td>
             <div class="icons">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="table-edit-btn" title="Edit" aria-label="Edit" aria-haspopup="dialog">
@@ -59,6 +65,18 @@ $subjectCount = count($subjects);
                         <line x1="10" y1="22" x2="23.5" y2="8.5"></line>
                         <line data-cap="butt" x1="4" y1="21" x2="11" y2="28" stroke-linecap="butt"></line>
                         <path d="M11,28,2,30l2-9L22.414,2.586a2,2,0,0,1,2.828,0l4.172,4.172a2,2,0,0,1,0,2.828Z"></path>
+                    </g>
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="table-delete-btn" title="Delete" aria-label="Delete">
+                    <g fill="currentColor" class="nc-icon-wrapper">
+                        <path data-color="color-2" d="M30,5h-8V1c0-.552-.448-1-1-1H11c-.552,0-1,.448-1,1V5H2c-.552,0-1,.448-1,1s.448,1,1,1H30c.552,0,1-.448,1-1s-.448-1-1-1ZM12,2h8v3H12V2Z"></path>
+                        <path d="M4,9V28c-.024,2.185,1.728,3.976,3.914,4,.029,0,.058,0,.086,0H24c2.185,.024,3.976-1.728,4-3.914,0-.029,0-.058,0-.086V9H4Zm7,16c0,.552-.447,1-1,1s-1-.448-1-1v-9c0-.552,.447-1,1-1s1,.448,1,1v9Zm6,0c0,.552-.447,1-1,1s-1-.448-1-1v-9c0-.552,.447-1,1-1s1,.448,1,1v9Zm6,0c0,.552-.447,1-1,1s-1-.448-1-1v-9c0-.552,.447-1,1-1s1,.448,1,1v9Z"></path>
+                    </g>
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="table-demote-btn" title="Demote" aria-label="Demote">
+                    <g fill="currentColor" class="nc-icon-wrapper">
+                        <path d="M15.193,30.591a1,1,0,0,0,1.614,0l11-15A1,1,0,0,0,27,14H21V6a1,1,0,0,0-1-1H12a1,1,0,0,0-1,1v8H5a1,1,0,0,0-.807,1.591Z" fill="currentColor"></path>
+                        <path data-color="color-2" d="M12,3h8a1,1,0,0,0,0-2H12a1,1,0,0,0,0,2Z" fill="currentColor"></path>
                     </g>
                 </svg>
             </div>
