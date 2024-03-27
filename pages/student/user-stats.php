@@ -1,9 +1,22 @@
-    <?php 
-    require_once('php/connection.php');
+<?php 
+    require_once(__DIR__ . '/../../php/dbfuncs.php');
     session_start();
 
     $userID = $_SESSION["userID"];
     $conn = newConn();
+
+    //Check to see if user is logged in, if not then redirect to login page
+    if (!isset($_SESSION['userID']))
+    {
+        header("Location: /login");
+        exit();    
+    }
+
+    //Check to see if the user is a student, if not then display error message
+    $role = GetUserRole($_SESSION['userID']);
+if (!($role == "student")) {
+    die("You do not have permission to view this page.");
+}
 
     //Get the logged in user's details, things like the first name and studentID
     $stmt = $conn->prepare("CALL GetStudentData(:userID)");
@@ -13,6 +26,8 @@
 
     $userName = $studentData['firstname'];
     $studentID = $studentData['studentID'];
+
+    $_SESSION['userName'] = $userName;
 
     //Query to get the tests
     $stmt = $conn->prepare("CALL GetStudentsQuizzes(:studentID)");
@@ -30,17 +45,16 @@
 
    if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] === 'getTestData') {
     // Get test names
-    $stmt = $conn->prepare("CALL GetStudentsQuizzes(:studentID)");
-    $stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
-    $stmt->execute();
-    $allTests = $stmt->fetchAll();
-    $testNames = array_column($allTests, 'quiz');
-
-    // Get percentages
     $stmt = $conn->prepare("CALL GetStudentsQuizPercentages(:studentID)");
     $stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
     $stmt->execute();
-    $percentages = $stmt->fetchAll(PDO::FETCH_COLUMN, 0); // Fetch only the first column of each row
+    $allTests = $stmt->fetchAll();
+
+    $testNames = array_column($allTests, 'title');
+    $percentages = array_column($allTests, 'percentage');
+
+    // Round the percentages
+    $percentages = array_map('round', $percentages);
 
     header('Content-Type: application/json');
     echo json_encode(['testNames' => $testNames, 'percentages' => $percentages]);
@@ -60,6 +74,9 @@
     }
 
     $averageScore = $NoOfTests > 0 ? round($totalScore / $NoOfTests) : 0;
+
+    $_SESSION['userName'] = $userName;
+    $_SESSION['completedTests'] = $completedTests;
     ?>
     <!DOCTYPE html>
 <html lang="en">
@@ -74,6 +91,8 @@
     <script defer src="graph.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.0.0-rc.7/html2canvas.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -121,7 +140,7 @@
                         <td><?php echo htmlspecialchars($test['subject'], ENT_QUOTES, 'UTF-8'); ?></td>
                         <td><?php echo date('d/m/Y', strtotime($test['dateCompleted'])); ?></td>
                         <td><?php echo $test['correctCount'] . '/' . $test['questionCount']; ?></td>
-                        <td><?php echo (($test['correctCount'] / $test['questionCount']) * 100) . '%'; ?></td>
+                        <td><?php echo round(($test['correctCount'] / $test['questionCount']) * 100) . '%'; ?></td>
                         <td><?php echo $test['points']; ?></td>
                     </tr>
                 <?php endforeach; ?>
@@ -129,14 +148,54 @@
             </table>
         </div>
     </div>
+
+    <div class="exportButtonContainer">
+        <button id="exportButton">Export Data</button>
+    </div>
+
+    <!-- Modal that appears when button is clicked -->
+    <div id="exportModal" class="exportModal">
+        <div class="export-modal-content">
+            <span class="close">&times;</span>
+            <h2>Export Data</h2>
+            <p>Choose the format you would like to export your data in:</p>
+            <div class="export-buttons">
+            <form action="php/exportCSV.php" method="post">
+                <button type="submit" id="exportCSV">CSV</button>
+            </form>
+            <form action="php/exportPDF.php" method="post">
+                <button type="submit" id="exportPDF">PDF</button>
+            </form>
+            </div>
+        </div>
+    </div>
+
     <script type="text/javascript">
 $(document).ready(function() {
     $('.table').DataTable({
         "searching": false,
         "pageLength": 10,
-        "lengthChange": false
+        "lengthChange": false,
+        "order": [[2, "desc"]]
     });
 });
+</script>
+
+<script>
+    var modal = document.getElementById("exportModal");
+    var btn = document.getElementById("exportButton");
+    var span = document.getElementsByClassName("close")[0];
+    btn.onclick = function() {
+        modal.style.display = "flex";
+    }
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
 </script>
 </body>
 </html>
