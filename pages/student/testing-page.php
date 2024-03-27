@@ -67,7 +67,7 @@
     $limit = 50;
     $stmt = $conn->prepare("CALL GetQuizSet(:quizID, :limit)");
     $stmt->bindParam(":quizID", $quizID, PDO::PARAM_STR);
-    $stmt->bindParam(":limit", $quizID, PDO::PARAM_INT);
+    $stmt->bindParam(":limit", $limit, PDO::PARAM_INT);
     $stmt->execute();
     $allQuestions = $stmt->fetchAll();
 
