@@ -6,9 +6,14 @@
     <link rel="stylesheet" href="stylesheet.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login page</title>
+
 </head>
 <body>
-
+<div class="logo">
+            <a>
+                <span>Qu</span><i>?</i><span>z</span>
+            </a>
+            </div>
 <form method= "POST"action="auth.php">
 <h2>Login</h2>
 <?php 

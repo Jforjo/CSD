@@ -9,6 +9,11 @@
 </head>
 <body>
 
+<div class="logo">
+            <a>
+                <span>Qu</span><i>?</i><span>z</span>
+            </a>
+            </div>
 <form method="POST" action="createuser.php">
 <h2>Signup</h2>
 <?php 

@@ -18,7 +18,25 @@ function CreateUser($firstname,$lastname,$email, $password) {
    return$success;
 }
 
-$data = CreateUser($_POST["firstname"],$_POST["lastname"],$_POST['email'], $_POST['password']);
+if (!isset($_POST['firstname'])) {
+    header("Location: login.php?e=3");
+    exit;
+}
+if (strlen($_POST['firstname'] >32)) {
+    header("Location: login.php?e=4");
+    exit;
+}
+
+if (!isset($_POST['lastname'])) {
+    header("Location: login.php?e=5");
+    exit;
+}
+if (strlen($_POST['lastname'] >32)) {
+    header("Location: login.php?e=6");
+    exit;
+}
+   
+$data = CreateUser($_POST["firstName"],$_POST["lastName"],$_POST['email'], $_POST['password']);
 
 if ($data === false) {
     header('Location: signup.php?e=5');
