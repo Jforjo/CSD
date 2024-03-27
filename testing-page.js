@@ -1,96 +1,118 @@
-// Set the variables
-let currentQuestion = 1;
-let questionID = document.getElementById(`question-${currentQuestion}`).dataset.questionId;
-let score = 0;
-let userChoice;
-let correctQuestions = 0;
-
-// Show the first question
-document.getElementById('question-1').style.display = 'block';
-
-// Add click event listeners to the answers and next question buttons
-document.querySelectorAll('.question-container').forEach((questionContainer) => {
-const answers = questionContainer.querySelectorAll('.answer');
-answers.forEach((answer, index) => {
-    answer.addEventListener('click', () => {
-        // Remove the "selected" class from all answers
-        answers.forEach((answer) => {
-            answer.classList.remove('selected');
-        });
-
-        // Add the "selected" class to the clicked answer
-        answer.classList.add('selected');
-        // Store the number of the clicked answer
-        userChoice = index + 1;
-
-        // Display the "Next Question" button
-        questionContainer.querySelector('.next-question').style.display = 'block';
-    });
-});
-
-// Add click event listener to the "Next Question" button
-const nextQuestionButton = questionContainer.querySelector('.next-question');
-nextQuestionButton.addEventListener('click', () => {
-    checkAnswerAndUpdateProgress();
-});
-});
-
-// Set progress bar to 0% on question 1
-document.querySelector('#question-1 .progress-bar i').style.width = '0%';
-
-function checkAnswerAndUpdateProgress() {
-var xhr = new XMLHttpRequest();
-xhr.open("POST", "../../php/checkAnswer.php", true);
-xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-xhr.send(`quizID=${quizID}&questionNumber=${currentQuestion}&userChoice=${userChoice}&questionID=${questionID}`);
-xhr.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-        // The server has responded
-        var response = JSON.parse(this.responseText);
-
-        // Check if the user's answer was correct
-        if (response.correct) {
-            score += 30;
-            correctQuestions++;
-        } else {
-            score -= 10;
-        }
-
-        // Go to the next question
-        if (currentQuestion < totalQuestions) {
-            document.getElementById(`question-${currentQuestion}`).style.display = 'none';
-            currentQuestion++;
-            questionID = document.getElementById(`question-${currentQuestion}`).dataset.questionId;
-            document.getElementById(`question-${currentQuestion}`).style.display = 'block';
-            // Calculate the progress percentage for the progress bar
-            const progressPercentage = ((currentQuestion - 1) / totalQuestions) * 100;
-            // Set the width of the progress bar div to the progress percentage
-            document.querySelector(`#question-${currentQuestion} .progress-bar i`).style.width = `${progressPercentage}%`;
-        }
-        else {
-            displayResults();
-        }
+class Quiz {
+    // Constructor for the Quiz class
+    constructor(totalQuestions, quizID, studentQuizLinkID) {
+        this.currentQuestion = 1;
+        this.questionID = document.getElementById(`question-${this.currentQuestion}`).dataset.questionId;
+        this.score = 0;
+        this.userChoice = null;
+        this.correctQuestions = 0;
+        this.totalQuestions = totalQuestions;
+        this.quizID = quizID;
+        this.studentQuizLinkID = studentQuizLinkID;
+        this.init();
     }
-};
+
+    //Initialise the quiz
+    init() {
+        this.showQuestion(this.currentQuestion);
+        this.addEventListeners();
+        this.updateProgressBar(0);
+    }
+
+    // Show the question number
+    showQuestion(questionNumber) {
+        document.getElementById(`question-${questionNumber}`).style.display = 'block';
+    }
+
+    //Event listeners for when the user clicks an answer and clicks the next question button
+    addEventListeners() {
+        document.querySelectorAll('.question-container').forEach((questionContainer) => {
+            const answers = questionContainer.querySelectorAll('.answer');
+            answers.forEach((answer, index) => {
+                answer.addEventListener('click', () => {
+                    answers.forEach((answer) => {
+                        answer.classList.remove('selected'); //Remove the selected class from the answer
+                    });
+                    answer.classList.add('selected'); //Set the user's answer choice as selected
+                    this.userChoice = index + 1;
+                    questionContainer.querySelector('.next-question').style.display = 'block';
+                });
+            });
+
+            const nextQuestionButton = questionContainer.querySelector('.next-question');
+            nextQuestionButton.addEventListener('click', () => {
+                //Check the answer and update the progress when the next question button is clicked
+                this.checkAnswerAndUpdateProgress();
+            });
+        });
+        
+        //Event listener for when the user clicks the show results button
+        document.getElementById('show-results-button').addEventListener('click', () => {
+            document.getElementById('complete-modal').style.display = 'none'; //Hide the complete modal after the user clicks the show results button
+            document.getElementById('results-modal').style.display = 'flex'; //Show the results modal
+        });
+    }
+
+    //Update the progress bar based on the current question
+    updateProgressBar(progressPercentage) {
+        document.querySelector(`#question-${this.currentQuestion} .progress-bar i`).style.width = `${progressPercentage}%`;
+    }
+
+    //Method to check the user's answer and update the progress
+    checkAnswerAndUpdateProgress() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "../../php/checkAnswer.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.addEventListener('error', function() {
+            console.error("An error occurred while making the AJAX request.");
+        });
+        //Send an AJAX request to check the user's answer
+        xhr.send(`quizID=${this.quizID}&questionNumber=${this.currentQuestion}&userChoice=${this.userChoice}&questionID=${this.questionID}`);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                try {
+                    var response = JSON.parse(xhr.responseText);
+                } catch (e) {
+                    console.error("An error occured while parsing the JSON data: " + e.message);
+                }
+                //Check the users answer and update their score based off it
+                if (response.correct) {
+                    this.score += 30;
+                    this.correctQuestions++;
+                } else {
+                    this.score -= 10;
+                }
+                //Update the score and the correct questions count
+                if (this.currentQuestion < this.totalQuestions) {
+                    document.getElementById(`question-${this.currentQuestion}`).style.display = 'none';
+                    this.currentQuestion++;
+                    this.questionID = document.getElementById(`question-${this.currentQuestion}`).dataset.questionId;
+                    this.showQuestion(this.currentQuestion);
+                    const progressPercentage = ((this.currentQuestion - 1) / this.totalQuestions) * 100;
+                    this.updateProgressBar(progressPercentage);
+                }
+                else {
+                    //After the last question then display the results
+                    this.displayResults();
+                }
+            }
+        };
+    }
+
+    //Method to display the results
+    displayResults() {
+        let percentage = (this.correctQuestions / this.totalQuestions) * 100;
+        percentage = Math.round(percentage);
+        document.getElementById('complete-modal').style.display = 'flex';
+        document.getElementById('total-score').textContent += this.score;
+        document.getElementById('correct-answers').textContent += `${this.correctQuestions}/${this.totalQuestions}`;
+        document.getElementById('percentage').textContent += `${percentage}%`;
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "../../php/updateCompletedQuiz.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.send(`studentQuizLinkID=${this.studentQuizLinkID}&completed=1&questionCount=${this.totalQuestions}&correctCount=${this.correctQuestions}&points=${this.score}`);
+    }
 }
 
-function displayResults() {
-//Display the results
-let percentage = (correctQuestions / totalQuestions) * 100;
-percentage = Math.round(percentage);
-//document.getElementById(`question-${currentQuestion}`).style.display = 'none';
-document.getElementById('complete-modal').style.display = 'flex';
-document.getElementById('total-score').textContent += score;
-document.getElementById('correct-answers').textContent += `${correctQuestions}/${totalQuestions}`;
-document.getElementById('percentage').textContent += `${percentage}%`;
-var xhr = new XMLHttpRequest();
-xhr.open("POST", "../../php/updateCompletedQuiz.php", true);
-xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-xhr.send(`studentQuizLinkID=${studentQuizLinkID}&completed=1&questionCount=${totalQuestions}&correctCount=${correctQuestions}&points=${score}`);
-}
-
-document.getElementById('show-results-button').addEventListener('click', () => {
-// Hide the complete modal and show the results modal
-document.getElementById('complete-modal').style.display = 'none';
-document.getElementById('results-modal').style.display = 'flex';
-});
+// Instantiate the Quiz class
+const quiz = new Quiz(totalQuestions, quizID, studentQuizLinkID);
