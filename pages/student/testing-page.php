@@ -1,37 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Testing Page</title>
-    <link rel="stylesheet" href="../../style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-</head> 
-<body>
-    <header>
-        <nav>
-            <ul>
-            <div class="logo">
-            <a>
-                <span>Qu</span><i>?</i><span>z</span>
-            </a>
-            </div>
-            <button class="mobile-nav-dropdown">&#9776;</button>
-            <div class="dropdown-links">
-                <a href="/dashboard">Home</a>
-                <a href="/stats">Stats</a>
-                <a href="/logout">Logout</a>
-            </div>
-            <div class="nav-links">
-                <li><i class="fas fa-home"></i><a href="/dashboard"> Home</a></li>
-                <li><i class="fas fa-chart-line"></i><a href="/stats"> Stats</a></li>
-            </div>
-                <li><a href="/logout" class="btn btn-primary logout-button"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-            </ul>
-        </nav>
-    </header>
-    <?php 
+<?php 
     //require_once(__DIR__ . '/../../php/dbfuncs.php');
     require_once('../../php/connection.php');
     session_start();
@@ -104,6 +71,39 @@ if (!($role == "student")) {
     $totalQuestions = count($allQuestions);
 }
    ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing Page</title>
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head> 
+<body>
+    <header>
+        <nav>
+            <ul>
+            <div class="logo">
+            <a>
+                <span>Qu</span><i>?</i><span>z</span>
+            </a>
+            </div>
+            <button class="mobile-nav-dropdown">&#9776;</button>
+            <div class="dropdown-links">
+                <a href="/dashboard">Home</a>
+                <a href="/stats">Stats</a>
+                <a href="/logout">Logout</a>
+            </div>
+            <div class="nav-links">
+                <li><i class="fas fa-home"></i><a href="/dashboard"> Home</a></li>
+                <li><i class="fas fa-chart-line"></i><a href="/stats"> Stats</a></li>
+            </div>
+                <li><a href="/logout" class="btn btn-primary logout-button"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </nav>
+    </header>
     <div class="test-info-section">
     <div class="test-info">
         <h1><?php echo htmlspecialchars($subjectName, ENT_QUOTES, 'UTF-8'); ?></h1>

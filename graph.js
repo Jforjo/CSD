@@ -54,5 +54,11 @@ function displayChart(testNames, percentages)
         .then(data => {
             var percentages = data.percentages.map(parseFloat);
             displayChart(data.testNames, percentages);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            var errorMessageDiv = document.getElementById('errorMessage');
+            errorMessageDiv.textContent = 'Failed to load graph';
+            errorMessageDiv.style.display = 'block';
         });
     }

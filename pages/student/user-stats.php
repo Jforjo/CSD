@@ -124,6 +124,7 @@ if (!($role == "student")) {
     </section>
     <div id="chart-container">
         <canvas id="chart"></canvas>
+        <div id="errorMessage" style="display: none;"></div>
     </div>
     <div class="user-scores">
         <div class="total-points" title="Total Points">
@@ -173,10 +174,10 @@ if (!($role == "student")) {
             <h2>Export Data</h2>
             <p>Choose the format you would like to export your data in:</p>
             <div class="export-buttons">
-            <form action="php/exportCSV.php" method="post">
+            <form action="../../php/exportCSV.php" method="post">
                 <button type="submit" id="exportCSV">CSV</button>
             </form>
-            <form action="php/exportPDF.php" method="post">
+            <form action="../../php/exportPDF.php" method="post">
                 <button type="submit" id="exportPDF">PDF</button>
             </form>
             </div>

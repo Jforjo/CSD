@@ -17,6 +17,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    if (count($questions) < $numQuestions) {
+        echo json_encode(['error' => 'Error: Subject does not have enough questions to create a quiz.']);
+        exit();
+    }
+
     $stmt->closeCursor(); //Allows the next query to execute
 
     $conn->beginTransaction();

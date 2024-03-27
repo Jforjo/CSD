@@ -1,39 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    
-    <link rel="stylesheet" href="../../style.css">
-    <title>Dashboard</title>
-</head>
-<body>
-<header>
-        <nav>
-            <ul>
-            <div class="logo">
-            <a>
-                <span>Qu</span><i>?</i><span>z</span>
-            </a>
-            </div>
-            <button class="mobile-nav-dropdown">&#9776;</button>
-            <div class="dropdown-links">
-                <a href="/dashboard">Home</a>
-                <a href="/stats">Stats</a>
-                <a href="/logout">Logout</a>
-            </div>
-            <div class="nav-links">
-                <li><i class="fas fa-home"></i><a href="/dashboard"> Home</a></li>
-                <li><i class="fas fa-chart-line"></i><a href="/stats"> Stats</a></li>
-            </div>
-                <li><a href="/logout" class="btn btn-primary logout-button"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-            </ul>
-        </nav>
-    </header>
-    <?php 
+<?php 
     //require_once(__DIR__ . '/../../php/dbfuncs.php');
     require_once('../../php/connection.php');
     session_start();
@@ -97,6 +62,41 @@ if (!($role == "student")) {
         throw new Exception("No subjects found.");
     }
     ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    
+    <link rel="stylesheet" href="../../style.css">
+    <title>Dashboard</title>
+</head>
+<body>
+<header>
+        <nav>
+            <ul>
+            <div class="logo">
+            <a>
+                <span>Qu</span><i>?</i><span>z</span>
+            </a>
+            </div>
+            <button class="mobile-nav-dropdown">&#9776;</button>
+            <div class="dropdown-links">
+                <a href="/dashboard">Home</a>
+                <a href="/stats">Stats</a>
+                <a href="/logout">Logout</a>
+            </div>
+            <div class="nav-links">
+                <li><i class="fas fa-home"></i><a href="/dashboard"> Home</a></li>
+                <li><i class="fas fa-chart-line"></i><a href="/stats"> Stats</a></li>
+            </div>
+                <li><a href="/logout" class="btn btn-primary logout-button"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </nav>
+    </header>
     <section class="welcome-section">
         <h2 class="welcome-message"><?php echo "Welcome, " . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></h2>
     </section>
