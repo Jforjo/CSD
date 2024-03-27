@@ -37,27 +37,3 @@ form{
   font-size: 32px;
 
 }
-
-.logo
-    {
-        margin-left: 5px;
-        font-size: 48px;
-        width: 150px;
-        align-self: center;
-    }
- 
-    .logo a
-    {
-        text-transform: uppercase;
-        text-decoration: none;
-        font-weight: 600;
-        letter-spacing: 2px;
-        cursor: pointer;
-    }
- 
-    .logo i
-    {
-        color: #FF799D;
-        font-style: normal;
-    }
-

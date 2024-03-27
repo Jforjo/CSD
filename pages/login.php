@@ -9,11 +9,6 @@
 
 </head>
 <body>
-<div class="logo">
-            <a>
-                <span>Qu</span><i>?</i><span>z</span>
-            </a>
-            </div>
 <form method="POST" action="../php/auth.php">
 <h2>Login</h2>
 <?php 

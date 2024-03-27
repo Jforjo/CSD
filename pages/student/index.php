@@ -12,8 +12,8 @@
 <header>
         <nav>
             <ul>
-                <li><a href="index.php">Home</a></li>
-                <li><a href="user-stats.php">Stats</a></li>
+                <li><a href="/dashboard">Home</a></li>
+                <li><a href="/stats">Stats</a></li>
                 <li><a href="#">Leaderboards</a></li>
                 <li><a href="/logout" class="btn btn-primary logout-button">Logout</a></li>
             </ul>

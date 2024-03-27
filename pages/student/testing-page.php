@@ -11,8 +11,8 @@
     <header>
         <nav>
             <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Stats</a></li>
+                <li><a href="/dashboard">Home</a></li>
+                <li><a href="/stats">Stats</a></li>
                 <li><a href="#">Leaderboards</a></li>
             </ul>
         </nav>

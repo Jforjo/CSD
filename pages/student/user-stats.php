@@ -88,19 +88,19 @@ if (!($role == "student")) {
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script defer src="graph.js"></script>
+    <script defer src="../../assets/js/graph.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.0.0-rc.7/html2canvas.min.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../../style.css">
 </head>
 <body>
     <header>
         <nav>
             <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Stats</a></li>
+                <li><a href="/dashboard">Home</a></li>
+                <li><a href="/stats">Stats</a></li>
                 <li><a href="#">Leaderboards</a></li>
                 <li><a href="/logout" class="btn btn-primary logout-button">Logout</a></li>
             </ul>
