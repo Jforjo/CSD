@@ -135,6 +135,12 @@ if (!($role == "student")) {
         <button id="successButton">OK</button>
     </div>
     </div>
+    <div id="errorModal" class="modal">
+    <div class="modal-content">
+        <p id="errorMessage"></p>
+        <button id="errorButton">OK</button>
+    </div>
+</div>
     <!-- Tests to complete section -->
     <section>
         <h2 class="section-title">Tests to complete</h2>
@@ -165,7 +171,7 @@ if (!($role == "student")) {
                 <div class="date-set-label">
                 <h6><?php echo date('d/m/Y', strtotime($test['dateSet'])); ?></h6>
                 </div>
-                <form method="POST" action="testing-page.php">
+                <form method="POST" action="/quiz">
                     <input type="hidden" name="quizID" value="<?php echo htmlspecialchars($test['quizID'], ENT_QUOTES, 'UTF-8'); ?>">
                     <input type="hidden" name="studentQuizLinkID" value="<?php echo htmlspecialchars($test['studentQuizLinkID'], ENT_QUOTES, 'UTF-8'); ?>">
                     <button type="submit" class="btn btn-primary">Start Test</button>
@@ -229,18 +235,30 @@ $(document).ready(function(){
             type: "post",
             data: $(this).serialize(),
             success: function(response){
-                //Close the create quiz modal
-                document.getElementById('createQuizModal').style.display = 'none';
+                var data = JSON.parse(response);
+                if (data.error) {
+                    // Display the error message in the error modal
+                    document.getElementById('errorMessage').textContent = data.error;
+                    document.getElementById('errorModal').style.display = 'flex';
+                } else {
+                    // Close the create quiz modal
+                    document.getElementById('createQuizModal').style.display = 'none';
 
-                //Open the success modal
-                document.getElementById('successModal').style.display = 'flex';
+                    // Open the success modal
+                    document.getElementById('successModal').style.display = 'flex';
+                }
             },
         });
     });
 
-    //Add an event listener to the OK button that refreshes the page when clicked
+    // Add an event listener to the OK button that refreshes the page when clicked
     document.getElementById('successButton').addEventListener('click', function() {
         location.reload();
+    });
+
+    // Add an event listener to the OK button in the error modal that hides the modal when clicked
+    document.getElementById('errorButton').addEventListener('click', function() {
+        document.getElementById('errorModal').style.display = 'none';
     });
 });
 document.querySelector('.mobile-nav-dropdown').addEventListener('click', function() {
