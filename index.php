@@ -26,6 +26,12 @@ switch ($url) {
     case 'dashboard':
         include_once(__DIR__ . '/pages/student/index.php');
         break;
+    case 'quiz':
+        include_once(__DIR__ . '/pages/student/testing-page.php');
+        break;
+    case 'stats':
+        include_once(__DIR__ . '/pages/student/user-stats.php');
+        break;
 
     case 'admin':
         $routerPage = '/dashboard.php';
