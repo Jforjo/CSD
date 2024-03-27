@@ -42,11 +42,11 @@ $lowestPercentageQuiz = null;
 foreach ($completedTests as $key => $test) {
     if (isset($test['correctCount'], $test['questionCount']) && $test['questionCount'] != 0) {
         $completedTests[$key]['percentage'] = $test['correctCount'] / $test['questionCount'] * 100;
-        if ($highestPercentageQuiz === null || $completedTests[$key]['percentage'] > $highestPercentageQuiz['percentage']) {
-            $highestPercentageQuiz = &$completedTests[$key];
+        if ($highestPercentageQuiz === null || $completedTests[$key]['percentage'] > $completedTests[$highestPercentageQuiz]['percentage']) {
+            $highestPercentageQuiz = $key;
         }
-        if ($lowestPercentageQuiz === null || $completedTests[$key]['percentage'] < $lowestPercentageQuiz['percentage']) {
-            $lowestPercentageQuiz = &$completedTests[$key];
+        if ($lowestPercentageQuiz === null || $completedTests[$key]['percentage'] < $completedTests[$lowestPercentageQuiz]['percentage']) {
+            $lowestPercentageQuiz = $key;
         }
     }
 }
@@ -81,18 +81,18 @@ $html = '<table border="1" cellspacing="3" cellpadding="4">
         <th>Percentage</th>
         <th>Points Earned</th>
     </tr>';
-foreach ($completedTests as $test) {
-    // Check if this quiz has the highest or lowest percentage
-    if ($test['quiz'] == $highestPercentageQuiz['quiz']) {
-        // Set cell background colour to green
-        $colour = 'bgcolor="#008000"';
-    } elseif ($test['quiz'] == $lowestPercentageQuiz['quiz']) {
-        // Set cell background colour to red
-        $colour = 'bgcolor="#FF0000"';
-    } else {
-        // Set cell background colour to white for all other quizzes
-        $colour = 'bgcolor="#FFFFFF"';
-    }
+    foreach ($completedTests as $key => $test) {
+        // Check if this quiz has the highest or lowest percentage
+        if ($key == $highestPercentageQuiz) {
+            // Set cell background colour to green
+            $colour = 'bgcolor="#008000"';
+        } elseif ($key == $lowestPercentageQuiz) {
+            // Set cell background colour to red
+            $colour = 'bgcolor="#FF0000"';
+        } else {
+            // Set cell background colour to white for all other quizzes
+            $colour = 'bgcolor="#FFFFFF"';
+        }
 
     $html .= '<tr>
         <td ' . $colour . '>' . $test['quiz'] . '</td>
