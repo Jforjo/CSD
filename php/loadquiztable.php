@@ -1,5 +1,5 @@
 <?php session_start();
-require_once('dbfuncs.php');
+require_once('../dbfuncs.php');
 // Checks if they are logged in
 // Header will not work as what it would link to
 //  would be sent to the JavaScript instead of actually
@@ -49,7 +49,7 @@ $quizCount = count($quizzes);
     <h3 class="n-a">N/A</h3>
 <?php } else { ?>
     <?php foreach($quizzes as $quiz) { ?>
-    <tr data-quizid="<?php echo $quiz['quizID']; ?>">
+    <tr data-id="<?php echo $quiz['quizID']; ?>">
         <td><span><?php echo $quiz['title']; ?></span></td>
         <td><span><?php echo $quiz['subject']; ?></span></td>
         <td>
