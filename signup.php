@@ -41,11 +41,11 @@ if ($_GET["e"]==7)
 
 ?>
 
-<label for="firstName">firstName:</label>
+<label for="firstname">firstname:</label>
 <input name="firstName" id="firstName" type="FirstName" required>
 
-<label for="lastName">lastName:</label>
-<input name="lastName" id="lastName" type="LastName" required>
+<label for="lastname">lastname:</label>
+<input name="lastname" id="lastname" type="LastName" required>
 
 <label for="email">Email:</label>
 <input name="email" id="email" type="email" placeholder="eg test@test.com" required>

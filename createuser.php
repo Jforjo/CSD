@@ -36,7 +36,7 @@ if (strlen($_POST['lastname'] >32)) {
     exit;
 }
    
-$data = CreateUser($_POST["firstName"],$_POST["lastName"],$_POST['email'], $_POST['password']);
+$data = CreateUser($_POST["firstname"],$_POST["lastname"],$_POST['email'], $_POST['password']);
 
 if ($data === false) {
     header('Location: signup.php?e=5');
