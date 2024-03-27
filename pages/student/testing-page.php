@@ -20,9 +20,9 @@
 
     //Check to see if the user is a student, if not then display error message
     $role = GetUserRole($_SESSION['userID']);
-if (!($role == "student")) {
-    die("You do not have permission to view this page.");
-}
+    if (!($role == "student")) {
+        die("You do not have permission to view this page.");
+    }
 
     //Get the logged in user's details, things like the first name and studentID
     $stmt = $conn->prepare("CALL GetStudentData(:userID)");
@@ -52,6 +52,11 @@ if (!($role == "student")) {
     $stmt->execute();
     $quizData = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    if (!$quizData) {
+        header("Location: /dashboard");
+        exit();
+    }
+
     $subjectName = $quizData['subject'];
     $quizName = $quizData['title'];
 
@@ -65,6 +70,11 @@ if (!($role == "student")) {
     $stmt->bindParam(":limit", $quizID, PDO::PARAM_INT);
     $stmt->execute();
     $allQuestions = $stmt->fetchAll();
+
+    if (!$allQuestions) {
+        header("Location: /dashboard");
+        exit();
+    }
 
     //Get question number and total number of questions
     $questionNumber = 0;
@@ -106,13 +116,24 @@ if (!($role == "student")) {
     </header>
     <div class="test-info-section">
     <div class="test-info">
+        <?php //Check to see if the subject name and quiz name are set, if not then redirect to student dashboard.
+            if (!isset($subjectName) || !isset($quizName)) {
+                header("Location: /dashboard");
+                exit();
+            }
+            ?>
         <h1><?php echo htmlspecialchars($subjectName, ENT_QUOTES, 'UTF-8'); ?></h1>
         <h2><?php echo htmlspecialchars($quizName, ENT_QUOTES, 'UTF-8'); ?></h2>
     </div>
     </div>
     <div class="main-content">
         <!-- Loop through each question -->
-        <?php foreach ($allQuestions as $question): ?>
+        <?php //Check to see if the questions are set, if not then redirect to student dashboard.
+        if (!isset($allQuestions)) {
+            header("Location: /dashboard");
+            exit();
+        }
+        foreach ($allQuestions as $question): ?>
         <!-- Increment the question number -->
         <?php $questionNumber++; ?>
         <div class="question-container" id="question-<?php echo $questionNumber; ?>" data-question-id="<?php echo $question['questionID']; ?>" style="display: none;">
