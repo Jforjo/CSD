@@ -14,7 +14,7 @@
                 <span>Qu</span><i>?</i><span>z</span>
             </a>
             </div>
-<form method= "POST"action="auth.php">
+<form method="POST" action="../php/auth.php">
 <h2>Login</h2>
 <?php 
 if(isset($_GET["e"]))

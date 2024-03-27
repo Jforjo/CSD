@@ -1,5 +1,5 @@
 <?php
-require_once('php/connection.php');
+require_once('connection.php');
 function validateUser($email, $password) {
     $sql = "CALL GetUserFromEmail(:email);";
     $conn = newConn();
@@ -10,55 +10,66 @@ function validateUser($email, $password) {
     $conn = null;
     if ($data === null || $data === false) return false;
     if (!password_verify($password, $data['password'])) return false;
-   return$data;
+    return $data;
 }
 
 if (!isset($_POST['email'])) {
-    header("Location: login.php?e=1");
+    header("Location: /login?e=1");
     exit;
 }
 if (!filter_var($_POST ['email'], FILTER_VALIDATE_EMAIL)) {
-    header("Location: login.php?e=2");
+    header("Location: /login?e=2");
     exit;
 }
 
 if (!isset($_POST['password'])) {
-    header("Location: login.php?e=3");
+    header("Location: /login?e=3");
     exit;
 }
 $password = $_POST['password'];
-if (strlen($password) <8){
-    header("Location: login.php?e=4");
+if (strlen($password) < 8){
+    header("Location: /login?e=4");
     exit;
 }
-
 if (preg_match('/[a-z]/', $password) == 0) {
-    header("Location: login.php?e=5");
+    header("Location: /login?e=5");
     exit;
 }
-
 if (preg_match('/[A-Z]/', $password) == 0) {
-    header("Location: login.php?e=6");
+    header("Location: /login?e=6");
     exit;
 }
-
 if (preg_match('/[0-9]/', $password) == 0)  {
-    header("Location: login.php?e=7");
+    header("Location: /login?e=7");
     exit;
 }
-
 if (preg_match('/[\'^£$%&*()}{@#~?!<>,|=_+¬-]/', $password) == 0) {
-    header("Location: login.php?e=8");
+    header("Location: /login?e=8");
     exit;
-} 
+}
 $data = validateUser($_POST['email'], $_POST['password']);
 
 if ($data === false) {
-    header('Location: login.php?e=5');
-} else {
+    header('Location: /login?e=5');
+    exit;
+}
+if ($data['state'] != 'active') {
+    header('Location: /login?e=5');
+    exit;
+}
+if ($data['role'] == 'student') {
     session_start();
     $_SESSION["userID"] = $data['userID'];
-    header('Location: dashboard.php');
+    header('Location: /dashboard');
+    exit;
+} else if ($data['role'] == 'lecturer' || $data['role'] == 'admin') {
+    session_start();
+    $_SESSION["userID"] = $data['userID'];
+    header('Location: /admin');
+    exit;
+} else {
+    header('Location: /login?e=5');
+    exit;
 }
 
 ?>
