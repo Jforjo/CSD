@@ -106,8 +106,8 @@ if (!($role == "student")) {
         <button id="createQuizButton">Create Quiz</button>
     </div>
     <!-- Modal that appears when button is clicked -->
-    <div id="createQuizModal" class="createQuizModal">
-        <div class="create-quiz-modal-content">
+    <div id="createQuizModal" class="modal">
+        <div class="modal-content">
             <span class="close">&times;</span>
             <form id="createQuizForm" method="post" action="../../php/studentAssignQuiz.php">
             <h2>Create Quiz</h2>
@@ -129,8 +129,8 @@ if (!($role == "student")) {
         </div>
     </div>
     <!-- Modal that appears after a quiz has successfully been created -->
-    <div id="successModal" class="successModal">
-    <div class="success-modal-content">
+    <div id="successModal" class="modal">
+    <div class="modal-content">
         <p>Quiz successfully created!</p>
         <button id="successButton">OK</button>
     </div>

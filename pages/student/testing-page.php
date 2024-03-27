@@ -145,15 +145,15 @@ if (!($role == "student")) {
     <?php endforeach; ?>
     </div>
 
-    <div id="complete-modal" class ="complete-modal" style="display: none;">
-    <div class="complete-content">
+    <div id="complete-modal" class ="modal" style="display: none;">
+    <div class="modal-content">
         <h1>Test Complete</h1>
         <button id="show-results-button">View Results</button>
     </div>
 </div>
 
-    <div id="results-modal" class ="results-modal" style="display: none;">
-    <div class="results-content">
+    <div id="results-modal" class ="modal" style="display: none;">
+    <div class="modal-content">
         <h1>Results</h1>
         <p id="total-score"><i class="fas fa-trophy"></i>Points Earned: </p>
         <p id="correct-answers"><i class="fas fa-check"></i>Correct questions: </p>

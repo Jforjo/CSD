@@ -168,8 +168,8 @@ if (!($role == "student")) {
     </div>
 
     <!-- Modal that appears when button is clicked -->
-    <div id="exportModal" class="exportModal">
-        <div class="export-modal-content">
+    <div id="exportModal" class="modal">
+        <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Export Data</h2>
             <p>Choose the format you would like to export your data in:</p>
