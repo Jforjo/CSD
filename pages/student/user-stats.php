@@ -227,5 +227,6 @@ window.addEventListener('resize', function() {
     }
 });
 </script>
+<footer></footer>
 </body>
 </html>

@@ -39,7 +39,11 @@
     session_start();
 
     $userID = $_SESSION["userID"];
-    $conn = newConn();
+    try {
+        $conn = newConn();
+    } catch (PDOException $e) {
+        die("Database connection failed: " . $e->getMessage());
+    }
 
     //Check to see if user is logged in, if not then redirect to login page
     /*if (!isset($_SESSION['userID']))
@@ -59,6 +63,11 @@ if (!($role == "student")) {
     $stmt->bindValue(":userID", $userID, PDO::PARAM_STR);
     $stmt->execute();
     $studentData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    //If no student data is found then show error
+    if (!$studentData) {
+        throw new Exception("Failed to fetch student data.");
+    }
 
     $userName = $studentData['firstname'];
     $studentID = $studentData['studentID'];
@@ -82,6 +91,11 @@ if (!($role == "student")) {
     $stmt->execute();
 
     $subjects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    //If no subjects are found then show error
+    if (!$subjects) {
+        throw new Exception("No subjects found.");
+    }
     ?>
     <section class="welcome-section">
         <h2 class="welcome-message"><?php echo "Welcome, " . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></h2>
@@ -188,7 +202,7 @@ if (!($role == "student")) {
         </div>
     </section>
     </div>
-    <footer>Footer</footer>
+    <footer></footer>
     <script>
     var modal = document.getElementById("createQuizModal");
     var btn = document.getElementById("createQuizButton");
