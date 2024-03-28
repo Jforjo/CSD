@@ -22,7 +22,7 @@ if (!isset($_POST['firstname'])) {
     header("Location: /signup?e=3");
     exit;
 }
-if (strlen($_POST['firstname'] > 32)) {
+if (strlen($_POST['firstname']) > 32) {
     header("Location: /signup?e=4");
     exit;
 }
@@ -31,7 +31,7 @@ if (!isset($_POST['lastname'])) {
     header("Location: /signup?e=5");
     exit;
 }
-if (strlen($_POST['lastname'] > 32)) {
+if (strlen($_POST['lastname']) > 32) {
     header("Location: /signup?e=6");
     exit;
 }
