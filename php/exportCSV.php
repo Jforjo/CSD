@@ -6,6 +6,13 @@
     $userName = $_SESSION['userName'];
     $conn = newConn();
 
+    //Check to see if user is logged in, if not then redirect to login page
+    if (!isset($_SESSION['userID']))
+    {
+        header("Location: /login");
+        exit();    
+    }
+
     $stmt = $conn->prepare("CALL GetStudentData(:userID)");
     $stmt->bindValue(":userID", $userID, PDO::PARAM_STR);
     $stmt->execute();

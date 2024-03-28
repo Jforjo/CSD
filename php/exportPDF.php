@@ -4,6 +4,13 @@ session_start();
 $userName = $_SESSION['userName'];
 $completedTests = $_SESSION['completedTests'];
 
+//Check to see if user is logged in, if not then redirect to login page
+if (!isset($_SESSION['userName']))
+{
+    header("Location: /login");
+    exit();    
+}
+
 // Create new PDF document
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 

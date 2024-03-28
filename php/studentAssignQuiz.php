@@ -10,6 +10,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $conn = newConn();
 
+    //Check to see if user is logged in, if not then redirect to login page
+    if (!isset($_SESSION['userID']))
+    {
+        header("Location: /login");
+        exit();    
+    }
+
     $stmt = $conn->prepare("CALL GetQuizSetFromSubject(?, ?)");
     $stmt->bindParam(1, $subjectID);
     $stmt->bindParam(2, $numQuestions, PDO::PARAM_INT);
@@ -68,5 +75,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
 
 
+}
+else
+{
+    header("Location: /dashboard");
+    exit();
 }
 ?>

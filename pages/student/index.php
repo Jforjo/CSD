@@ -171,7 +171,7 @@ if (!($role == "student")) {
                 <div class="date-set-label">
                 <h6><?php echo date('d/m/Y', strtotime($test['dateSet'])); ?></h6>
                 </div>
-                <form method="POST" action="testing-page.php">
+                <form method="POST" action="/quiz">
                     <input type="hidden" name="quizID" value="<?php echo htmlspecialchars($test['quizID'], ENT_QUOTES, 'UTF-8'); ?>">
                     <input type="hidden" name="studentQuizLinkID" value="<?php echo htmlspecialchars($test['studentQuizLinkID'], ENT_QUOTES, 'UTF-8'); ?>">
                     <button type="submit" class="btn btn-primary">Start Test</button>
