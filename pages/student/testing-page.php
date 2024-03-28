@@ -179,7 +179,7 @@
         <p id="total-score"><i class="fas fa-trophy"></i>Points Earned: </p>
         <p id="correct-answers"><i class="fas fa-check"></i>Correct questions: </p>
         <p id="percentage"><i class="fas fa-chart-line"></i>Percentage: </p>
-        <a href="index.php" class="button">Finish</a>
+        <a href="/dashboard" class="button">Finish</a>
     </div>
 </div>
 <script>
