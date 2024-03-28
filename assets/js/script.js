@@ -225,7 +225,7 @@
                 const formData = new FormData(e.target);
                 // Absolutely no idea why it doesn't work without this line
                 // It just doesn't seem to pass the button value without it
-                formData.append([e.submitter.name, e.submitter.value]);
+                formData.append(e.submitter.name, e.submitter.value);
 
                 const values = [];
                 for (const pair of formData.entries()) {
