@@ -56,7 +56,7 @@ window.onload = function() {
     var toggleYAxis = document.getElementById('toggleYAxis');
 
     function loadChart() {
-        fetch('user-stats.php?action=getTestData')
+        fetch('/pages/student/user-stats.php?action=getTestData')
             .then(response => response.json())
             .then(data => {
                 var percentages = data.percentages.map(parseFloat);
