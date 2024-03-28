@@ -1,5 +1,6 @@
 <?php 
     require_once(__DIR__ . '/../../php/dbfuncs.php');
+    //require_once('../../php/connection.php');
     session_start();
 
     $userID = $_SESSION["userID"];
@@ -88,7 +89,7 @@ if (!($role == "student")) {
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script defer src="../../assets/js/graph.js"></script>
+    <script defer src="../../graph.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
@@ -99,10 +100,22 @@ if (!($role == "student")) {
     <header>
         <nav>
             <ul>
-                <li><a href="/dashboard">Home</a></li>
-                <li><a href="/stats">Stats</a></li>
-                <li><a href="#">Leaderboards</a></li>
-                <li><a href="/logout" class="btn btn-primary logout-button">Logout</a></li>
+            <div class="logo">
+            <a>
+                <span>Qu</span><i>?</i><span>z</span>
+            </a>
+            </div>
+            <button class="mobile-nav-dropdown">&#9776;</button>
+            <div class="dropdown-links">
+                <a href="/dashboard">Home</a>
+                <a href="/stats">Stats</a>
+                <a href="/logout">Logout</a>
+            </div>
+            <div class="nav-links">
+                <li><i class="fas fa-home"></i><a href="/dashboard"> Home</a></li>
+                <li><i class="fas fa-chart-line"></i><a href="/stats"> Stats</a></li>
+            </div>
+                <li><a href="/logout" class="btn btn-primary logout-button"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
         </nav>
     </header>
@@ -111,6 +124,7 @@ if (!($role == "student")) {
     </section>
     <div id="chart-container">
         <canvas id="chart"></canvas>
+        <div id="errorMessage" style="display: none;"></div>
     </div>
     <div class="user-scores">
         <div class="total-points" title="Total Points">
@@ -154,16 +168,16 @@ if (!($role == "student")) {
     </div>
 
     <!-- Modal that appears when button is clicked -->
-    <div id="exportModal" class="exportModal">
-        <div class="export-modal-content">
+    <div id="exportModal" class="modal">
+        <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Export Data</h2>
             <p>Choose the format you would like to export your data in:</p>
             <div class="export-buttons">
-            <form action="php/exportCSV.php" method="post">
+            <form action="../../php/exportCSV.php" method="post">
                 <button type="submit" id="exportCSV">CSV</button>
             </form>
-            <form action="php/exportPDF.php" method="post">
+            <form action="../../php/exportPDF.php" method="post">
                 <button type="submit" id="exportPDF">PDF</button>
             </form>
             </div>
@@ -197,5 +211,23 @@ $(document).ready(function() {
         }
     }
 </script>
+<script>
+    document.querySelector('.mobile-nav-dropdown').addEventListener('click', function() {
+    var dropdownLinks = document.querySelector('.dropdown-links');
+    if (dropdownLinks.style.display === 'none' || dropdownLinks.style.display === '') {
+        dropdownLinks.style.display = 'block';
+    } else {
+        dropdownLinks.style.display = 'none';
+    }
+});
+
+window.addEventListener('resize', function() {
+    var dropdownLinks = document.querySelector('.dropdown-links');
+    if (window.innerWidth >= 769) {
+        dropdownLinks.style.display = 'none';
+    }
+});
+</script>
+<footer></footer>
 </body>
 </html>

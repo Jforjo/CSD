@@ -1,30 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="../../style.css">
-    <title>Dashboard</title>
-</head>
-<body>
-<header>
-        <nav>
-            <ul>
-                <li><a href="/dashboard">Home</a></li>
-                <li><a href="/stats">Stats</a></li>
-                <li><a href="#">Leaderboards</a></li>
-                <li><a href="/logout" class="btn btn-primary logout-button">Logout</a></li>
-            </ul>
-        </nav>
-    </header>
-    <?php 
+<?php 
     require_once(__DIR__ . '/../../php/dbfuncs.php');
+    //require_once('../../php/connection.php');
     session_start();
 
     $userID = $_SESSION["userID"];
-    $conn = newConn();
+    try {
+        $conn = newConn();
+    } catch (PDOException $e) {
+        die("Database connection failed: " . $e->getMessage());
+    }
 
     //Check to see if user is logged in, if not then redirect to login page
     if (!isset($_SESSION['userID']))
@@ -44,6 +28,11 @@ if (!($role == "student")) {
     $stmt->bindValue(":userID", $userID, PDO::PARAM_STR);
     $stmt->execute();
     $studentData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    //If no student data is found then show error
+    if (!$studentData) {
+        throw new Exception("Failed to fetch student data.");
+    }
 
     $userName = $studentData['firstname'];
     $studentID = $studentData['studentID'];
@@ -67,7 +56,47 @@ if (!($role == "student")) {
     $stmt->execute();
 
     $subjects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    //If no subjects are found then show error
+    if (!$subjects) {
+        throw new Exception("No subjects found.");
+    }
     ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    
+    <link rel="stylesheet" href="../../style.css">
+    <title>Dashboard</title>
+</head>
+<body>
+<header>
+        <nav>
+            <ul>
+            <div class="logo">
+            <a>
+                <span>Qu</span><i>?</i><span>z</span>
+            </a>
+            </div>
+            <button class="mobile-nav-dropdown">&#9776;</button>
+            <div class="dropdown-links">
+                <a href="/dashboard">Home</a>
+                <a href="/stats">Stats</a>
+                <a href="/logout">Logout</a>
+            </div>
+            <div class="nav-links">
+                <li><i class="fas fa-home"></i><a href="/dashboard"> Home</a></li>
+                <li><i class="fas fa-chart-line"></i><a href="/stats"> Stats</a></li>
+            </div>
+                <li><a href="/logout" class="btn btn-primary logout-button"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </nav>
+    </header>
     <section class="welcome-section">
         <h2 class="welcome-message"><?php echo "Welcome, " . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></h2>
     </section>
@@ -77,10 +106,10 @@ if (!($role == "student")) {
         <button id="createQuizButton">Create Quiz</button>
     </div>
     <!-- Modal that appears when button is clicked -->
-    <div id="createQuizModal" class="createQuizModal">
-        <div class="create-quiz-modal-content">
+    <div id="createQuizModal" class="modal">
+        <div class="modal-content">
             <span class="close">&times;</span>
-            <form method="post" action="../../php/studentAssignQuiz.php">
+            <form id="createQuizForm" method="post" action="../../php/studentAssignQuiz.php">
             <h2>Create Quiz</h2>
             <p>Select the subject</p>
             <select name="subject">
@@ -100,12 +129,18 @@ if (!($role == "student")) {
         </div>
     </div>
     <!-- Modal that appears after a quiz has successfully been created -->
-    <div id="successModal" class="successModal">
-    <div class="success-modal-content">
+    <div id="successModal" class="modal">
+    <div class="modal-content">
         <p>Quiz successfully created!</p>
         <button id="successButton">OK</button>
     </div>
     </div>
+    <div id="errorModal" class="modal">
+    <div class="modal-content">
+        <p id="errorMessage"></p>
+        <button id="errorButton">OK</button>
+    </div>
+</div>
     <!-- Tests to complete section -->
     <section>
         <h2 class="section-title">Tests to complete</h2>
@@ -130,9 +165,13 @@ if (!($role == "student")) {
                 $result = $stmt->fetch();
                 $questionCount = $result['questionCount'];
                 ?>
+                <div class="num-of-questions-label">
                 <h6><?php echo $questionCount; ?> Questions</h6>
+                </div>
+                <div class="date-set-label">
                 <h6><?php echo date('d/m/Y', strtotime($test['dateSet'])); ?></h6>
-                <form method="POST" action="testing-page.php">
+                </div>
+                <form method="POST" action="/quiz">
                     <input type="hidden" name="quizID" value="<?php echo htmlspecialchars($test['quizID'], ENT_QUOTES, 'UTF-8'); ?>">
                     <input type="hidden" name="studentQuizLinkID" value="<?php echo htmlspecialchars($test['studentQuizLinkID'], ENT_QUOTES, 'UTF-8'); ?>">
                     <button type="submit" class="btn btn-primary">Start Test</button>
@@ -169,7 +208,7 @@ if (!($role == "student")) {
         </div>
     </section>
     </div>
-    <footer>Footer</footer>
+    <footer></footer>
     <script>
     var modal = document.getElementById("createQuizModal");
     var btn = document.getElementById("createQuizButton");
@@ -188,7 +227,7 @@ if (!($role == "student")) {
 </script>
 <script>
 $(document).ready(function(){
-    $("form").on("submit", function(event){
+    $("#createQuizForm").on("submit", function(event){
         event.preventDefault();
 
         $.ajax({
@@ -196,19 +235,46 @@ $(document).ready(function(){
             type: "post",
             data: $(this).serialize(),
             success: function(response){
-                //Close the create quiz modal
-                document.getElementById('createQuizModal').style.display = 'none';
+                var data = JSON.parse(response);
+                if (data.error) {
+                    // Display the error message in the error modal
+                    document.getElementById('errorMessage').textContent = data.error;
+                    document.getElementById('errorModal').style.display = 'flex';
+                } else {
+                    // Close the create quiz modal
+                    document.getElementById('createQuizModal').style.display = 'none';
 
-                //Open the success modal
-                document.getElementById('successModal').style.display = 'flex';
+                    // Open the success modal
+                    document.getElementById('successModal').style.display = 'flex';
+                }
             },
         });
     });
 
-    //Add an event listener to the OK button that refreshes the page when clicked
+    // Add an event listener to the OK button that refreshes the page when clicked
     document.getElementById('successButton').addEventListener('click', function() {
         location.reload();
     });
+
+    // Add an event listener to the OK button in the error modal that hides the modal when clicked
+    document.getElementById('errorButton').addEventListener('click', function() {
+        document.getElementById('errorModal').style.display = 'none';
+    });
+});
+document.querySelector('.mobile-nav-dropdown').addEventListener('click', function() {
+    var dropdownLinks = document.querySelector('.dropdown-links');
+    if (dropdownLinks.style.display === 'none' || dropdownLinks.style.display === '') {
+        dropdownLinks.style.display = 'block';
+    } else {
+        dropdownLinks.style.display = 'none';
+    }
+});
+
+window.addEventListener('resize', function() {
+    var dropdownLinks = document.querySelector('.dropdown-links');
+    if (window.innerWidth >= 769) {
+        dropdownLinks.style.display = 'none';
+    }
 });
 </script>
 </body>
