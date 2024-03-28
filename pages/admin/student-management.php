@@ -56,6 +56,7 @@ $studentCount = GetStudentCount();
                     <th>Name</th>
                     <th>ID</th>
                     <th>State</th>
+                    <th>Last Login</th>
                     <th>Manage</th>
                 </tr>
             </thead>
