@@ -1,5 +1,5 @@
 <?php
-require_once('php/connection.php');
+require_once('connection.php');
 function CreateUser($firstname,$lastname,$email, $password) {
     $sql = "CALL CreateUser(:ID,:firstname,:lastname,:email,:password);";
     $conn = newConn();
