@@ -188,7 +188,7 @@
     var studentQuizLinkID = <?php echo json_encode($studentQuizLinkID); ?>;
     var quizID = <?php echo json_encode($quizID); ?>;
 </script>
-<script src="../../testing-page.js"></script>
+<script src="../../assets/js/testing-page.js"></script>
 <footer></footer>
 </body>
 </html>
