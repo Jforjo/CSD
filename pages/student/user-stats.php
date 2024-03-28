@@ -125,6 +125,7 @@ if (!($role == "student")) {
     <div id="chart-container">
         <canvas id="chart"></canvas>
         <div id="errorMessage" style="display: none;"></div>
+        <input type="checkbox" id="toggleYAxis" checked> Start y-axis at 0
     </div>
     <div class="user-scores">
         <div class="total-points" title="Total Points">

@@ -1,7 +1,11 @@
-function displayChart(testNames, percentages)
+var chart; //Stores the chart to allow it to be refreshed when the toggle is clicked
+function displayChart(testNames, percentages, beginAtZero)
 {
     var ctx = document.getElementById('chart').getContext('2d');
-        var chart = new Chart(ctx, {
+    if (chart) {
+        chart.destroy();
+    }
+        chart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: testNames,
@@ -36,7 +40,7 @@ function displayChart(testNames, percentages)
                     },
                     y: 
                     {
-                        beginAtZero: false,
+                        beginAtZero: beginAtZero,
                         ticks:
                         {
                             color: 'white',
@@ -48,17 +52,25 @@ function displayChart(testNames, percentages)
         });
 }
 
-    window.onload = function() {
+window.onload = function() {
+    var toggleYAxis = document.getElementById('toggleYAxis');
+
+    function loadChart() {
         fetch('user-stats.php?action=getTestData')
-        .then(response => response.json())
-        .then(data => {
-            var percentages = data.percentages.map(parseFloat);
-            displayChart(data.testNames, percentages);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            var errorMessageDiv = document.getElementById('errorMessage');
-            errorMessageDiv.textContent = 'Failed to load graph';
-            errorMessageDiv.style.display = 'block';
-        });
+            .then(response => response.json())
+            .then(data => {
+                var percentages = data.percentages.map(parseFloat);
+                displayChart(data.testNames, percentages, toggleYAxis.checked);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                var errorMessageDiv = document.getElementById('errorMessage');
+                errorMessageDiv.textContent = 'Failed to load graph';
+                errorMessageDiv.style.display = 'block';
+            });
     }
+
+    toggleYAxis.addEventListener('change', loadChart);
+
+    loadChart();
+}
