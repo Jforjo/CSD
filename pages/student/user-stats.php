@@ -78,7 +78,7 @@ if (!($role == "student")) {
 
     $_SESSION['userName'] = $userName;
     $_SESSION['completedTests'] = $completedTests;
-    ?>
+?>
     <!DOCTYPE html>
 <html lang="en">
 <head>
