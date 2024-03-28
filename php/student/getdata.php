@@ -37,25 +37,18 @@ if (!($role == "lecturer" || $role == "admin")) {
 unset($role);
 
 // Checks if the user's ID to retireve data has been passed to this file
-if (!isset($_POST['userID'])) die(json_encode(array(
+if (!isset($_POST['studentID'])) die(json_encode(array(
     "type" => "error",
     "msg" => "Invalid POST User ID"
 )));
-// Checks if the passed userID belongs to a valid user
-if (!CheckUserIDExists($_POST['userID'])) die(json_encode(array(
+// Checks if the passed studentID belongs to a valid user
+if (!CheckUserIDExists($_POST['studentID'])) die(json_encode(array(
     "type" => "error",
     "msg" => "User ID does not exist"
 )));
-// Checks if the passed userID belongs to a student
-$role = GetUserRole($_POST['userID']);
-if ($role != "student") die(json_encode(array(
-    "type" => "error",
-    "msg" => "You do not have permission to view this user"
-)));
-unset($role);
 
 // Retrieve the user's data from the database
-$studentData = GetStudentData($_POST['userID']);
+$studentData = GetStudentData($_POST['studentID']);
 // Checks if, for some reason, FALSE was returned
 if ($studentData === false) die(json_encode(array(
     "type" => "error",

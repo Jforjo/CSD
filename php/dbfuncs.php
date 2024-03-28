@@ -1074,6 +1074,24 @@ function GetAvgQuizScores(): mixed {
     $conn = null;
     return $data;
 }
+/**
+ * Fetches a students ID based on their user ID.
+ * 
+ * @param string $userID The user's ID.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return mixed A student ID as a string or FALSE on failure.
+ */
+function GetStudentID(string $userID): mixed {
+    $sql = "CALL GetStudentID(:userID);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":userID", $userID, PDO::PARAM_STR);
+    $stmt->execute();
+    $data = $stmt->fetch();
+    $conn = null;
+    return $data['studentID'];
+}
 
 
 ?>
