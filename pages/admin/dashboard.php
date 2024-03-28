@@ -69,7 +69,7 @@ $inactiveStudentCount = GetInactiveStudentCount();
                     <fieldset>
                         <legend><?php echo ucfirst($student['firstname']) . ' ' . ucfirst($student['lastname']); ?></legend>
                         <input type="hidden" name="userID" value="<?php echo $student['userID']; ?>">
-                        <input type="text" name="studentID" maxlength="16" placeholder="Student number" required>
+                        <input type="text" name="studentID" maxlength="16" placeholder="Student number">
                         <div class="user-row-btns">
                             <button type="submit" name="action" value="accept" class="primary">Accept</button>
                             <button type="submit" name="action" value="decline" class="to-error">Decline</button>
