@@ -183,7 +183,6 @@ if (!($role == "student")) {
             </div>
         </div>
     </div>
-
     <script type="text/javascript">
 $(document).ready(function() {
     $('.table').DataTable({
@@ -194,7 +193,6 @@ $(document).ready(function() {
     });
 });
 </script>
-
 <script>
     var modal = document.getElementById("exportModal");
     var btn = document.getElementById("exportButton");

@@ -209,58 +209,8 @@ if (!($role == "student")) {
     </section>
     </div>
     <footer></footer>
+    <script src="../../assets/js/student-create-quiz.js"></script>
 <script>
-    var modal = document.getElementById("createQuizModal");
-    var btn = document.getElementById("createQuizButton");
-    var span = document.getElementsByClassName("close")[0];
-    btn.onclick = function() {
-        modal.style.display = "flex";
-    }
-    span.onclick = function() {
-        modal.style.display = "none";
-    }
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
-</script>
-<script>
-$(document).ready(function(){
-    $("#createQuizForm").on("submit", function(event){
-        event.preventDefault();
-
-        $.ajax({
-            url: "../../php/studentAssignQuiz.php",
-            type: "post",
-            data: $(this).serialize(),
-            success: function(response){
-                var data = JSON.parse(response);
-                if (data.error) {
-                    // Display the error message in the error modal
-                    document.getElementById('errorMessage').textContent = data.error;
-                    document.getElementById('errorModal').style.display = 'flex';
-                } else {
-                    // Close the create quiz modal
-                    document.getElementById('createQuizModal').style.display = 'none';
-
-                    // Open the success modal
-                    document.getElementById('successModal').style.display = 'flex';
-                }
-            },
-        });
-    });
-
-    // Add an event listener to the OK button that refreshes the page when clicked
-    document.getElementById('successButton').addEventListener('click', function() {
-        location.reload();
-    });
-
-    // Add an event listener to the OK button in the error modal that hides the modal when clicked
-    document.getElementById('errorButton').addEventListener('click', function() {
-        document.getElementById('errorModal').style.display = 'none';
-    });
-});
 document.querySelector('.mobile-nav-dropdown').addEventListener('click', function() {
     var dropdownLinks = document.querySelector('.dropdown-links');
     if (dropdownLinks.style.display === 'none' || dropdownLinks.style.display === '') {
