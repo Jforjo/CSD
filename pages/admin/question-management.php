@@ -33,11 +33,11 @@ else $quizID = "";
 
 $questionCount = GetQuestionCount($quizID);
 ?>
-<section class="user-management" id="question-management">
+<section class="management" data-type="question">
     <div class="table-header">
         <div class="table-perpage">
             Show
-            <select id="user-management-perpage">
+            <select id="perpage">
                 <option value="5" selected>5</option>
                 <option value="10" <?php if ($questionCount <= 5) echo "hidden"; ?>>10</option>
                 <option value="15" <?php if ($questionCount <= 10) echo "hidden"; ?>>15</option>
@@ -95,7 +95,12 @@ $questionCount = GetQuestionCount($quizID);
     </div>
 </section>
 
-<dialog id="dialog-edit-question" aria-modal="true">
+<?php
+$subjects = GetAllSubjects();
+$subjectCount = count($subjects);
+
+?>
+<dialog data-type="edit" aria-modal="true">
     <form method="dialog">
         <fieldset>
             <span class="error-msg"></span>
@@ -103,6 +108,19 @@ $questionCount = GetQuestionCount($quizID);
             <div class="form-input">
                 <label for="form-question">Question<i aria-hidden="true">*</i></label>
                 <textarea type="text" name="question" id="form-question" required></textarea>
+            </div>
+            <div class="form-input">
+                <label for="form-subject">Subject<i aria-hidden="true">*</i></label>
+                <select name="subject" id="form-subjectID" <?php if ($subjectCount == 0) echo "disabled"; ?>>
+                    <?php if ($subjectCount == 0) { ?>
+                        <option selected>None Available</option>
+                    <?php } else { ?>
+                        <option disabled>Select an option</option>
+                        <?php foreach ($subjects as $subject) { ?>
+                            <option value="<?php echo $subject['subjectID']; ?>"><?php echo $subject['name']; ?></option>
+                        <?php } ?>
+                    <?php } ?>
+                </select>
             </div>
             <div class="form-input">
                 <label>Correct Annswer<i aria-hidden="true">*</i></label>

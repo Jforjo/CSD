@@ -1,4 +1,4 @@
-    <?php 
+<?php 
     require_once(__DIR__ . '/../../php/dbfuncs.php');
     //require_once('../../php/connection.php');
     session_start();
@@ -78,7 +78,7 @@ if (!($role == "student")) {
 
     $_SESSION['userName'] = $userName;
     $_SESSION['completedTests'] = $completedTests;
-    ?>
+?>
     <!DOCTYPE html>
 <html lang="en">
 <head>

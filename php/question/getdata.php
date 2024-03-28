@@ -1,5 +1,5 @@
 <?php session_start();
-require_once('dbfuncs.php');
+require_once('../dbfuncs.php');
 // Checks if they are logged in
 // Header will not work as what it would link to
 //  would be sent to the JavaScript instead of actually
@@ -26,7 +26,7 @@ if (GetUserState($_SESSION['userID']) !== "active") {
 }
 // Checks if they have the correct permissions
 $role = GetUserRole($_SESSION['userID']);
-if ($role != "admin") {
+if (!($role == "lecturer" || $role == "admin")) {
     // They shouldn't have been able to access this file without
     //  these permissions, so log them out just incase.
     DestroySession();
@@ -36,28 +36,28 @@ if ($role != "admin") {
 }
 unset($role);
 
-// Checks if the 'name' value was passed to the file
-if (!isset($_POST['name'])) die(json_encode(array(
+// Checks if the question's ID to retireve data has been passed to this file
+if (!isset($_POST['questionID'])) die(json_encode(array(
     "type" => "error",
-    "msg" => "Invalid POST name"
+    "msg" => "Invalid POST Quiz ID"
+)));
+// Checks if the passed questionID belongs to a valid user
+if (!CheckQuestionIDExists($_POST['questionID'])) die(json_encode(array(
+    "type" => "error",
+    "msg" => "Quiz ID does not exist"
 )));
 
-// Checks if the 'name' is NULL or empty
-$name = $_POST['name'];
-if (ctype_space($name) || $name == '') die(json_encode(array(
+// Retrieve the question's data from the database
+$queustionData = GetQuestionData($_POST['questionID']);
+// Checks if, for some reason, FALSE was returned
+if ($queustionData === false) die(json_encode(array(
     "type" => "error",
-    "input" => "name",
-    "msg" => "Name cannot be NULL or empty"
+    "msg" => "An unknown error occurred while retrieving the question's data"
 )));
-
-if (!CreateSubject($name)) die(json_encode(array(
-    "type" => "error",
-    "msg" => "Failed to create the subject"
-)));
-
+// Return the question's data
 exit(json_encode(array(
-    "type" => "success",
-    "msg" => "Successfully created the subject"
+    "type" => "data",
+    "data" => $queustionData
 )));
 
 ?>

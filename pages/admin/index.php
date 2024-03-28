@@ -252,13 +252,13 @@ if ($role === 'admin') {
             <h1 id="page-title"><?php echo $pageData['header-title']; ?></h1>
         </div>
         <div class="search">
-            <div class="search-box">
-                <!-- <search> -->
+            <!-- <div class="search-box">
+                <search>
                     <form role="search">
                         <input type="search" name="q" id="search-input" placeholder="Search...">
                     </form>
-                <!-- </search> -->
-            </div>
+                </search>
+            </div> -->
             <button id="logout">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
                     <g stroke-linecap="square" stroke-miterlimit="10" fill="currentColor" stroke-linejoin="miter" class="nc-icon-wrapper">

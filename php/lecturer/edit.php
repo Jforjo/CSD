@@ -1,5 +1,5 @@
 <?php session_start();
-require_once('dbfuncs.php');
+require_once('../dbfuncs.php');
 // Checks if they are logged in
 // Header will not work as what it would link to
 //  would be sent to the JavaScript instead of actually
@@ -26,7 +26,7 @@ if (GetUserState($_SESSION['userID']) !== "active") {
 }
 // Checks if they have the correct permissions
 $role = GetUserRole($_SESSION['userID']);
-if (!($role == "lecturer" || $role == "admin")) {
+if ($role != "admin") {
     // They shouldn't have been able to access this file without
     //  these permissions, so log them out just incase.
     DestroySession();
@@ -46,9 +46,9 @@ if (!CheckUserIDExists($_POST['userID'])) die(json_encode(array(
     "type" => "error",
     "msg" => "User ID does not exist"
 )));
-// Checks if the passed userID belongs to a student
+// Checks if the passed userID belongs to a lecturer
 $role = GetUserRole($_POST['userID']);
-if ($role != "student") die(json_encode(array(
+if ($role != "lecturer") die(json_encode(array(
     "type" => "error",
     "msg" => "You do not have permission to edit this user"
 )));
@@ -64,11 +64,6 @@ if (!isset($_POST['lastname'])) die(json_encode(array(
     "type" => "error",
     "msg" => "Invalid POST lastname"
 )));
-// Checks if the 'studentID' value was passed to the file
-if (!isset($_POST['studentID'])) die(json_encode(array(
-    "type" => "error",
-    "msg" => "Invalid POST studentID"
-)));
 // Checks if the 'email' value was passed to the file
 if (!isset($_POST['email'])) die(json_encode(array(
     "type" => "error",
@@ -78,12 +73,6 @@ if (!isset($_POST['email'])) die(json_encode(array(
 if (!isset($_POST['state'])) die(json_encode(array(
     "type" => "error",
     "msg" => "Invalid POST state"
-)));
-
-// Checks if the passed studentID belongs to another student
-if (CheckStudentIDExists($_POST['studentID']) && !CheckUserOwnsStudentID($_POST['userID'], $_POST['studentID'])) die(json_encode(array(
-    "type" => "error",
-    "msg" => "Another student with that ID already exists"
 )));
 
 // Checks if the 'firstname' is NULL or empty
@@ -99,13 +88,6 @@ if (ctype_space($lastname) || $lastname == '') die(json_encode(array(
     "type" => "error",
     "input" => "lastname",
     "msg" => "Lastname cannot be NULL or empty"
-)));
-// Checks if the 'studentID' is NULL or empty
-$studentID = $_POST['studentID'];
-if (ctype_space($studentID) || $studentID == '') die(json_encode(array(
-    "type" => "error",
-    "input" => "studentID",
-    "msg" => "Student ID cannot be NULL or empty"
 )));
 // Checks if the 'email' is NULL or empty
 $email = $_POST['email'];
@@ -133,12 +115,6 @@ if (strlen($lastname) > 36) die(json_encode(array(
     "type" => "error",
     "input" => "lastname",
     "msg" => "Lastname is too long"
-)));
-// Checks the lenth of the `studentID` string
-if (strlen($studentID) > 16) die(json_encode(array(
-    "type" => "error",
-    "input" => "studentID",
-    "msg" => "Student ID is too long"
 )));
 // Checks the lenth of the `email` string
 if (strlen($email) > 64) die(json_encode(array(
@@ -207,14 +183,14 @@ if (isset($_POST['password']) && !ctype_space($_POST['password']) && $_POST['pas
     )));
 }
 
-if (!EditStudent($_POST['userID'], $firstname, $lastname, $studentID, $email, $state, $password)) die(json_encode(array(
+if (!EditUserData($_POST['userID'], $firstname, $lastname, $email, $state, $password)) die(json_encode(array(
     "type" => "error",
-    "msg" => "Failed to edit the student"
+    "msg" => "Failed to edit the lecturer"
 )));
 
 exit(json_encode(array(
     "type" => "success",
-    "msg" => "Successfully edited the student"
+    "msg" => "Successfully edited the lecturer"
 )));
 
 ?>

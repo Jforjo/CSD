@@ -1,5 +1,5 @@
 <?php session_start();
-require_once('dbfuncs.php');
+require_once('../dbfuncs.php');
 // Checks if they are logged in
 // Header will not work as what it would link to
 //  would be sent to the JavaScript instead of actually
@@ -40,25 +40,26 @@ if (!isset($_POST['limit']) || $_POST['limit'] < 5) $limit = 5;
 $offset = $_POST['offset'];
 if (!isset($_POST['offset']) || $_POST['offset'] < 0) $offset = 0;
 
-$quizzes = GetLimitedQuizzesData($limit, $offset);
+if (isset($_GET['quiz'])) {
+    $quizID = $_GET['quiz'];
+    $quizlink = "table-deletelinkquiz-btn";
+} else {
+    $quizID = "";
+    $quizlink = "table-linkquiz-btn";
+}
 
-$quizCount = count($quizzes);
+$questions = GetLimitedQuestionsData($limit, $offset, $quizID);
+
+$questionCount = count($questions);
 ?>
 
-<?php if ($quizCount == 0) { ?>
+<?php if ($questionCount == 0) { ?>
     <h3 class="n-a">N/A</h3>
 <?php } else { ?>
-    <?php foreach($quizzes as $quiz) { ?>
-    <tr data-quizid="<?php echo $quiz['quizID']; ?>">
-        <td><span><?php echo $quiz['title']; ?></span></td>
-        <td><span><?php echo $quiz['subject']; ?></span></td>
-        <td>
-            <a href="/admin/questions?quiz=<?php echo $quiz['quizID']; ?>" title="View all questions of quiz: '<?php echo $quiz['title']; ?>'">
-                <?php echo $quiz['questions']; ?>
-            </a>
-        </td>
-        <td><span><?php echo $quiz['available']; ?></span></td>
-        <td>
+    <?php foreach($questions as $question) { ?>
+    <tr data-id="<?php echo $question['questionID']; ?>">
+        <td colspan="12" align="center"><span><?php echo $question['question'] . " (" . $question['subject'] . ")"; ?></span></td>
+        <td rowspan="2">
             <div class="icons">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="table-edit-btn" title="Edit" aria-label="Edit" aria-haspopup="dialog">
                     <g stroke-linecap="square" stroke-miterlimit="10" fill="none" stroke="currentColor" stroke-linejoin="miter" class="nc-icon-wrapper">
@@ -74,14 +75,38 @@ $quizCount = count($quizzes);
                         <path d="M4,9V28c-.024,2.185,1.728,3.976,3.914,4,.029,0,.058,0,.086,0H24c2.185,.024,3.976-1.728,4-3.914,0-.029,0-.058,0-.086V9H4Zm7,16c0,.552-.447,1-1,1s-1-.448-1-1v-9c0-.552,.447-1,1-1s1,.448,1,1v9Zm6,0c0,.552-.447,1-1,1s-1-.448-1-1v-9c0-.552,.447-1,1-1s1,.448,1,1v9Zm6,0c0,.552-.447,1-1,1s-1-.448-1-1v-9c0-.552,.447-1,1-1s1,.448,1,1v9Z"></path>
                     </g>
                 </svg>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="table-assignquiz-btn" title="Assign to students" aria-label="Assign to students">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="<?php echo $quizlink; ?>" title="Link to a quiz" aria-label="Link to a quiz">
                     <g fill="currentColor" class="nc-icon-wrapper">
-                        <path d="M59.856,43.065,48.468,38.51a1,1,0,0,1-.622-.8l-.378-3.025A12,12,0,0,0,54,24V14.725a7.009,7.009,0,0,0-6.368-6.972L46.341,5.172a2.157,2.157,0,0,0-2.617-1.053L36.316,6.764a9.478,9.478,0,0,0-4.191,3.2A14.946,14.946,0,0,1,37,21v1a23.2,23.2,0,0,0,3.43,11.941A4,4,0,0,1,38.262,39.8a21.294,21.294,0,0,1-2.067.575l4.776,1.91A7.962,7.962,0,0,1,46,49.708V57a3.939,3.939,0,0,1-.142,1H62a1,1,0,0,0,1-1V47.708A4.975,4.975,0,0,0,59.856,43.065Z" fill="currentColor" data-color="color-2"></path>
-                        <path d="M42,58H2a1,1,0,0,1-1-1V49.708a4.975,4.975,0,0,1,3.144-4.643L15.533,40.51a1,1,0,0,0,.621-.806l.279-2.226a18.784,18.784,0,0,1-9.749-.53,1,1,0,0,1-.541-1.463A26.2,26.2,0,0,0,10,22V21a12,12,0,0,1,24,0v1a26.2,26.2,0,0,0,3.857,13.485,1,1,0,0,1-.541,1.463,18.774,18.774,0,0,1-9.749.53l.279,2.227a1,1,0,0,0,.622.8l11.388,4.555A4.975,4.975,0,0,1,43,49.708V57A1,1,0,0,1,42,58Z" fill="currentColor"></path>
+                        <rect x="1" y="1" width="12" height="12" rx="1" ry="1" fill="currentColor"></rect>
+                        <rect x="19" y="19" width="12" height="12" rx="1" ry="1" fill="currentColor"></rect>
+                        <rect x="1" y="19" width="12" height="12" rx="1" ry="1" fill="currentColor"></rect>
+                        <path data-color="color-2" d="M22.293,11.707c.188,.188,.442,.293,.707,.293,.011,0,.022,0,.033,0,.276-.009,.537-.133,.72-.341L30.753,3.659c.363-.416,.321-1.047-.095-1.411-.415-.364-1.046-.322-1.411,.094l-6.296,7.196-2.244-2.244c-.391-.391-1.023-.391-1.414,0s-.391,1.023,0,1.414l3,3Z" fill="currentColor"></path>
                     </g>
                 </svg>
             </div>
         </td>
+    </tr>
+    <tr>
+        <?php
+        $totalAnswers = 0;
+        if ($question['answerOne'] != null) $totalAnswers++;
+        if ($question['answerTwo'] != null) $totalAnswers++;
+        if ($question['answerThree'] != null) $totalAnswers++;
+        if ($question['answerFour'] != null) $totalAnswers++;
+        ?>
+
+        <?php if ($question['answerOne'] != null) { ?>
+            <td colspan="<?php echo 12 / $totalAnswers; ?>" align="center" class="<?php if ($question['correctAnswer'] == "1") echo "correct"; ?>"><span><?php echo $question['answerOne']; ?></span></td>
+        <?php } ?>
+        <?php if ($question['answerTwo'] != null) { ?>
+            <td colspan="<?php echo 12 / $totalAnswers; ?>" align="center" class="<?php if ($question['correctAnswer'] == "2") echo "correct"; ?>"><span><?php echo $question['answerTwo']; ?></span></td>
+        <?php } ?>
+        <?php if ($question['answerThree'] != null) { ?>
+            <td colspan="<?php echo 12 / $totalAnswers; ?>" align="center" class="<?php if ($question['correctAnswer'] == "3") echo "correct"; ?>"><span><?php echo $question['answerThree']; ?></span></td>
+        <?php } ?>
+        <?php if ($question['answerFour'] != null) { ?>
+            <td colspan="<?php echo 12 / $totalAnswers; ?>" align="center" class="<?php if ($question['correctAnswer'] == "4") echo "correct"; ?>"><span><?php echo $question['answerFour']; ?></span></td>
+        <?php } ?>
     </tr>
     <?php } ?>
 <?php } ?>

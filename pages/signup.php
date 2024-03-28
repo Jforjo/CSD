@@ -5,12 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="stylesheet.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login page</title>
-
+    <title>Signup</title>
 </head>
 <body>
-<form method="POST" action="../php/auth.php">
-<h2>Login</h2>
+
+<form method="POST" action="../php/createuser.php">
+<h2>Signup</h2>
 <?php 
 if(isset($_GET["e"]))
 {
@@ -27,7 +27,7 @@ if ($_GET["e"]==6)
 
 if ($_GET["e"]==7)
 {
-    echo "<span class= 'error'>You are not login.</span>";
+    echo "<span class= 'error'>You are not logged in.</span>";
 }
 
 
@@ -35,17 +35,25 @@ if ($_GET["e"]==7)
 }
 
 ?>
+
+<label for="firstname">firstname:</label>
+<input name="firstname" id="firstname" type="text" required>
+
+<label for="lastname">lastname:</label>
+<input name="lastname" id="lastname" type="text" required>
+
 <label for="email">Email:</label>
 <input name="email" id="email" type="email" placeholder="eg test@test.com" required>
 
 <label for="password">Password:</label>
 <input name="password" id="password" type="password" placeholder="password" required>
 
-<button type="submit">Login</button>
+
+<button type="submit">Signup</button>
 
 </form>
+
 </body>
 </html>
-
 
 

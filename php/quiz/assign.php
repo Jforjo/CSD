@@ -1,5 +1,5 @@
 <?php session_start();
-require_once('dbfuncs.php');
+require_once('../dbfuncs.php');
 // Checks if they are logged in
 // Header will not work as what it would link to
 //  would be sent to the JavaScript instead of actually
@@ -72,7 +72,7 @@ foreach ($students as $studentID) {
     // Checks if the studentID belongs to a valid student
     if (!CheckStudentIDExists($studentID)) die(json_encode(array(
         "type" => "error",
-        "msg" => "A student with the ID '" . $studentID . "' does not exists"
+        "msg" => "A student with the ID '" . $studentID . "' does not exists (".var_dump($students).")"
     )));
 }
 foreach ($students as $studentID) {

@@ -565,6 +565,7 @@ function CreateQuiz(string $subjectID, string $title, string|null $available): b
 /**
  * Create a question based on the given parameters.
  * 
+ * @param string $subjectID The question's subject.
  * @param string $question The question's question.
  * @param string $answerOne The question's answer one.
  * @param string $answerTwo The question's answer two.
@@ -575,14 +576,15 @@ function CreateQuiz(string $subjectID, string $title, string|null $available): b
  * @author Jforjo <https://github.com/Jforjo>
  * @return bool TRUE on success or FALSE on failure.
  */
-function CreateQuestion(string $question, string $answerOne, string $answerTwo, string|null $answerThree, string|null $answerFour, int $correctAnswer): bool {
-    $sql = "CALL CreateQuestion(:questionID, :question, :answerOne, :answerTwo, :answerThree, :answerFour, :correctAnswer);";
+function CreateQuestion(string $subjectID, string $question, string $answerOne, string $answerTwo, string|null $answerThree, string|null $answerFour, int $correctAnswer): bool {
+    $sql = "CALL CreateQuestion(:questionID, :subjectID, :question, :answerOne, :answerTwo, :answerThree, :answerFour, :correctAnswer);";
     do {
         $questionID = bin2hex(random_bytes(16));
     } while (CheckQuestionIDExists($questionID));
     $conn = newConn();
     $stmt = $conn->prepare($sql);
     $stmt->bindValue(":questionID", $questionID, PDO::PARAM_STR);
+    $stmt->bindValue(":subjectID", $subjectID, PDO::PARAM_STR);
     $stmt->bindValue(":question", $question, PDO::PARAM_STR);
     $stmt->bindValue(":answerOne", $answerOne, PDO::PARAM_STR);
     $stmt->bindValue(":answerTwo", $answerTwo, PDO::PARAM_STR);
@@ -784,6 +786,7 @@ function EditQuiz(string $quizID, string $title, string $subjectID, string $avai
  * Edit the data of the question with the given ID.
  * 
  * @param string $questionID The question's ID.
+ * @param string $questionID The question's new subject ID.
  * @param string $question The question's new question.
  * @param string $answerOne The question's new answer one.
  * @param string $answerTwo The question's new answer two.
@@ -794,11 +797,12 @@ function EditQuiz(string $quizID, string $title, string $subjectID, string $avai
  * @author Jforjo <https://github.com/Jforjo>
  * @return bool TRUE on success or FALSE on failure.
  */
-function EditQuestion(string $questionID, string $question, string $answerOne, string $answerTwo, string|null $answerThree, string|null $answerFour, int $correctAnswer): bool {
-    $sql = "CALL EditQuestion(:questionID, :question, :answerOne, :answerTwo, :answerThree, :answerFour, :correctAnswer);";
+function EditQuestion(string $questionID, string $subjectID, string $question, string $answerOne, string $answerTwo, string|null $answerThree, string|null $answerFour, int $correctAnswer): bool {
+    $sql = "CALL EditQuestion(:questionID, :subjectID, :question, :answerOne, :answerTwo, :answerThree, :answerFour, :correctAnswer);";
     $conn = newConn();
     $stmt = $conn->prepare($sql);
     $stmt->bindValue(":questionID", $questionID, PDO::PARAM_STR);
+    $stmt->bindValue(":subjectID", $subjectID, PDO::PARAM_STR);
     $stmt->bindValue(":question", $question, PDO::PARAM_STR);
     $stmt->bindValue(":answerOne", $answerOne, PDO::PARAM_STR);
     $stmt->bindValue(":answerTwo", $answerTwo, PDO::PARAM_STR);
@@ -1056,6 +1060,37 @@ function AssignQuiz(string $studentID, string $quizID, int $questionCount): bool
     $success = $stmt->execute();
     $conn = null;
     return $success && CheckStudentQuizLinkIDExists($studentQuizLinkID);
+}
+/**
+ * Fetches the average quiz percentages of each quiz.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return mixed The quiz IDs and the avg percentage for each or FALSE on failure.
+ */
+function GetAvgQuizScores(): mixed {
+    $sql = "CALL GetAvgQuizScores();";
+    $conn = newConn();
+    $data = $conn->query($sql)->fetchAll();
+    $conn = null;
+    return $data;
+}
+/**
+ * Fetches a students ID based on their user ID.
+ * 
+ * @param string $userID The user's ID.
+ * 
+ * @author Jforjo <https://github.com/Jforjo>
+ * @return mixed A student ID as a string or FALSE on failure.
+ */
+function GetStudentID(string $userID): mixed {
+    $sql = "CALL GetStudentID(:userID);";
+    $conn = newConn();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(":userID", $userID, PDO::PARAM_STR);
+    $stmt->execute();
+    $data = $stmt->fetch();
+    $conn = null;
+    return $data['studentID'];
 }
 
 
