@@ -10,6 +10,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $conn = newConn();
 
+    //Check to see if user is logged in, if not then redirect to login page
+    if (!isset($_SESSION['userID']))
+    {
+        header("Location: /login");
+        exit();    
+    }
+
     $stmt = $conn->prepare("CALL GetQuizSetFromSubject(?, ?)");
     $stmt->bindParam(1, $subjectID);
     $stmt->bindParam(2, $numQuestions, PDO::PARAM_INT);
@@ -21,38 +28,57 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $conn->beginTransaction();
 
-    //Query to create the quiz
-    $stmt = $conn->prepare("CALL StudentCreateQuiz(:quizID, :subjectID, :title, :available)");
-    $quizID = bin2hex(random_bytes(16));
-    $stmt->bindValue(":quizID", $quizID, PDO::PARAM_STR);
-    $stmt->bindValue(":subjectID", $subjectID, PDO::PARAM_STR);
-    $stmt->bindValue(":title", $title, PDO::PARAM_STR);
-    $stmt->bindValue(":available", $available, PDO::PARAM_STR);
-    $stmt->execute();
-
-    //Query to link the questions to the quiz that was just made
-    $stmt = $conn->prepare("CALL StudentCreateQuizQuestionLink(:quizQuestionLinkID, :quizID, :questionID)");
-    foreach ($questions as $question) {
-        $quizQuestionLinkID = bin2hex(random_bytes(16));
-        $stmt->bindValue(":quizQuestionLinkID", $quizQuestionLinkID, PDO::PARAM_STR);
+    //If there are enough questions in the subject
+    if (count($questions) >= $numQuestions) {
+        //Query to create the quiz
+        $stmt = $conn->prepare("CALL StudentCreateQuiz(:quizID, :subjectID, :title, :available)");
+        $quizID = bin2hex(random_bytes(16));
         $stmt->bindValue(":quizID", $quizID, PDO::PARAM_STR);
-        $stmt->bindValue(":questionID", $question['questionID'], PDO::PARAM_STR);
+        $stmt->bindValue(":subjectID", $subjectID, PDO::PARAM_STR);
+        $stmt->bindValue(":title", $title, PDO::PARAM_STR);
+        $stmt->bindValue(":available", $available, PDO::PARAM_STR);
         $stmt->execute();
+
+        //Query to link the questions to the quiz that was just made
+        $stmt = $conn->prepare("CALL StudentCreateQuizQuestionLink(:quizQuestionLinkID, :quizID, :questionID)");
+        foreach ($questions as $question) {
+            $quizQuestionLinkID = bin2hex(random_bytes(16));
+            $stmt->bindValue(":quizQuestionLinkID", $quizQuestionLinkID, PDO::PARAM_STR);
+            $stmt->bindValue(":quizID", $quizID, PDO::PARAM_STR);
+            $stmt->bindValue(":questionID", $question['questionID'], PDO::PARAM_STR);
+            $stmt->execute();
+        }
+
+        $studentID = $_POST['studentID'];
+
+        //Query to link assign the quiz to the logged in student
+        $stmt = $conn->prepare("CALL StudentCreateStudentQuizLink(:studentQuizLinkID, :studentID, :quizID, :questionCount)");
+        $studentQuizLinkID = bin2hex(random_bytes(16));
+        $stmt->bindValue(":studentQuizLinkID", $studentQuizLinkID, PDO::PARAM_STR);
+        $stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
+        $stmt->bindValue(":quizID", $quizID, PDO::PARAM_STR);
+        $stmt->bindValue(":questionCount", $numQuestions, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $conn->commit();
+    
+        echo json_encode(['success' => 'Quiz successfully created!']);
+        exit();
     }
 
-    $studentID = $_POST['studentID'];
+    //If there are not enough questions in the subject
+    if (count($questions) < $numQuestions) {
+        echo json_encode(['error' => 'Error: Subject does not have enough questions to create a quiz.']);
+        exit();
+    }
 
-    //Query to link assign the quiz to the logged in student
-    $stmt = $conn->prepare("CALL StudentCreateStudentQuizLink(:studentQuizLinkID, :studentID, :quizID, :questionCount)");
-    $studentQuizLinkID = bin2hex(random_bytes(16));
-    $stmt->bindValue(":studentQuizLinkID", $studentQuizLinkID, PDO::PARAM_STR);
-    $stmt->bindValue(":studentID", $studentID, PDO::PARAM_STR);
-    $stmt->bindValue(":quizID", $quizID, PDO::PARAM_STR);
-    $stmt->bindValue(":questionCount", $numQuestions, PDO::PARAM_INT);
-    $stmt->execute();
-
-    $conn->commit();
+    
 
 
+}
+else
+{
+    header("Location: /dashboard");
+    exit();
 }
 ?>
